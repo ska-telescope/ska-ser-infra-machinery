@@ -1,7 +1,31 @@
 all:
   children:
     central-logging: null
-  hosts: {}
+  hosts:
+    prometheus_podman:
+      ansible_host: prometheus_podman
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ip: 192.168.99.154
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes: {}
+      services: {}
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 55769bf8-4285-4d5e-be5f-8f85e2b0c072
+        mount_point: /var/lib/containers
+        name: prometheus_podman-containers-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 36db1c23-2ba8-4c4c-8828-ac3619ae75a4
+        mount_point: /var/lib/prometheus
+        name: prometheus_podman-prometheus_wal-vol
 central-logging:
   children:
     central-logging_data: null
@@ -15,44 +39,74 @@ central-logging_kibana:
 central-logging_master:
   hosts:
     central-logging_master_i00:
-      ansible_host: 192.168.99.104
+      ansible_host: central-logging_master_i00
       ansible_python_interpreter: python3
-      ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
-        -v
-      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
+      ip: 192.168.99.91
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.91:9114
+        node_exporter: 192.168.99.91:9100
+      services:
+        elasticsearch: 192.168.99.91:9300
+        elasticsearch_exporter: 192.168.99.91:9114
+        node_exporter: 192.168.99.91:9100
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: e9afbe9e-02b4-4408-8e05-2324815d0bdf
+        id: d9407aa2-9937-4107-82f4-f9a30d77179a
         mount_point: /usr/share/elasticsearch/data
         name: central-logging_master_i00-data-vol
     central-logging_master_i01:
-      ansible_host: 192.168.99.186
+      ansible_host: central-logging_master_i01
       ansible_python_interpreter: python3
-      ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
-        -v
-      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
+      ip: 192.168.99.41
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.41:9114
+        node_exporter: 192.168.99.41:9100
+      services:
+        elasticsearch: 192.168.99.41:9300
+        elasticsearch_exporter: 192.168.99.41:9114
+        node_exporter: 192.168.99.41:9100
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: ea609e37-9275-4d85-b42d-54a5226da388
+        id: f0eefa12-f6d9-4e74-b78d-edda96f02705
         mount_point: /usr/share/elasticsearch/data
         name: central-logging_master_i01-data-vol
     central-logging_master_i02:
-      ansible_host: 192.168.99.107
+      ansible_host: central-logging_master_i02
       ansible_python_interpreter: python3
-      ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
-        -v
-      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
+      ip: 192.168.99.162
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.162:9114
+        node_exporter: 192.168.99.162:9100
+      services:
+        elasticsearch: 192.168.99.162:9300
+        elasticsearch_exporter: 192.168.99.162:9114
+        node_exporter: 192.168.99.162:9100
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: 45dd9def-c636-4358-87f5-2bce65cb84f6
+        id: eaeaf963-19d1-460c-aed7-2bd2665fe61a
         mount_point: /usr/share/elasticsearch/data
         name: central-logging_master_i02-data-vol
