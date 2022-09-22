@@ -8,7 +8,7 @@ module "prometheus" {
 
   configuration = {
     name = "prometheus_podman" # use an unique name
-    flavor = "c3.large"
+    flavor = "l3.micro"
     image = "ubuntu-2004-lts"
     volumes = [ 
       {
@@ -23,12 +23,6 @@ module "prometheus" {
       } 
     ]
   }
-}
-
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [module.prometheus]
-
-  create_duration = "30s"
 }
 
 output "prometheus" {
