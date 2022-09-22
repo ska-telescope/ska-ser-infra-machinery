@@ -1,1 +1,5 @@
-env.sh
+**/env.sh
+**/.terraform
+**/*.lock.hcl
+**/clouds.yaml
+*.pem

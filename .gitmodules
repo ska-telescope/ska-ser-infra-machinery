@@ -1,9 +1,9 @@
-[submodule "ska-ser-ansible-collections"]
-	path = ska-ser-ansible-collections
-	url = git@gitlab.com:ska-telescope/sdi/ska-ser-ansible-collections.git
 [submodule "ska-ser-orchestration"]
 	path = ska-ser-orchestration
 	url = git@gitlab.com:ska-telescope/sdi/ska-ser-orchestration.git
 [submodule ".make"]
 	path = .make
 	url = git@gitlab.com:ska-telescope/sdi/ska-cicd-makefile.git
+[submodule "ska-ser-ansible-collections"]
+	path = ska-ser-ansible-collections
+	url = git@gitlab.com:ska-telescope/sdi/ska-ser-ansible-collections.git

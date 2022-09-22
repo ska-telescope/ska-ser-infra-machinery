@@ -1,3 +1,11 @@
+.DEFAULT_GOAL := help
+
+help:  ## show this help.
+	@echo "make targets:"
+	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo ""; echo "make vars (+defaults):"
+	@grep -E '^[0-9a-zA-Z_-]+ \?=.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = " \\?= "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
 check-env:
 ifndef ENVIRONMENT
 	$(error ENVIRONMENT is undefined)
@@ -23,7 +31,8 @@ ifeq (orch,$(firstword $(MAKECMDGOALS)))
 endif
 
 orch: check-env
-	cd ska-ser-orchestration && $(MAKE) $(TARGET_ARGS) 
+	cd ska-ser-orchestration && $(MAKE) $(TARGET_ARGS)
+
 
 # elasticstack: ## call the Makefile in the elasticstack sub-project
 # 	export ANSIBLE_SSH_ARGS="-o ForwardAgent=yes -F $(THIS_BASE)/ssh.config " && \

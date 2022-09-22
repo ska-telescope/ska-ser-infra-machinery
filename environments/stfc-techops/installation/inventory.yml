@@ -1,58 +1,58 @@
 all:
   children:
-    cental-monitoring: null
+    central-logging: null
   hosts: {}
-cental-monitoring:
+central-logging:
   children:
-    cental-monitoring_data: null
-    cental-monitoring_kibana: null
-    cental-monitoring_master: null
+    central-logging_data: null
+    central-logging_kibana: null
+    central-logging_master: null
   hosts: {}
-cental-monitoring_data:
+central-logging_data:
   hosts: {}
-cental-monitoring_kibana:
+central-logging_kibana:
   hosts: {}
-cental-monitoring_master:
+central-logging_master:
   hosts:
-    cental-monitoring_master_i00:
-      ansible_host: 192.168.99.25
+    central-logging_master_i00:
+      ansible_host: 192.168.99.104
       ansible_python_interpreter: python3
       ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "./keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
+        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
         -v
-      ansible_ssh_private_key_file: ./keys/ska-techops.pem
+      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: 03b609ec-37fa-448e-b78e-d9d63b6bea3f
+        id: e9afbe9e-02b4-4408-8e05-2324815d0bdf
         mount_point: /usr/share/elasticsearch/data
-        name: cental-monitoring_master_i00-data-vol
-    cental-monitoring_master_i01:
-      ansible_host: 192.168.99.236
+        name: central-logging_master_i00-data-vol
+    central-logging_master_i01:
+      ansible_host: 192.168.99.186
       ansible_python_interpreter: python3
       ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "./keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
+        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
         -v
-      ansible_ssh_private_key_file: ./keys/ska-techops.pem
+      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: 29c5b131-207e-4e8d-9674-bd2599d709cc
+        id: ea609e37-9275-4d85-b42d-54a5226da388
         mount_point: /usr/share/elasticsearch/data
-        name: cental-monitoring_master_i01-data-vol
-    cental-monitoring_master_i02:
-      ansible_host: 192.168.99.24
+        name: central-logging_master_i01-data-vol
+    central-logging_master_i02:
+      ansible_host: 192.168.99.107
       ansible_python_interpreter: python3
       ansible_ssh_common_args: -o ControlPersist=30m -o StrictHostKeyChecking=no -o
-        ProxyCommand="ssh -i "./keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
+        ProxyCommand="ssh -i "../resources/keys/ska-techops.pem" -W %h:%p -q ubuntu@130.246.214.45"
         -v
-      ansible_ssh_private_key_file: ./keys/ska-techops.pem
+      ansible_ssh_private_key_file: ../resources/keys/ska-techops.pem
       ansible_user: ubuntu
       volumes:
       - device: /dev/vdb
         file_system: ext4
-        id: eba2d629-c3b8-4fc2-b3e1-1761ec896e4a
+        id: 45dd9def-c636-4358-87f5-2bce65cb84f6
         mount_point: /usr/share/elasticsearch/data
-        name: cental-monitoring_master_i02-data-vol
+        name: central-logging_master_i02-data-vol

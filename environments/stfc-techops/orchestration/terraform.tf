@@ -30,5 +30,6 @@ terraform {
 provider "openstack" {
   cloud     = var.openstack.cloud
   tenant_id = var.openstack.project_id
+  max_retries = 12                                    // 2 minutes
 }
 # --------------------------------------------------- #
