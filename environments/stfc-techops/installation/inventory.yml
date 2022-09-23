@@ -60,8 +60,13 @@ central-logging_master:
       - device: /dev/vdb
         file_system: ext4
         id: d9407aa2-9937-4107-82f4-f9a30d77179a
-        mount_point: /usr/share/elasticsearch/data
+        mount_point: /var/lib/stack-data
         name: central-logging_master_i00-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: cea66865-9fea-4cf3-a896-19839f963747
+        mount_point: /var/lib/docker
+        name: central-logging_master_i00-docker-vol
     central-logging_master_i01:
       ansible_host: central-logging_master_i01
       ansible_python_interpreter: python3
@@ -84,8 +89,13 @@ central-logging_master:
       - device: /dev/vdb
         file_system: ext4
         id: f0eefa12-f6d9-4e74-b78d-edda96f02705
-        mount_point: /usr/share/elasticsearch/data
+        mount_point: /var/lib/stack-data
         name: central-logging_master_i01-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 539edd40-1f4e-4c0a-9ecb-db1543da37e4
+        mount_point: /var/lib/docker
+        name: central-logging_master_i01-docker-vol
     central-logging_master_i02:
       ansible_host: central-logging_master_i02
       ansible_python_interpreter: python3
@@ -108,5 +118,10 @@ central-logging_master:
       - device: /dev/vdb
         file_system: ext4
         id: eaeaf963-19d1-460c-aed7-2bd2665fe61a
-        mount_point: /usr/share/elasticsearch/data
+        mount_point: /var/lib/stack-data
         name: central-logging_master_i02-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: db3161c3-ac3d-416b-ab6d-2c8f92fbd1fe
+        mount_point: /var/lib/docker
+        name: central-logging_master_i02-docker-vol

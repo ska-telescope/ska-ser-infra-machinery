@@ -8,7 +8,8 @@ module "central_logging" {
   elasticsearch = {
     name   = "central-logging"
     master = {
-      data_volume_size = 250
+      data_volume_size = 250,
+      docker_volume_size = 20
     }
     data = {
       size = 0
