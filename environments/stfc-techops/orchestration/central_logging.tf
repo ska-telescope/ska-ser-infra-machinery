@@ -19,8 +19,3 @@ module "central_logging" {
     }
   }
 }
-
-
-output "central_logging" {
-  value = module.central_logging
-}

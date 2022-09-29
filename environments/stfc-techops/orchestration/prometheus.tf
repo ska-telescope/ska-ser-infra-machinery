@@ -25,7 +25,3 @@ module "prometheus" {
   }
 }
 
-output "prometheus" {
-  value = module.prometheus
-  
-}
