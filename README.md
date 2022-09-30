@@ -1,92 +1,181 @@
 # SKA Infrastructure Machinery
 
+The Infra Machinery is an umbrella of multiple repositories to manage the infrastructure 
+supervise by SKAO. It uses [Terraform](https://www.terraform.io/) 
+for orchestration and [Ansible](https://www.ansible.com/) for installation/configuration.
 
+# Prerequisites
 
-## Getting started
+It does not have any direct dependencies but check the READMEs of 
+each submodule for an updated list of requirements:
+* [SKA Orchestration](./ska-ser-orchestration/README.md#prerequisites)
+* [SKA Ansible Collections](./ska-ser-ansible-collections/README.md#requirements)
+* [SKA Makefile](./.make/README.md)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+# Setup
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## TLDR
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+We already create the **setenv.sh** script with every variable mandatory.
+ Just change the first three variables and source the file on your terminal.
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/ska-telescope/ska-infra-machinery.git
-git branch -M main
-git push -uf origin main
+source setenv.sh
 ```
 
-## Integrate with your tools
+The Makefile has a help target to print these variables and all available targets:
 
-- [ ] [Set up project integrations](https://gitlab.com/ska-telescope/ska-infra-machinery/-/settings/integrations)
+```
+make help
+```
 
-## Collaborate with your team
+## Environment Variables
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Like the submodules for Terraform and Ansible, this repository does not have any default 
+variables when running the Makefile targets to avoid any deployment/installation on the
+wrong cluster my mistake.
 
-## Test and Deploy
+So, the first variable to setup is the **ENVIRONMENT**. Like the name suggest, it points 
+to the environment we want to work with.
 
-Use the built-in continuous integration in GitLab.
+```
+export ENVIRONMENT="stfc-techops"
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+If this variable is empty, the Makefile targets will not run for security reasons.
 
-***
+### Terraform
 
-# Editing this README
+Next, we need to configure the Terraform specifics variables for the 
+Gitlab's backend:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```
+export GITLAB_PROJECT_ID="<project-id>"
+export TF_HTTP_USERNAME="<gitlab-username>"
+export TF_HTTP_PASSWORD="<user-token>"
+export TF_HTTP_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
+export TF_HTTP_LOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+export TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+```
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token)
+to create the Gitlab User token with the API scope.
 
-## Name
-Choose a self-explaining name for your project.
+Now, we need to pinpoint where are the Terraform files are located:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```
+export BASE_PATH="$(cd "$(dirname "$1")"; pwd -P)"
+export TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+This way the directory is absolute and always based on the environment.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Ansible
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Following the same rationale, we need to specify where the ansible files/variables 
+are placed:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```
+export PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
+export ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
+export ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective 
+group variables.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+# How to use
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Make Targets
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The Makefile available in this repository has two main targets which redirect 
+to the two different functionalities that this repository provide.
 
-## License
-For open source projects, say how it is licensed.
+For [Terraform make targets](./ska-ser-orchestration/Makefile) we must use **orch** 
+as first argument and **playbooks** , for [Ansible Targets](./ska-ser-ansible-collections/Makefile).
+All the shell env variables are saved and the command arguments are 
+carried over.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Always check the READMEs for [orchestration](./ska-ser-orchestration/README.md#Getting&#32;started)
+and [installation](./ska-ser-ansible-collections/README.md#Usage) 
+for up-to-date setup and how to use recommendations.
+
+## Project Structured
+
+ This a single repository that can manage multiple environments, so the first step is
+ to select which one we want. Inside the **./environments/** folder, we have all the 
+ configurations and variables separated by cluster.
+
+| Cluster           | Folder Name   |
+| ----------------- | -------       |
+| STFC TechOps      | stfc-techops  |
+| STFC TechSDH&P    | stfc-techsdhp |
+| EngageSKA         | engage        |
+| PSI Low           | psi-low       |
+| PSI Mid           | psi-mid       |
+
+Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
+and Ansible (installation). Like the example bellow:
+
+ ```
+environments/
+│     
+└─── stfc-techops/
+│   │   
+│   └─── orchestration
+│   │       *.tf
+│   │       clouds.yaml
+│   │       ...
+│   └─── installation
+│       │   ansible.cfg
+│       │   inventory.yml
+│       │   ssf.config
+│       └─── groups_vars
+│           │    all.yml
+│           │    ...
+│    
+└─── ...
+```
+
+## Orchestration on Openstack
+
+Any Terraform files (*.tf) inside the orchestration folder will be 
+analysed and applied. So every service/VM is described there and use the modules
+on the **ska-ser-orchestration** submodule.
+
+The **clouds.yaml** file should also be on this folder along the Terraform files.
+This is the only supported authentication for Openstack API. Go to the Openstack
+Web interface and created a new credencial on *Identity > Application Credentials*
+page.
+
+Finally, you just have to init Terraform locally and apply the changes:
+
+```
+make orch init
+make orch apply 
+```
+Recommendation: Setup the **TF_TARGET** to only apply/destroy to a specific 
+service/VM. The module name should be name on the first line of the module 
+definition:
+
+```
+make orch init
+make orch apply TF_TARGET="module.<your-module-name>"
+```
+
+## Installation via Ansible
+
+The **ssf.config** and **inventory.yml** files automatically generated using:
+
+```
+make orch generate-inventory
+```
+
+This target call a script to retrieve the TF state from Gitlab and compiles the
+data to generate those two files and automatically moves them to the 
+**$PLAYBOOKS_ROOT_DIR**.
+
+Finally, run the installation make targets of your choosing.
+

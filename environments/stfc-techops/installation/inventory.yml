@@ -1,0 +1,127 @@
+all:
+  children:
+    central-logging: null
+  hosts:
+    prometheus_podman:
+      ansible_host: prometheus_podman
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ip: 192.168.99.154
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes: {}
+      services: {}
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 55769bf8-4285-4d5e-be5f-8f85e2b0c072
+        mount_point: /var/lib/containers
+        name: prometheus_podman-containers-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 36db1c23-2ba8-4c4c-8828-ac3619ae75a4
+        mount_point: /var/lib/prometheus
+        name: prometheus_podman-prometheus_wal-vol
+central-logging:
+  children:
+    central-logging_data: null
+    central-logging_kibana: null
+    central-logging_master: null
+  hosts: {}
+central-logging_data:
+  hosts: {}
+central-logging_kibana:
+  hosts: {}
+central-logging_master:
+  hosts:
+    central-logging_master_i00:
+      ansible_host: central-logging_master_i00
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ip: 192.168.99.91
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.91:9114
+        node_exporter: 192.168.99.91:9100
+      services:
+        elasticsearch: 192.168.99.91:9300
+        elasticsearch_exporter: 192.168.99.91:9114
+        node_exporter: 192.168.99.91:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: d9407aa2-9937-4107-82f4-f9a30d77179a
+        mount_point: /var/lib/stack-data
+        name: central-logging_master_i00-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: cea66865-9fea-4cf3-a896-19839f963747
+        mount_point: /var/lib/docker
+        name: central-logging_master_i00-docker-vol
+    central-logging_master_i01:
+      ansible_host: central-logging_master_i01
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ip: 192.168.99.41
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.41:9114
+        node_exporter: 192.168.99.41:9100
+      services:
+        elasticsearch: 192.168.99.41:9300
+        elasticsearch_exporter: 192.168.99.41:9114
+        node_exporter: 192.168.99.41:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: f0eefa12-f6d9-4e74-b78d-edda96f02705
+        mount_point: /var/lib/stack-data
+        name: central-logging_master_i01-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 539edd40-1f4e-4c0a-9ecb-db1543da37e4
+        mount_point: /var/lib/docker
+        name: central-logging_master_i01-docker-vol
+    central-logging_master_i02:
+      ansible_host: central-logging_master_i02
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ip: 192.168.99.162
+      jump_host:
+        hostname: terminus
+        ip: 130.246.214.45
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      scrapes:
+        elasticsearch_exporter: 192.168.99.162:9114
+        node_exporter: 192.168.99.162:9100
+      services:
+        elasticsearch: 192.168.99.162:9300
+        elasticsearch_exporter: 192.168.99.162:9114
+        node_exporter: 192.168.99.162:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: eaeaf963-19d1-460c-aed7-2bd2665fe61a
+        mount_point: /var/lib/stack-data
+        name: central-logging_master_i02-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: db3161c3-ac3d-416b-ab6d-2c8f92fbd1fe
+        mount_point: /var/lib/docker
+        name: central-logging_master_i02-docker-vol
