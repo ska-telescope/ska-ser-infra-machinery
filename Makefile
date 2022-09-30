@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
 SHELL=/usr/bin/env bash
+MAKEFLAGS += --no-print-directory
 
 .PHONY: vars help check-env playbooks orch
 .DEFAULT_GOAL := help
@@ -11,8 +12,7 @@ PLAYBOOKS_ROOT_DIR ?=
 ANSIBLE_COLLECTIONS_PATHS ?=
 ANSIBLE_CONFIG ?=
 
-vars:  ## Current variables
-	@echo "Current variable settings:"
+vars:  ### Current variables
 	@echo "ENVIRONMENT=$(ENVIRONMENT)"
 	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
 	@echo "TF_ROOT_DIR=$(TF_ROOT_DIR)"
@@ -48,7 +48,14 @@ orch: check-env ## Access Orchestration submodule targets
 	cd ska-ser-orchestration && $(MAKE) $(TARGET_ARGS)
 
 help:  ## Show Help
-	@echo "make targets:"
+	@echo "Vars:";
+	@make vars;
+	@echo "";
+	@echo "Main targets:"
 	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-	@echo ""; 
-	@make vars
+	@echo "";
+	@echo "Orchestration targets - make orch <target>:";
+	@cd ska-ser-orchestration && grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}';
+	@echo "";
+	@echo "Installation targets - make orch <target>:";
+	@cd ska-ser-ansible-collections && make help;

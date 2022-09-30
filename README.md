@@ -1,7 +1,7 @@
 # SKA Infrastructure Machinery
 
 The Infra Machinery is an umbrella of multiple repositories to manage the infrastructure 
-supervise by the SYSTEM & BANG teams. It uses [Terraform](https://www.terraform.io/) 
+supervise by SKAO. It uses [Terraform](https://www.terraform.io/) 
 for orchestration and [Ansible](https://www.ansible.com/) for installation/configuration.
 
 # Prerequisites
@@ -14,38 +14,19 @@ each submodule for an updated list of requirements:
 
 # Setup
 
- This a single repository that can manage multiple environments, so the first step is
- to select which one we want. Inside the **./environments/** folder, we have all the 
- configurations and variables separated by cluster.
+## TLDR
 
-| Cluster           | Folder Name   |
-| ----------------- | -------       |
-| STFC TechOps      | stfc-techops  |
-| STFC TechSDH&P    | stfc-techsdhp |
-| EngageSKA         | engage        |
-| PSI Low           | psi-low       |
-| PSI Mid           | psi-mid       |
+We already create the **setenv.sh** script with every variable mandatory.
+ Just change the first three variables and source the file on your terminal.
 
-Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
-and Ansible (installation). Like the example bellow:
+```
+source setenv.sh
+```
 
- ```
-environments/
-│     
-└─── stfc-techops/
-│   │   
-│   └─── orchestration
-│   │       *.tf
-│   │       ...
-│   └─── installation
-│       │   ansible.cfg
-│       │   inventory.yml
-│       │   ssf.config
-│       └─── groups_vars
-│           │    all.yml
-│           │    ...
-│    
-└─── ...
+The Makefile has a help target to print these variables and all available targets:
+
+```
+make help
 ```
 
 ## Environment Variables
@@ -78,7 +59,7 @@ export TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJE
 ```
 
 Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token)
-to create the Gitlab User token.
+to create the Gitlab User token with the API scope.
 
 Now, we need to pinpoint where are the Terraform files are located:
 
@@ -88,6 +69,8 @@ export TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
 ```
 
 This way the directory is absolute and always based on the environment.
+
+
 
 ## Ansible
 
@@ -105,28 +88,94 @@ group variables.
 
 # How to use
 
-The umbrella makefile only redirects to the corresponding submodule Makefile. This means
-that orchestration and installation are completely independent.
+## Make Targets
 
-For Terraform make targets we must use **orch** as first argument and **playbooks**
-, for Ansible. All the shell env variables are saved and the command arguments are 
+The Makefile available in this repository has two main targets which redirect 
+to the two different functionalities that this repository provide.
+
+For [Terraform make targets](./ska-ser-orchestration/Makefile) we must use **orch** 
+as first argument and **playbooks** , for [Ansible Targets](./ska-ser-ansible-collections/Makefile).
+All the shell env variables are saved and the command arguments are 
 carried over.
 
-For example, we are required to specify which hosts to run the playbooks to install 
-ElasticSearch cluster. For that, we need to setup the variable **PLAYBOOKS_HOSTS**. 
-It is possible to define before running the command.
+Always check the READMEs for [orchestration](./ska-ser-orchestration/README.md#Getting&#32;started)
+and [installation](./ska-ser-ansible-collections/README.md#Usage) 
+for up-to-date setup and how to use recommendations.
+
+## Project Structured
+
+ This a single repository that can manage multiple environments, so the first step is
+ to select which one we want. Inside the **./environments/** folder, we have all the 
+ configurations and variables separated by cluster.
+
+| Cluster           | Folder Name   |
+| ----------------- | -------       |
+| STFC TechOps      | stfc-techops  |
+| STFC TechSDH&P    | stfc-techsdhp |
+| EngageSKA         | engage        |
+| PSI Low           | psi-low       |
+| PSI Mid           | psi-mid       |
+
+Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
+and Ansible (installation). Like the example bellow:
+
+ ```
+environments/
+│     
+└─── stfc-techops/
+│   │   
+│   └─── orchestration
+│   │       *.tf
+│   │       clouds.yaml
+│   │       ...
+│   └─── installation
+│       │   ansible.cfg
+│       │   inventory.yml
+│       │   ssf.config
+│       └─── groups_vars
+│           │    all.yml
+│           │    ...
+│    
+└─── ...
+```
+
+## Orchestration on Openstack
+
+Any Terraform files (*.tf) inside the orchestration folder will be 
+analysed and applied. So every service/VM is described there and use the modules
+on the **ska-ser-orchestration** submodule.
+
+The **clouds.yaml** file should also be on this folder along the Terraform files.
+This is the only supported authentication for Openstack API. Go to the Openstack
+Web interface and created a new credencial on *Identity > Application Credentials*
+page.
+
+Finally, you just have to init Terraform locally and apply the changes:
 
 ```
-export PLAYBOOKS_HOSTS="central-logging"
-make playbooks elastic install
+make orch init
+make orch apply 
+```
+Recommendation: Setup the **TF_TARGET** to only apply/destroy to a specific 
+service/VM. The module name should be name on the first line of the module 
+definition:
+
+```
+make orch init
+make orch apply TF_TARGET="module.<your-module-name>"
 ```
 
-Or as command line argument:
+## Installation via Ansible
+
+The **ssf.config** and **inventory.yml** files automatically generated using:
 
 ```
-make playbooks elastic install PLAYBOOKS_HOSTS="central-logging"
+make orch generate-inventory
 ```
 
-Always check the READMEs for [orchestration](./ska-ser-orchestration/README.md)
-and [installation](./ska-ser-ansible-collections/README.md) for up-to-date variable
-requirements.
+This target call a script to retrieve the TF state from Gitlab and compiles the
+data to generate those two files and automatically moves them to the 
+**$PLAYBOOKS_ROOT_DIR**.
+
+Finally, run the installation make targets of your choosing.
+

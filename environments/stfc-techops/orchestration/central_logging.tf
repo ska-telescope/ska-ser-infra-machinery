@@ -6,7 +6,7 @@ module "central_logging" {
   }
 
   elasticsearch = {
-    name   = "central-logging"
+    name   = "central_logging"
     master = {
       data_volume_size = 250,
       docker_volume_size = 20
