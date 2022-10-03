@@ -8,17 +8,24 @@ MAKEFLAGS += --no-print-directory
 ENVIRONMENT ?=
 GITLAB_PROJECT_ID ?=
 TF_ROOT_DIR ?=
+TF_HTTP_USERNAME ?=
 PLAYBOOKS_ROOT_DIR ?=
+TF_INVENTORY_DIR ?=
 ANSIBLE_COLLECTIONS_PATHS ?=
 ANSIBLE_CONFIG ?=
+PLAYBOOKS_HOSTS ?=
 
 vars:  ### Current variables
 	@echo "ENVIRONMENT=$(ENVIRONMENT)"
 	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
+	@echo "TF_HTTP_USERNAME=$(TF_HTTP_USERNAME)"
 	@echo "TF_ROOT_DIR=$(TF_ROOT_DIR)"
+	@echo "TF_INVENTORY_DIR=$(TF_INVENTORY_DIR)"
+	@echo "TF_TARGET=$(TF_TARGET)"
 	@echo "PLAYBOOKS_ROOT_DIR=$(PLAYBOOKS_ROOT_DIR)"
 	@echo "ANSIBLE_COLLECTIONS_PATHS=$(ANSIBLE_COLLECTIONS_PATHS)"
 	@echo "ANSIBLE_CONFIG=$(ANSIBLE_CONFIG)"
+	@echo "PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)"
 
 check-env: ## Check ENVIRONMENT variable
 ifndef ENVIRONMENT
@@ -58,4 +65,4 @@ help:  ## Show Help
 	@cd ska-ser-orchestration && grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}';
 	@echo "";
 	@echo "Installation targets - make orch <target>:";
-	@cd ska-ser-ansible-collections && make help;
+	@cd ska-ser-ansible-collections && make help-from-submodule;
