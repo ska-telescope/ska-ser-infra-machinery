@@ -4,3 +4,5 @@ setenv.sh
 **/*.lock.hcl
 **/clouds.yaml
 **/*.pem
+**/inventory.yml
+**/ssh.config
