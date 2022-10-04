@@ -29,8 +29,13 @@ terraform {
 
 # -------------------- Providers -------------------- #
 provider "openstack" {
+<<<<<<< HEAD
   cloud       = var.openstack.cloud
   tenant_id   = var.openstack.project_id
   max_retries = 12 // 2 minutes
+=======
+  cloud     = var.openstack.cloud
+  tenant_id = var.openstack.project_id
+>>>>>>> ST-1355: Reformatted existing code
 }
 # --------------------------------------------------- #
