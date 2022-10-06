@@ -1,7 +1,7 @@
 # Edit with your config
-export ENVIRONMENT="<environment>"
-export TF_HTTP_USERNAME="<gitlab-username>"
-export TF_HTTP_PASSWORD="<gitlab-acess-token>" #https://gitlab.com/-/profile/personal_access_tokens
+export ENVIRONMENT="stfc-techops"
+export TF_HTTP_USERNAME="sawdyj"
+export TF_HTTP_PASSWORD="glpat-3N_e9AFk6xw7zhC3SJ3r" #https://gitlab.com/-/profile/personal_access_tokens
 
 
 # Do not change these variables

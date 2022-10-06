@@ -6,7 +6,7 @@ module "thanos" {
   }
 
   configuration = {
-    name = "thanos_james" # use an unique name
+    name = "thanos" # use an unique name
     #flavor = "l3.micro"
     image = "ubuntu-2004-lts"
     volumes = [ 
