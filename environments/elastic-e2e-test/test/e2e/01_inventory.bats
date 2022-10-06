@@ -16,6 +16,7 @@ setup() {
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
 
+    TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     if grep -q "${TEST_FILE}" <<< "${BATS_SKIP_TESTS}"; then
         skip
     fi
@@ -32,11 +33,7 @@ setup() {
 }
 
 @test 'INVENTORY: SSH config exists' {
-    assert_exist ${PLAYBOOKS_ROOT_DIR}/inventory.yml
-}
-
-@test 'INVENTORY: Ansible config exists' {
-    assert_exist ${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+    assert_exist ${PLAYBOOKS_ROOT_DIR}/ssh.config
 }
 
 @test 'INVENTORY: Failure to ping unknown group' {
