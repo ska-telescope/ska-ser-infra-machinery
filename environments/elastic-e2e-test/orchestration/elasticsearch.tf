@@ -8,7 +8,7 @@ module "elasticsearch" {
   # TODO: Set to 1 master and 1 data when playbook supports it
 
   elasticsearch = {
-    name = "elasticsearch-e2e-test"
+    name = "elastic-e2e-test"
     master = {
       size               = 2
       data_volume_size   = 10
