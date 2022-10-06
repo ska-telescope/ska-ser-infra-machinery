@@ -1,2 +1,2 @@
 debug: false
-ansible_ssh_timeout: 10
+ansible_ssh_timeout: 30
