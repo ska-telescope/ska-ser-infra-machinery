@@ -1,5 +1,5 @@
 env.sh
-setenv.sh
+setenv*.sh
 **/.terraform
 **/*.lock.hcl
 **/clouds.yaml
