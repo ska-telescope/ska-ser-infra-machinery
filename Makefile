@@ -1,4 +1,3 @@
-.DEFAULT_GOAL := help
 SHELL=/usr/bin/env bash
 MAKEFLAGS += --no-print-directory
 
@@ -7,13 +6,12 @@ MAKEFLAGS += --no-print-directory
 
 ENVIRONMENT ?=
 TF_HTTP_USERNAME ?=
-TF_INVENTORY_DIR ?=
-PLAYBOOKS_HOSTS ?=
 
 -include .make/terraform.mk
 -include .make/python.mk
 -include PrivateRules.mak
 
+<<<<<<< HEAD
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
 GITLAB_PROJECT_ID?="39377838"
 TF_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
@@ -28,8 +26,28 @@ ANSIBLE_COLLECTIONS_PATHS?="${BASE_PATH}/ska-ser-ansible-collections"
 EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
 	TF_HTTP_PASSWORD="$(TF_HTTP_PASSWORD)" \
+=======
+BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
+GITLAB_PROJECT_ID?=39377838
+ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
+ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
+ANSIBLE_COLLECTIONS_PATHS?="$(BASE_PATH)/ska-ser-ansible-collections"
+
+TF_INVENTORY_DIR ?= $(PLAYBOOKS_ROOT_DIR)
+PLAYBOOKS_HOSTS ?=
+
+EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
+	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
+	TF_HTTP_PASSWORD="$(TF_HTTP_PASSWORD)" \
+>>>>>>> ST-1355: Added elastic-e2e-test environment
 	BASE_PATH="$(BASE_PATH)" \
 	GITLAB_PROJECT_ID="$(GITLAB_PROJECT_ID)" \
+	ENVIRONMENT_ROOT_DIR="$(ENVIRONMENT_ROOT_DIR)" \
 	TF_ROOT_DIR="$(TF_ROOT_DIR)" \
 	TF_HTTP_ADDRESS="$(TF_HTTP_ADDRESS)" \
 	TF_HTTP_LOCK_ADDRESS="$(TF_HTTP_LOCK_ADDRESS)" \
@@ -52,10 +70,18 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	KUBECONFIG=$(KUBECONFIG) \
 	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD)
 
+BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/test
+SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
+BATS_TEST_TARGETS ?= "unit e2e"
+BATS_CORE_VERSION = v1.8.0
+
+-include .make/base.mk
+-include .make/bats.mk
+
 vars:  ### Current variables
 	@echo "BASE_PATH=$(BASE_PATH)"
 
-check-env: ## Check ENVIRONMENT variable
+check-env: ## Check environment configuration variables
 ifndef ENVIRONMENT
 	$(error ENVIRONMENT is undefined)
 endif
@@ -87,6 +113,23 @@ endif
 
 orch: check-env ## Access Orchestration submodule targets
 	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
+
+ifeq ($(SKIP_BATS_TESTS),true)
+test: check-env
+	@echo "No tests found for '$(ENVIRONMENT)'"
+else
+test: check-env
+	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+endif
+
+test-install: check-env
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+
+test-uninstall: check-env
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
+
+test-reinstall: test-uninstall test-install
 
 print_targets:
 	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {p=index($$1,":")} {printf "\033[36m%-30s\033[0m %s\n", substr($$1,p+1), $$2}';

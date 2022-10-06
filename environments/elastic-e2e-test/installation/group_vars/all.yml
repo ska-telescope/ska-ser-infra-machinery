@@ -1,0 +1,2 @@
+debug: false
+ansible_ssh_timeout: 10
