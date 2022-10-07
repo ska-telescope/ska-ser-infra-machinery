@@ -10,13 +10,11 @@ setup() {
     load "../scripts/bats-assert/load"
     load "../src/functions"
 
+    shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
+
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
-
-    if grep -q "${TEST_FILE}" <<< "${BATS_SKIP_TESTS}"; then
-        skip
-    fi
 }
 
 @test 'FUNCTIONS: parsePlan no changes' {

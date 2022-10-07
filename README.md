@@ -8,9 +8,9 @@ for orchestration and [Ansible](https://www.ansible.com/) for installation/confi
 
 It does not have any direct dependencies but check the READMEs of
 each submodule for an updated list of requirements:
-* [SKA Orchestration](./ska-ser-orchestration/README.md#prerequisites)
-* [SKA Ansible Collections](./ska-ser-ansible-collections/README.md#requirements)
-* [SKA Makefile](./.make/README.md)
+* [SKA Orchestration](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/README.md#prerequisites)
+* [SKA Ansible Collections](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/README.mdska-ser-ansible-collections/README.md#requirements)
+* [SKA Makefile](https://gitlab.com/ska-telescope/sdi/ska-cicd-makefile/-/blob/master/README.md)
 
 # Setup
 
@@ -48,13 +48,14 @@ BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
 TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)terraform/state/$(ENVIRONMENT)-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)terraform/state/$(ENVIRONMENT)-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)terraform/state/$(ENVIRONMENT)-terraform-state/lock
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
-ANSIBLE_CONFIG=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
-ANSIBLE_SSH_ARGS=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
-ANSIBLE_INVENTORY=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
+TF_INVENTORY_DIR?= $(PLAYBOOKS_ROOT_DIR)
+ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
+ANSIBLE_INVENTORY?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 ```
 
@@ -69,13 +70,13 @@ The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective 
 The Makefile available in this repository has two main targets which redirect
 to the two different functionalities that this repository provide.
 
-For [Terraform make targets](./ska-ser-orchestration/Makefile) we must use **orch**
-as first argument and **playbooks** , for [Ansible Targets](./ska-ser-ansible-collections/Makefile).
+For [Terraform make targets](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/Makefile) we must use **orch**
+as first argument and **playbooks** , for [Ansible Targets](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/Makefile).
 All the shell env variables are saved and the command arguments are
 carried over.
 
-Always check the READMEs for [orchestration](./ska-ser-orchestration/README.md#Getting&#32;started)
-and [installation](./ska-ser-ansible-collections/README.md#Usage)
+Always check the READMEs for [orchestration](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/README.md)
+and [installation](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/README.md)
 for up-to-date setup and how to use recommendations.
 
 ## Testing
@@ -98,17 +99,37 @@ make test
 ```
 
 By default, this will run the tests in - relative to *test/* - the environment's **unit/** and **e2e/** directories.
-We can skip any test in the runnable test targets by setting *BATS_SKIP_TESTS* using a comma separated list:
-
-```
-make test BATS_SKIP_TESTS="<test file name>.bats,[other targets]"
-```
-
-The same way, we can trigger tests targetting individual targets, both relative to **test/** or by specifying absolute paths in
+We can trigger tests targetting individual targets, both relative to **test/** or by specifying absolute paths in
 *BATS_TEST_TARGETS*, using a comma separated list:
 
 ```
 make test BATS_TEST_TARGETS="<test file name>.bats,[other targets]"
+```
+
+We can skip any test files in the runnable test targets by setting *BATS_SKIP_TESTS* using a comma separated list. This
+supports both filenames and test case names:
+
+```
+make test BATS_SKIP_TESTS="<test case name>,<test file name>.bats,[other targets]"
+
+# example: make test BATS_SKIP_TESTS="INVENTORY: Ansible inventory exists,99_orchestration_teardown.bats"
+```
+
+We can also run specific test cases using included in the runnable targets. This can be achieved by adding its name
+(full or short name) by setting *BATS_RUN_TESTS* in a comma separated list:
+
+```
+make test BATS_RUN_TESTS="<test case name>,[other targets]" 
+```
+
+## Ad hoc
+
+The intances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
+purposes) to do manual ansible work, you can setup your shell and issue ansible commands from any working directory
+agains the environment's inventory. Please, use with caution:
+
+```
+eval $(make export)
 ```
 
 ## Project Structure

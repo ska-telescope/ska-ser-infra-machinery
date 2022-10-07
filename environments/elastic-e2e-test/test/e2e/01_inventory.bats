@@ -15,11 +15,9 @@ setup() {
     load "../scripts/bats-file/load"
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
+    load "../src/functions"
 
-    TEST_FILE=$(basename ${BATS_TEST_FILENAME})
-    if grep -q "${TEST_FILE}" <<< "${BATS_SKIP_TESTS}"; then
-        skip
-    fi
+    shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
 }
 
 @test 'INVENTORY: Generate inventory' {

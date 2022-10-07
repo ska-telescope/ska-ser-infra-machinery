@@ -1,0 +1,27 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Elasticsearch client works with cluster
+  hosts: all
+  tasks:
+  - name: Gather elasticsearch nodes
+    set_fact:
+      nodes: "{{ nodes|default([]) + groups[item] }}"
+    with_items: "{{ elasticsearch_node_groups.split(',') }}"
+  - name: Client can reach elasticsearch API port
+    ansible.builtin.wait_for:
+      port: "{{ elasticsearch_api_port | int }}"
+      host: "{{ hostvars[item]['ip'] }}"
+      timeout: 60
+    loop: "{{ nodes }}"
+  - name: Unauthorized Client -> Internal access to api works
+    ansible.builtin.uri:
+      url: "http://{{ hostvars[item].ip }}:{{ elasticsearch_api_port }}{{ elasticsearch_health_endpoint }}"
+      method: GET
+      force: yes
+      return_content: yes
+      status_code: [200]
+    register: health_info
+    retries: 3
+    timeout: 60
+    until: "'green' in health_info.content"
+    loop: "{{ nodes }}"
