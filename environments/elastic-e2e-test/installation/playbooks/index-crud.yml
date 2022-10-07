@@ -1,0 +1,71 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Elasticsearch client works with cluster
+  hosts: all
+  tasks:
+  - name: Set test variables
+    set_fact:
+      event_messages: ["these", "are", "messages"]
+      elasticsearch_ip: "{{ hostvars[groups[elasticsearch_node_groups][0]].ip }}"
+  - name: Unauthorized Client -> Get index works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      method: GET
+      force: yes
+      status_code: [200, 404]
+    register: index_info
+  - name: Unauthorized Client -> Create index works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      method: PUT
+      force: yes
+      status_code: [200]
+    when: index_info.status == 404
+  - name: Unauthorized Client -> Get index works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      method: GET
+      force: yes
+      status_code: [200]
+  - name: Unauthorized Client -> Delete all events works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_delete_endpoint }}"
+      method: POST
+      body_format: json
+      body: |
+        {
+          "query": {
+            "match_all": {}
+          }
+        }
+      force: yes
+      status_code: [200]
+  - name: Unauthorized Client -> Send data works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_endpoint }}"
+      method: POST
+      body_format: json
+      body: |
+        {
+          "message": "{{ item }}"
+        }
+      force: yes
+      status_code: [201]
+    loop: "{{ event_messages }}"
+  - name: Unauthorized Client -> Count docs works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_count_endpoint }}"
+      method: GET
+      status_code: [200]
+    register: events
+    failed_when: '(events.json.count | int) != (event_messages | length)'
+  - name: debug
+    debug:
+      var: events
+  - name: Unauthorized Client -> Delete index works
+    ansible.builtin.uri:
+      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      method: DELETE
+      force: yes
+      status_code: [200]
+  

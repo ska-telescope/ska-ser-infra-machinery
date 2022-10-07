@@ -5,24 +5,22 @@
   tasks:
   - name: Elasticsearch running on all nodes
     ansible.builtin.wait_for:
-      port: "{{elasticsearch_transport_port | int}}"
+      port: "{{ elasticsearch_transport_port | int }}"
       host: "localhost"
-      delay: 5
       timeout: 60
   - name: Elasticsearch API running on all nodes
     ansible.builtin.wait_for:
-      port: "{{elasticsearch_api_port | int}}"
+      port: "{{ elasticsearch_api_port | int }}"
       host: "localhost"
-      delay: 5
       timeout: 60
   - name: All nodes respond to the api with a 'green' status
     ansible.builtin.uri:
-      url: "http://localhost:{{elasticsearch_api_port}}/{{elasticsearch_health_endpoint}}"
+      url: "http://localhost:{{ elasticsearch_api_port }}{{ elasticsearch_health_endpoint }}"
       method: GET
       force: yes
       return_content: yes
       status_code: [200]
     register: health_info
     retries: 3
-    delay: 5
+    timeout: 60
     until: "'green' in health_info.content"

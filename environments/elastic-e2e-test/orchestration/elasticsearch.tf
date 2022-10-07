@@ -5,12 +5,10 @@ module "elasticsearch" {
     openstack = openstack
   }
 
-  # TODO: Set to 1 master and 1 data when playbook supports it
-
   elasticsearch = {
     name = var.environment
     master = {
-      size               = 2
+      size               = 3
       data_volume_size   = 10
       docker_volume_size = 10
     }
@@ -22,6 +20,13 @@ module "elasticsearch" {
     kibana = {
       size               = 0
       docker_volume_size = 10
+    }
+    loadbalancer = {
+      deploy             = false
+      docker_volume_size = 10
+      floating_ip = {
+        create = true
+      }
     }
   }
 }
