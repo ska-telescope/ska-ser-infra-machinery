@@ -41,7 +41,7 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
 endif
 
 playbooks: check-env ## Access Ansible Collections submodule targets
-	cd ska-ser-ansible-collections && $(MAKE) $(TARGET_ARGS)
+	@cd ska-ser-ansible-collections && $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
 ifeq (orch,$(firstword $(MAKECMDGOALS)))

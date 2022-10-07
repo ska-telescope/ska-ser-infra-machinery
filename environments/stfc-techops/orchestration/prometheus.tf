@@ -7,8 +7,7 @@ module "prometheus" {
   }
 
   configuration = {
-    name = "prometheus_podman" # use an unique name
-    #flavor = "l3.micro"
+    name = "prometheus1"
     image = "ubuntu-2004-lts"
     volumes = [ 
       {
@@ -22,6 +21,8 @@ module "prometheus" {
         size = 200
       } 
     ]
+    applications = ["prometheus", "thanos_sidecar", "grafana", "node-exporter"] 
   }
+
 }
 

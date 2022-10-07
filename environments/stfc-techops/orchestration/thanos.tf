@@ -26,5 +26,8 @@ module "thanos" {
         size = 50
       }  
     ]
+    applications = ["thanos", "node_exporter"] 
   }
+
+  
 }
