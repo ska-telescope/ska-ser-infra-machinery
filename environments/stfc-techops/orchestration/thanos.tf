@@ -9,6 +9,7 @@ module "thanos" {
     name = "thanos" # use an unique name
     #flavor = "l3.micro"
     image = "ubuntu-2004-lts"
+    applications = ["thanos", "node_exporter"] 
     volumes = [ 
       {
         mount_point = "/var/lib/containers"
@@ -26,7 +27,6 @@ module "thanos" {
         size = 50
       }  
     ]
-    applications = ["thanos", "node_exporter"] 
   }
 
   

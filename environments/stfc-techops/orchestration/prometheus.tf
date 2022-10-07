@@ -9,6 +9,7 @@ module "prometheus" {
   configuration = {
     name = "prometheus1"
     image = "ubuntu-2004-lts"
+    applications = ["prometheus", "thanos_sidecar", "grafana", "node_exporter"] 
     volumes = [ 
       {
         mount_point = "/var/lib/containers"
@@ -21,7 +22,6 @@ module "prometheus" {
         size = 200
       } 
     ]
-    applications = ["prometheus", "thanos_sidecar", "grafana", "node-exporter"] 
   }
 
 }
