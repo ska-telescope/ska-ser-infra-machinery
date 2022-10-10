@@ -21,6 +21,8 @@ PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
 ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
 ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
 
+-include PrivateRules.mak
+
 vars:  ### Current variables
 	@echo "ENVIRONMENT=$(ENVIRONMENT)"
 	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
