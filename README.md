@@ -16,13 +16,6 @@ each submodule for an updated list of requirements:
 
 ## TLDR
 
-We already create the **setenv.sh** script with every variable mandatory.
- Just change the first three variables and source the file on your terminal.
-
-```
-source setenv.sh
-```
-
 The Makefile has a help target to print these variables and all available targets:
 
 ```
@@ -36,12 +29,12 @@ variables when running the Makefile targets to avoid any deployment/installation
 wrong cluster my mistake.
 
 So, the first variable to setup is the **ENVIRONMENT**. Like the name suggest, it points 
-to the environment we want to work with.
+to the environment we want to work with. For doing that please add a PrivateRules.mak with the following variables
 
 ```
-export ENVIRONMENT="stfc-techops"
-export TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
-export TF_HTTP_PASSWORD="<user-token>"
+ENVIRONMENT="stfc-techops"
+TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
+TF_HTTP_PASSWORD="<user-token>"
 ```
 
 Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the API scope. If this variable is empty, the Makefile targets will not run for security reasons.
