@@ -271,8 +271,8 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
         prometheus_prometheus:
           hosts:
-            prometheus_podman:
-              ansible_host: 192.168.99.154
+            prometheus:
+              ansible_host: 192.168.99.153
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               calc_create_data2_vol: 'false'
@@ -866,7 +866,7 @@ all:
             nexus: {}
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
         systems_k8s1_master:
           hosts:
             systems-k8s1-master-0: {}
@@ -1013,7 +1013,7 @@ all:
             nexus: {}
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
         systems_k8s1_master:
           hosts:
             systems-k8s1-master-0: {}
@@ -1124,7 +1124,7 @@ all:
       children:
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
     cluster_server:
       children:
         terminus_terminus:
@@ -1300,7 +1300,7 @@ all:
             nexus: {}
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
         systems_k8s1_master:
           hosts:
             systems-k8s1-master-0: {}
@@ -1469,7 +1469,7 @@ all:
             nexus: {}
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
         systems_k8s1_master:
           hosts:
             systems-k8s1-master-0: {}
@@ -1601,7 +1601,7 @@ all:
       children:
         prometheus_prometheus:
           hosts:
-            prometheus_podman: {}
+            prometheus: {}
     rgws:
       children:
         systems_storage1_master:

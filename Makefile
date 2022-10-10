@@ -6,26 +6,36 @@ MAKEFLAGS += --no-print-directory
 .DEFAULT_GOAL := help
 
 ENVIRONMENT ?=
-GITLAB_PROJECT_ID ?=
-TF_ROOT_DIR ?=
 TF_HTTP_USERNAME ?=
-PLAYBOOKS_ROOT_DIR ?=
 TF_INVENTORY_DIR ?=
-ANSIBLE_COLLECTIONS_PATHS ?=
-ANSIBLE_CONFIG ?=
 PLAYBOOKS_HOSTS ?=
+
+# Do not change these variables
+BASE_PATH="$(shell cd "$(dirname "$1")"; pwd -P)"
+GITLAB_PROJECT_ID="39377838"
+TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
+TF_HTTP_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
+TF_HTTP_LOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
+ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
+ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
 
 vars:  ### Current variables
 	@echo "ENVIRONMENT=$(ENVIRONMENT)"
 	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
 	@echo "TF_HTTP_USERNAME=$(TF_HTTP_USERNAME)"
 	@echo "TF_ROOT_DIR=$(TF_ROOT_DIR)"
-	@echo "TF_INVENTORY_DIR=$(TF_INVENTORY_DIR)"
-	@echo "TF_TARGET=$(TF_TARGET)"
 	@echo "PLAYBOOKS_ROOT_DIR=$(PLAYBOOKS_ROOT_DIR)"
 	@echo "ANSIBLE_COLLECTIONS_PATHS=$(ANSIBLE_COLLECTIONS_PATHS)"
 	@echo "ANSIBLE_CONFIG=$(ANSIBLE_CONFIG)"
+	@echo "BASE_PATH=$(BASE_PATH)"
+	@echo "TF_HTTP_ADDRESS=$(TF_HTTP_ADDRESS)"
+	@echo "TF_HTTP_LOCK_ADDRESS=$(TF_HTTP_LOCK_ADDRESS)"
+	@echo "TF_HTTP_UNLOCK_ADDRESS=$(TF_HTTP_UNLOCK_ADDRESS)"
 	@echo "PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)"
+	@echo "TF_INVENTORY_DIR=$(TF_INVENTORY_DIR)"
+	@echo "TF_TARGET=$(TF_TARGET)"
 
 check-env: ## Check ENVIRONMENT variable
 ifndef ENVIRONMENT
