@@ -40,51 +40,31 @@ to the environment we want to work with.
 
 ```
 export ENVIRONMENT="stfc-techops"
-```
-
-If this variable is empty, the Makefile targets will not run for security reasons.
-
-### Terraform
-
-Next, we need to configure the Terraform specifics variables for the 
-Gitlab's backend:
-
-```
-export GITLAB_PROJECT_ID="<project-id>"
-export TF_HTTP_USERNAME="<gitlab-username>"
+export TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
 export TF_HTTP_PASSWORD="<user-token>"
-export TF_HTTP_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
-export TF_HTTP_LOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-export TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
 ```
 
-Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token)
-to create the Gitlab User token with the API scope.
+Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the API scope. If this variable is empty, the Makefile targets will not run for security reasons.
 
-Now, we need to pinpoint where are the Terraform files are located:
+### Other important variables
 
-```
-export BASE_PATH="$(cd "$(dirname "$1")"; pwd -P)"
-export TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
-```
-
-This way the directory is absolute and always based on the environment.
-
-
-
-## Ansible
-
-Following the same rationale, we need to specify where the ansible files/variables 
-are placed:
+For Terraform the following specifics variables for the Gitlab's backend are already set in the Makefile:
 
 ```
-export PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
-export ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
-export ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
+BASE_PATH="$(shell cd "$(dirname "$1")"; pwd -P)"
+GITLAB_PROJECT_ID="39377838"
+TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
+TF_HTTP_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
+TF_HTTP_LOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
+ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
+ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
 ```
 
-The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective 
-group variables.
+Change them carefully if you really need it. 
+
+The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective  group variables.
 
 # How to use
 
