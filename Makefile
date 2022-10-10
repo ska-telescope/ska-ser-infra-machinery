@@ -41,6 +41,12 @@ check-env: ## Check ENVIRONMENT variable
 ifndef ENVIRONMENT
 	$(error ENVIRONMENT is undefined)
 endif
+ifndef TF_HTTP_USERNAME
+	$(error TF_HTTP_USERNAME is undefined)
+endif
+ifndef TF_HTTP_PASSWORD
+	$(error TF_HTTP_PASSWORD is undefined)
+endif
 
 # If the first argument is "install"...
 ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
