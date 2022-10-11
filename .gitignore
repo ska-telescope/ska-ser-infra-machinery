@@ -1,8 +1,10 @@
 env.sh
-setenv.sh
+setenv*.sh
 **/.terraform
 **/*.lock.hcl
 **/clouds.yaml
 **/*.pem
 **/inventory.yml
 **/ssh.config
+setenv.sh
+PrivateRules.mak

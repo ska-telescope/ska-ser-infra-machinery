@@ -1,5 +1,4 @@
-
-module "prometheus" {
+module "thanos" {
   source   = "../../../ska-ser-orchestration/openstack-instance"
   defaults = var.defaults
   providers = {
@@ -7,9 +6,9 @@ module "prometheus" {
   }
 
   configuration = {
-    name = "prometheus1"
+    name = "thanos"
     image = "ubuntu-2004-lts"
-    applications = ["prometheus", "thanos_sidecar", "grafana", "node_exporter"] 
+    applications = ["thanos", "node_exporter"] 
     volumes = [ 
       {
         mount_point = "/var/lib/containers"
@@ -17,12 +16,17 @@ module "prometheus" {
         size = 20
       },
       {
-        mount_point = "/var/lib/prometheus"
-        name = "prometheus_wal"
-        size = 200
-      } 
+        mount_point = "/etc/thanos/data/dir"
+        name = "thanos_data"
+        size = 50
+      },
+       {
+        mount_point = "/etc/thanos/thanos-compact"
+        name = "thanos_compact"
+        size = 50
+      }  
     ]
   }
 
+  
 }
-
