@@ -14,19 +14,7 @@ localuser: ubuntu
 
 k8s_external_dns_entry: k8s.stfc.skao.int
 
-archiver_ip: "192.168.99.229"
-archiver_user: "eda_admin"
-archiver_password: "*************"
-archiver_default_db: "tango"
-grafana_host: "192.168.99.154"
-grafana_port: 3000
-grafana_user: "admin"
-grafana_admin_password: "*************"
 grafana_disable_admin_account_creation: "false"
-k8s_loadbalancer: "10.200.0.63"
-k8s_master: "10.200.1.129"
-tangodb_password: "*************"
-
 
 # ST-1273: AzureAD Grafana Integration Variables
 k8s_external_dns_entry: k8s.stfc.skao.int
