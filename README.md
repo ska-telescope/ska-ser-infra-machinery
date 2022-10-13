@@ -127,7 +127,7 @@ we've created a set of core functions to handle that. For that reason, to write 
 the following boilerplate code:
 
 ```
-load "../src/core"
+load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER} # evaluates if it should abort test based on previous tests
 
 setup_file() {
@@ -141,7 +141,7 @@ setup() {
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
     # Add other modules
-    # e.g: load "../src/core"
+    # e.g: load "../resources/core"
 
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}" $ checks if test should be skipped based on the name
     prepareTest # prepares to evaluate test outcome
