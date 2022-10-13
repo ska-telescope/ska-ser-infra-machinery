@@ -17,5 +17,7 @@ module "central_logging" {
     kibana = {
       size = 0
     }
+    loadbalancer = {
+    }
   }
 }
