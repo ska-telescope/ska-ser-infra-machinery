@@ -1,4 +1,4 @@
-load "../src/core"
+load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {

@@ -1,4 +1,4 @@
-load "../src/core"
+load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
@@ -19,7 +19,7 @@ setup() {
     load "../scripts/bats-file/load"
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
-    load "../src/utils"
+    load "../resources/utils"
 
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
     prepareTest
@@ -30,45 +30,48 @@ setup() {
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Clean' {
+@test 'ORCHESTRATION: Clean' {
     cd ${BASE_PATH}
     run make orch clean
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Init' {
+@test 'ORCHESTRATION: Init' {
     cd ${BASE_PATH}
+    export TF_ARGUMENTS="-input=false"
     run make orch init
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy Plan' {
+@test 'ORCHESTRATION: Plan' {
     cd ${BASE_PATH}
     export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
-    run make orch plan-destroy
+    run make orch plan
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
-    assert_equal ${PLAN_TO_ADD} 0
+    # Allow nothing to be added if infrastructure is up to date
+    # or only to be added, if it is non existing.
     assert_equal ${PLAN_TO_UPDATE} 0
-    assert [ ${PLAN_TO_DESTROY} -gt 0 ]
+    assert_equal ${PLAN_TO_DESTROY} 0
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy' {
+@test 'ORCHESTRATION: Apply' {
     cd ${BASE_PATH}
     export TF_ARGUMENTS="-input=false -no-color"
     export TF_AUTO_APPROVE=true
-    run make orch destroy
+    run make orch apply
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy is idempotent' {
+@test 'ORCHESTRATION: Plan is idempotent' {
     cd ${BASE_PATH}
     export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
-    run make orch plan-destroy
+    run make orch plan
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
+    # Allow nothing to be added, changed or destroyed
     assert_equal ${PLAN_TO_ADD} 0
     assert_equal ${PLAN_TO_UPDATE} 0
     assert_equal ${PLAN_TO_DESTROY} 0

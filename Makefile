@@ -89,7 +89,7 @@ ENVIRONMENT_VARS ?= \
 	TF_INVENTORY_DIR="$(TF_INVENTORY_DIR)"
 >>>>>>> ST-1355: Refactored makefile and tests
 
-BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/test
+BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/tests
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_TEST_TARGETS ?= "unit e2e"
 BATS_CORE_VERSION = v1.8.0

@@ -1,4 +1,4 @@
-load "../src/core"
+load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
@@ -11,7 +11,7 @@ setup() {
     load "../scripts/bats-file/load"
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
-    load "../src/utils"
+    load "../resources/utils"
 
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
     prepareTest
