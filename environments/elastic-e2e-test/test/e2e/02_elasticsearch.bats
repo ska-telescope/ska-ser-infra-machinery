@@ -1,3 +1,6 @@
+load "../src/core"
+shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
+
 setup_file() {
     REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR"
     for VAR in ${REQUIRED_ENV_VARS}; do
@@ -12,9 +15,9 @@ setup() {
     load "../scripts/bats-file/load"
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
-    load "../src/functions"
 
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
+    prepareTest
 
     ELASTICSEARCH_CLUSTER_NAME=${ENVIRONMENT}
 }
@@ -55,4 +58,8 @@ setup() {
         -e "elasticsearch_index=${ELASTICSEARCH_CLUSTER_NAME}-idx" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/index-crud.yml
     assert_success
+}
+
+teardown() {
+    finalizeTest
 }

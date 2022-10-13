@@ -122,6 +122,51 @@ We can also run specific test cases using included in the runnable targets. This
 make test BATS_RUN_TESTS="<test case name>,[other targets]" 
 ```
 
+Also, to overcome some bats-core lack of functionality - for instance, stopping execution of tests when a test case fails -
+we've created a set of core functions to handle that. For that reason, to write a test file, one **NEEDS** to use
+the following boilerplate code:
+
+```
+load "../src/core"
+shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER} # evaluates if it should abort test based on previous tests
+
+setup_file() {
+    # Write code here that should be executed once per test file
+    # before running tests
+}
+
+setup() {
+    # Load modules for tests in this file
+    load "../scripts/bats-file/load"
+    load "../scripts/bats-support/load"
+    load "../scripts/bats-assert/load"
+    # Add other modules
+    # e.g: load "../src/core"
+
+    shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}" $ checks if test should be skipped based on the name
+    prepareTest # prepares to evaluate test outcome
+
+    # Write code here that should be executed once per test case
+    # before running test
+}
+
+@test '<test file id>: <test case name>' {
+    # Write test case code
+}
+
+teardown() {
+    finalizeTest # stores test outcome
+
+    # Write code here that should be executed once per test case
+    # after running test
+}
+
+teardown_file() {
+    # Write code here that should be executed once per test case
+    # after running tests
+}
+```
+
 ## Ad hoc
 
 The intances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
