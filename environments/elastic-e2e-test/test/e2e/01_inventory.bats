@@ -1,3 +1,6 @@
+load "../src/core"
+shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
+
 setup_file() {
     REQUIRED_ENV_VARS="BASE_PATH PLAYBOOKS_ROOT_DIR"
     for VAR in ${REQUIRED_ENV_VARS}; do
@@ -15,9 +18,9 @@ setup() {
     load "../scripts/bats-file/load"
     load "../scripts/bats-support/load"
     load "../scripts/bats-assert/load"
-    load "../src/functions"
 
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
+    prepareTest
 }
 
 @test 'INVENTORY: Generate inventory' {
@@ -41,8 +44,12 @@ setup() {
     assert_failure
 }
 
-@test 'INVENTORY: Ping all instances' {
+@test 'INVENTORY: Ping all instances' { # bats-ignore-failure
     cd ${BASE_PATH}
     run make playbooks ping
     assert_success
+}
+
+teardown() {
+    finalizeTest
 }
