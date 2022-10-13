@@ -5,7 +5,9 @@ MAKEFLAGS += --no-print-directory
 .PHONY: vars help check-env playbooks orch
 .DEFAULT_GOAL := help
 
+DATACENTER ?=
 ENVIRONMENT ?=
+SERVICE ?=
 TF_HTTP_USERNAME ?=
 TF_INVENTORY_DIR ?=
 PLAYBOOKS_HOSTS ?=
@@ -13,16 +15,18 @@ PLAYBOOKS_HOSTS ?=
 -include PrivateRules.mak
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
-GITLAB_PROJECT_ID?="39377838"
-TF_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
-TF_HTTP_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
-TF_HTTP_LOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-TF_HTTP_UNLOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-PLAYBOOKS_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
-ANSIBLE_CONFIG?="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
-ANSIBLE_COLLECTIONS_PATHS?="${BASE_PATH}/ska-ser-ansible-collections"
+GITLAB_PROJECT_ID?=39377838
+TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation
+ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
+ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
 
-EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
+EXTRA_VARS ?= DATACENTER="$(DATACENTER)" \
+	ENVIRONMENT="$(ENVIRONMENT)" \
+	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
 	TF_HTTP_PASSWORD="$(TF_HTTP_PASSWORD)" \
 	BASE_PATH="$(BASE_PATH)" \
