@@ -5,26 +5,18 @@ production: true
 k8s_api_server_addr: "10.200.0.63"
 k8s_api_server_port: "6443"
 k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
-k8s_certificate_authority: ""
 k8s_client_certificate: "/etc/prometheus/ca.crt"
-k8s_client_key: ""
 k8s_bearer_token: "/etc/prometheus/bearer.token"
-k8s_username: ""
 localuser: ubuntu
 
 k8s_external_dns_entry: k8s.stfc.skao.int
 
 grafana_disable_admin_account_creation: "false"
 
-# ST-1273: AzureAD Grafana Integration Variables
 k8s_external_dns_entry: k8s.stfc.skao.int
-azuread_client_id:
-azuread_client_secret:
-azuread_tenant_id:
-
+project_name: "SKA-TechOps"
 
 prometheus_datacentre: stfc-ska-monitor
-
 
 prometheus_global:
   scrape_interval: 15s
@@ -70,11 +62,6 @@ prometheus_scrape_configs:
       - 'node_exporter.json'
     metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
 
-  # - job_name: "gitlab-runner"
-  #   file_sd_configs:
-  #   - files:
-  #     - 'gitlab_exporter.json'
-
   - job_name: "gitlab-runner"
     static_configs:
     - targets:
@@ -95,16 +82,6 @@ prometheus_scrape_configs:
     - files:
       - 'kube-proxy.json'
     metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
-
-  # - job_name: "kube-state-metrics"
-  #   file_sd_configs:
-  #   - files:
-  #     - 'kubernetes_exporter.json'
-
-  # - job_name: "k8stelemetry"
-  #   file_sd_configs:
-  #   - files:
-  #     - 'kubernetes_telemetry.json'
 
   - job_name: "kube-state-metrics"
     static_configs:
