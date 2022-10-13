@@ -1,5 +1,5 @@
 module "central_logging" {
-  source   = "../../../ska-ser-orchestration/openstack-elasticsearch-cluster"
+  source   = "../../../../../ska-ser-orchestration/openstack-elasticsearch-cluster"
   defaults = var.defaults
   providers = {
     openstack = openstack

@@ -1,6 +1,6 @@
 
 module "prometheus" {
-  source   = "../../../ska-ser-orchestration/openstack-instance"
+  source   = "../../../../../ska-ser-orchestration/openstack-instance"
   defaults = var.defaults
   providers = {
     openstack = openstack
