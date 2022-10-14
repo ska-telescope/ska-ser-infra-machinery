@@ -118,4 +118,4 @@ node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prom
 thanos_query_endpoints:
 - 192.168.99.153:10901
 - 192.168.99.31:19090
-
+- sdhp.stfc.skao.int:10901
