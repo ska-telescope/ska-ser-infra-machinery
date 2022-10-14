@@ -120,6 +120,17 @@ environments/
 
 To add a new datacenter/environment/service, all that is required is to create the appropriate folder structure under [environments](environments/), add the necessary files there for orchestration and installation, and to ensure that the required variables are set in the PrivateRules.mak file as previously explained.
 
+## Modifying the Project Structure
+
+If the folder structure needs to be altered in some way, e.g. if a service or datacenter must be renamed, then the state file needs to be updated since its name directly references the folder structure.
+
+After the folder structure is updated, you must run the following commands for all services affected by the migration (by updating the PrivateRules.mak between each execution):
+
+```
+make orch init
+make orch refresh
+```
+
 ## Orchestration on Openstack
 
 Any Terraform files (*.tf) inside the orchestration folder will be 
