@@ -8,6 +8,7 @@ k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
 k8s_client_certificate: "/etc/prometheus/ca.crt"
 k8s_bearer_token: "/etc/prometheus/bearer.token"
 localuser: ubuntu
+gateway_host: terminus
 
 k8s_external_dns_entry: k8s.stfc.skao.int
 

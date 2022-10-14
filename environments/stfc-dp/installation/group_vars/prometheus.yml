@@ -9,6 +9,7 @@ k8s_client_certificate: "/etc/prometheus/ca.crt"
 k8s_bearer_token: "/etc/prometheus/bearer.token"
 k8s_username: ""
 localuser: ubuntu
+gateway_host: jupiter
 
 k8s_external_dns_entry: sdhp.stfc.skao.int
 
@@ -16,7 +17,7 @@ grafana_disable_admin_account_creation: "false"
 
 project_name: "SKA-TechSDH&P"
 
-prometheus_datacentre: stfc-ska-monitor
+prometheus_datacentre: stfc-dp-ska-monitor
 
 prometheus_global:
   scrape_interval: 15s
