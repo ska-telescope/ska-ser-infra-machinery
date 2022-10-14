@@ -28,11 +28,15 @@ Like the submodules for Terraform and Ansible, this repository does not have any
 variables when running the Makefile targets to avoid any deployment/installation on the
 wrong cluster my mistake.
 
-So, the first variable to setup is the **ENVIRONMENT**. Like the name suggest, it points 
-to the environment we want to work with. For doing that please add a PrivateRules.mak with the following variables
+So, the first variables to setup are the **DATACENTER**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
+to the datacenter, environment and service we want to work with. These map to the folder structure under [environments](environments/) (`environments/<datacenter>/<environment>/<service>`), which contains the orchestration and installation files.
+
+For doing that please add a PrivateRules.mak with the following variables:
 
 ```
-ENVIRONMENT="stfc-techops"
+DATACENTER="<datacenter>"
+ENVIRONMENT="<environment>"
+SERVICE="<service>"
 TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
 TF_HTTP_PASSWORD="<user-token>"
 ```
@@ -44,15 +48,15 @@ Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_token
 For Terraform the following specifics variables for the Gitlab's backend are already set in the Makefile:
 
 ```
-BASE_PATH="$(shell cd "$(dirname "$1")"; pwd -P)"
-GITLAB_PROJECT_ID="39377838"
-TF_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
-TF_HTTP_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
-TF_HTTP_LOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-TF_HTTP_UNLOCK_ADDRESS="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-PLAYBOOKS_ROOT_DIR="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
-ANSIBLE_CONFIG="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
-ANSIBLE_COLLECTIONS_PATHS="${BASE_PATH}/ska-ser-ansible-collections"
+BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
+GITLAB_PROJECT_ID?=39377838
+TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation
+ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
+ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
 ```
 
 Change them carefully if you really need it. 
@@ -75,19 +79,19 @@ Always check the READMEs for [orchestration](./ska-ser-orchestration/README.md#G
 and [installation](./ska-ser-ansible-collections/README.md#Usage) 
 for up-to-date setup and how to use recommendations.
 
-## Project Structured
+## Project Structure
 
- This a single repository that can manage multiple environments, so the first step is
+ This a single repository that can manage multiple datacenters, environments and services, so the first step is
  to select which one we want. Inside the **./environments/** folder, we have all the 
- configurations and variables separated by cluster.
+ configurations and variables separated by datacenter (cluster), environment and service.
 
-| Cluster           | Folder Name   |
-| ----------------- | -------       |
-| STFC TechOps      | stfc-techops  |
-| STFC TechSDH&P    | stfc-techsdhp |
-| EngageSKA         | engage        |
-| PSI Low           | psi-low       |
-| PSI Mid           | psi-mid       |
+| Cluster           | Environment   | Service    | Folder Path                                      |
+| ----------------- | ------------- | ---------- | ------------------------------------------------ |
+| STFC TechOps      | production    | monitoring | environments/stfc-techops/production/monitoring  |
+| STFC TechSDH&P    | dev           | logging    | environments/stfc-techsdhp/dev/logging           | 
+| EngageSKA         | production    | logging    | environments/engage/production/logging           |
+| PSI Low           | production    | ceph       | environments/psi-low/production/ceph             |
+| PSI Mid           | test          | ceph       | environments/psi-mid/test/ceph                   |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -96,21 +100,25 @@ and Ansible (installation). Like the example bellow:
 environments/
 │     
 └─── stfc-techops/
-│   │   
-│   └─── orchestration
-│   │       *.tf
-│   │       clouds.yaml
-│   │       ...
-│   └─── installation
-│       │   ansible.cfg
-│       │   inventory.yml
-│       │   ssf.config
-│       └─── groups_vars
-│           │    all.yml
-│           │    ...
-│    
+|   └─── production/
+|   |   └─── logging/   
+│   |   |   └─── orchestration
+│   |   |   |       *.tf
+│   |   |   |       clouds.yaml
+│   |   |   |       ...
+│   |   |   └─── installation
+│   |   |       │   ansible.cfg
+│   |   |       │   inventory.yml
+│   |   |       │   ssf.config
+│   |   |       └─── groups_vars
+│   |   |           │    all.yml
+│   |   |           │    ...
+│   |   └─── ...
+|   └─── ...
 └─── ...
 ```
+
+To add a new datacenter/environment/service, all that is required is to create the appropriate folder structure under [environments](environments/), add the necessary files there for orchestration and installation, and to ensure that the required variables are set in the PrivateRules.mak file as previously explained.
 
 ## Orchestration on Openstack
 
