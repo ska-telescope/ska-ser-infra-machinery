@@ -1,0 +1,1706 @@
+all:
+  children:
+    bifrost:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus:
+              ansible_host: 192.168.99.194
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: 7127dab3-1aab-4b93-b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+    ca:
+      hosts:
+        systems-monitoring1-master-0:
+          ansible_host: 192.168.99.131
+          ansible_python_interpreter: python3
+          ansible_user: ubuntu
+          calc_create_data2_vol: 'false'
+          calc_create_data_vol: 'true'
+          calc_mount_data2_vol: 'false'
+          calc_mount_data_vol: 'true'
+          ceph_no_volumes: 1
+          common_single_host_mode: false
+          dashboard_admin_password: ehlafugr826b
+          data2_vol_diskid: ''
+          data_vol_diskid: 864c1b4f-6629-4e6f-b
+          docker_vol_diskid: fbbb174d-0325-4586-b
+          grafana_admin_password: ehlafugr826b
+          log_docker: 'true'
+          log_kubernetes: 'true'
+          monitor_interface: ens3
+          radosgw_interface: ens3
+          systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+          systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+          systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+            ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems-monitoring1-master-1:
+          ansible_host: 192.168.99.22
+          ansible_python_interpreter: python3
+          ansible_user: ubuntu
+          calc_create_data2_vol: 'false'
+          calc_create_data_vol: 'true'
+          calc_mount_data2_vol: 'false'
+          calc_mount_data_vol: 'true'
+          ceph_no_volumes: 1
+          common_single_host_mode: false
+          dashboard_admin_password: ehlafugr826b
+          data2_vol_diskid: ''
+          data_vol_diskid: 784eac27-661b-4d22-8
+          docker_vol_diskid: 79714736-40c1-4f18-8
+          grafana_admin_password: ehlafugr826b
+          log_docker: 'true'
+          log_kubernetes: 'true'
+          monitor_interface: ens3
+          radosgw_interface: ens3
+          systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+          systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+          systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+            ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems-monitoring1-master-2:
+          ansible_host: 192.168.99.183
+          ansible_python_interpreter: python3
+          ansible_user: ubuntu
+          calc_create_data2_vol: 'false'
+          calc_create_data_vol: 'true'
+          calc_mount_data2_vol: 'false'
+          calc_mount_data_vol: 'true'
+          ceph_no_volumes: 1
+          common_single_host_mode: false
+          dashboard_admin_password: ehlafugr826b
+          data2_vol_diskid: ''
+          data_vol_diskid: e71be556-3c35-4b73-9
+          docker_vol_diskid: f9de7f22-9e9a-4b10-b
+          grafana_admin_password: ehlafugr826b
+          log_docker: 'true'
+          log_kubernetes: 'true'
+          monitor_interface: ens3
+          radosgw_interface: ens3
+          systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+          systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+            ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+          systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+            ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+    ca_revoke: {}
+    clients:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0:
+              ansible_host: 192.168.99.48
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'true'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: eb74a2bc-b2ac-4705-b
+              data_vol_diskid: 072591b2-989f-4abc-b
+              docker_vol_diskid: e85044a8-1bee-452b-b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems-storage1-master-1:
+              ansible_host: 192.168.99.197
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'true'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: aacbb133-422b-4dc6-b
+              data_vol_diskid: 3602a383-5c7b-4443-b
+              docker_vol_diskid: a20500cc-177f-43b6-b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems-storage1-master-2:
+              ansible_host: 192.168.99.200
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'true'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: df66fb37-bb93-4e07-a
+              data_vol_diskid: 446cafa0-8029-4afb-8
+              docker_vol_diskid: 9ed65eb8-1a3d-42e2-b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_storage1_worker: {}
+    cluster:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb:
+              ansible_host: 192.168.99.37
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'true'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: 8b0e6522-7c93-4059-a
+              docker_vol_diskid: dd4cd868-8218-4555-a
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'false'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        mariadb_mariadb:
+          hosts:
+            mariadb:
+              ansible_host: 192.168.99.229
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'true'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: 86138239-1acf-4fd9-b
+              docker_vol_diskid: cfd2c34a-19fb-4a2f-a
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'false'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        nexus_nexus:
+          hosts:
+            nexus:
+              ansible_host: 192.168.99.204
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'true'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: 2fe33a5e-05d8-44f8-b
+              docker_vol_diskid: 0fd42df9-877e-4914-8
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'false'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        prometheus_prometheus:
+          hosts:
+            prometheus:
+              ansible_host: 192.168.99.153
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'true'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0:
+              ansible_host: 10.200.1.129
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: ''
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems-k8s1-master-1:
+              ansible_host: 10.200.1.204
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: ''
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems-k8s1-master-2:
+              ansible_host: 10.200.1.109
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: ''
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer:
+              ansible_host: 10.200.0.63
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: ''
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0:
+              ansible_host: 10.200.2.77
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: ''
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              log_kubernetes: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0:
+                  ansible_host: 10.200.1.208
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10:
+                  ansible_host: 10.200.2.69
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11:
+                  ansible_host: 10.200.1.251
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1:
+                  ansible_host: 10.200.0.50
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2:
+                  ansible_host: 10.200.3.249
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3:
+                  ansible_host: 10.200.1.145
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4:
+                  ansible_host: 10.200.2.98
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5:
+                  ansible_host: 10.200.0.42
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6:
+                  ansible_host: 10.200.1.253
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7:
+                  ansible_host: 10.200.2.163
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8:
+                  ansible_host: 10.200.2.24
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9:
+                  ansible_host: 10.200.3.7
+                  ansible_python_interpreter: python3
+                  ansible_user: ubuntu
+                  calc_create_data2_vol: 'false'
+                  calc_create_data_vol: 'false'
+                  calc_mount_data2_vol: 'false'
+                  calc_mount_data_vol: 'false'
+                  ceph_no_volumes: 1
+                  common_single_host_mode: false
+                  dashboard_admin_password: ehlafugr826b
+                  data2_vol_diskid: ''
+                  data_vol_diskid: ''
+                  docker_vol_diskid: ''
+                  grafana_admin_password: ehlafugr826b
+                  log_docker: 'true'
+                  log_kubernetes: 'true'
+                  monitor_interface: ens3
+                  radosgw_interface: ens3
+                  systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+                  systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                    ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+                  systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                    ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer:
+              ansible_host: 192.168.99.127
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'true'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'true'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: da9526df-646a-4c88-9
+              docker_vol_diskid: e51def7d-b3c3-4666-9
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_bifrost:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_elkmasters:
+      children:
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+    cluster_influxdb:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+    cluster_loadbalancers:
+      children:
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+    cluster_logging:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+        nexus_nexus:
+          hosts:
+            nexus: {}
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_mariadb:
+      children:
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+    cluster_masters:
+      children:
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    cluster_nexus:
+      children:
+        nexus_nexus:
+          hosts:
+            nexus: {}
+    cluster_nodes:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+        nexus_nexus:
+          hosts:
+            nexus: {}
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_prometheus:
+      children:
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+    cluster_server:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_systems_k8s1_worker:
+      children:
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+    cluster_the_bifrost:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    cluster_workers:
+      children:
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_worker: {}
+    elkmasters:
+      children:
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+    grafana-server:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    influxdb:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+    loadbalancers:
+      children:
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+    logging:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+        nexus_nexus:
+          hosts:
+            nexus: {}
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    mariadb:
+      children:
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+    masters:
+      children:
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    mdss:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    mgrs:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    mons:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    nexus:
+      children:
+        nexus_nexus:
+          hosts:
+            nexus: {}
+    nfss: {}
+    nodes:
+      children:
+        influxdb_influxdb:
+          hosts:
+            influxdb: {}
+        mariadb_mariadb:
+          hosts:
+            mariadb: {}
+        nexus_nexus:
+          hosts:
+            nexus: {}
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+        systems_k8s1_master:
+          hosts:
+            systems-k8s1-master-0: {}
+            systems-k8s1-master-1: {}
+            systems-k8s1-master-2: {}
+        systems_k8s1_systems-k8s1-loadbalancer:
+          hosts:
+            systems-k8s1-loadbalancer: {}
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_logging1_systems-logging1-loadbalancer:
+          hosts:
+            systems-logging1-loadbalancer: {}
+        systems_monitoring1_master:
+          hosts:
+            systems-monitoring1-master-0: {}
+            systems-monitoring1-master-1: {}
+            systems-monitoring1-master-2: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    openstack:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_python_interpreter: python3
+          ansible_user: ubuntu
+          ceph_no_volumes: 1
+          common_single_host_mode: false
+          dashboard_admin_password: ehlafugr826b
+          grafana_admin_password: ehlafugr826b
+          log_docker: 'true'
+          monitor_interface: ens3
+          radosgw_interface: ens3
+    osds:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+        systems_storage1_worker: {}
+    prometheus:
+      children:
+        prometheus_prometheus:
+          hosts:
+            prometheus: {}
+    rgws:
+      children:
+        systems_storage1_master:
+          hosts:
+            systems-storage1-master-0: {}
+            systems-storage1-master-1: {}
+            systems-storage1-master-2: {}
+    server:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    the_bifrost:
+      children:
+        terminus_terminus:
+          hosts:
+            terminus: {}
+    ungrouped: {}
+    workers:
+      children:
+        systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+          hosts:
+            systems-k8s1-v100-worker-0: {}
+        systems_k8s1_worker:
+          children:
+            systems_k8s1_v100_worker_0_systems-k8s1-v100-worker-0:
+              hosts:
+                systems-k8s1-v100-worker-0: {}
+            systems_k8s1_worker_0_systems-k8s1-worker-0:
+              hosts:
+                systems-k8s1-worker-0: {}
+            systems_k8s1_worker_10_systems-k8s1-worker-10:
+              hosts:
+                systems-k8s1-worker-10: {}
+            systems_k8s1_worker_11_systems-k8s1-worker-11:
+              hosts:
+                systems-k8s1-worker-11: {}
+            systems_k8s1_worker_1_systems-k8s1-worker-1:
+              hosts:
+                systems-k8s1-worker-1: {}
+            systems_k8s1_worker_2_systems-k8s1-worker-2:
+              hosts:
+                systems-k8s1-worker-2: {}
+            systems_k8s1_worker_3_systems-k8s1-worker-3:
+              hosts:
+                systems-k8s1-worker-3: {}
+            systems_k8s1_worker_4_systems-k8s1-worker-4:
+              hosts:
+                systems-k8s1-worker-4: {}
+            systems_k8s1_worker_5_systems-k8s1-worker-5:
+              hosts:
+                systems-k8s1-worker-5: {}
+            systems_k8s1_worker_6_systems-k8s1-worker-6:
+              hosts:
+                systems-k8s1-worker-6: {}
+            systems_k8s1_worker_7_systems-k8s1-worker-7:
+              hosts:
+                systems-k8s1-worker-7: {}
+            systems_k8s1_worker_8_systems-k8s1-worker-8:
+              hosts:
+                systems-k8s1-worker-8: {}
+            systems_k8s1_worker_9_systems-k8s1-worker-9:
+              hosts:
+                systems-k8s1-worker-9: {}
+        systems_k8s1_worker_0_systems-k8s1-worker-0:
+          hosts:
+            systems-k8s1-worker-0: {}
+        systems_k8s1_worker_10_systems-k8s1-worker-10:
+          hosts:
+            systems-k8s1-worker-10: {}
+        systems_k8s1_worker_11_systems-k8s1-worker-11:
+          hosts:
+            systems-k8s1-worker-11: {}
+        systems_k8s1_worker_1_systems-k8s1-worker-1:
+          hosts:
+            systems-k8s1-worker-1: {}
+        systems_k8s1_worker_2_systems-k8s1-worker-2:
+          hosts:
+            systems-k8s1-worker-2: {}
+        systems_k8s1_worker_3_systems-k8s1-worker-3:
+          hosts:
+            systems-k8s1-worker-3: {}
+        systems_k8s1_worker_4_systems-k8s1-worker-4:
+          hosts:
+            systems-k8s1-worker-4: {}
+        systems_k8s1_worker_5_systems-k8s1-worker-5:
+          hosts:
+            systems-k8s1-worker-5: {}
+        systems_k8s1_worker_6_systems-k8s1-worker-6:
+          hosts:
+            systems-k8s1-worker-6: {}
+        systems_k8s1_worker_7_systems-k8s1-worker-7:
+          hosts:
+            systems-k8s1-worker-7: {}
+        systems_k8s1_worker_8_systems-k8s1-worker-8:
+          hosts:
+            systems-k8s1-worker-8: {}
+        systems_k8s1_worker_9_systems-k8s1-worker-9:
+          hosts:
+            systems-k8s1-worker-9: {}
+        systems_monitoring1_worker: {}
+        systems_storage1_worker: {}
