@@ -11,20 +11,23 @@ TF_HTTP_USERNAME ?=
 -include .make/bats.mk
 -include .make/terraform.mk
 -include .make/python.mk
--include PrivateRules.mak
 
-BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
-GITLAB_PROJECT_ID?="39377838"
-TF_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
-TF_HTTP_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
-TF_HTTP_LOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-TF_HTTP_UNLOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
-# TERRAFORM_LINT_TARGET=$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
-PLAYBOOKS_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
-INVENTORY_FILE?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
-ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
+GITLAB_PROJECT_ID?=39377838
+ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
+ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
-ANSIBLE_COLLECTIONS_PATHS?="${BASE_PATH}/ska-ser-ansible-collections"
+ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
+
+TERRAFORM_LINT_TARGETS="$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )"
+
+# Include environment specific vars and secrets
+-include $(PLAYBOOKS_ROOT_DIR)/PrivateRules.mak
 
 EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -56,13 +59,10 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD) \
 	PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)
 
-BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/test
+BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/tests
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_TEST_TARGETS ?= "unit e2e"
 BATS_CORE_VERSION = v1.8.0
-
--include .make/base.mk
--include .make/bats.mk
 
 vars:  ### Current variables
 	@echo "BASE_PATH=$(BASE_PATH)"
@@ -77,6 +77,9 @@ endif
 ifndef TF_HTTP_PASSWORD
 	$(error TF_HTTP_PASSWORD is undefined)
 endif
+
+export: check-env
+	@echo 'export $(EXTRA_VARS)'
 
 # If the first argument is "install"...
 ifeq (playbooks,$(firstword $(MAKECMDGOALS)))

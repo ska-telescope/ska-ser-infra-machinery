@@ -6,15 +6,8 @@ module "gitlab_runner" {
   }
 
   configuration = {
-    name   = "iac-gitlab-runner"
+    name   = "ska-techops-iac-gitlab-runner"
     flavor = "c3.large"
-    image  = "ubuntu-2004-lts"
-    volumes = [
-      {
-        name        = "docker"
-        mount_point = "/var/lib/docker"
-        size        = 20
-      }
-    ]
+    image  = "ubuntu-jammy-22.04"
   }
 }
