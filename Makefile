@@ -27,7 +27,6 @@ TERRAFORM_LINT_TARGETS="$(shell find ./environments -name 'terraform.tf' | grep 
 
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
--include $(PLAYBOOKS_ROOT_DIR)/PrivateRules.mak
 
 EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -78,7 +77,7 @@ ifndef TF_HTTP_PASSWORD
 	$(error TF_HTTP_PASSWORD is undefined)
 endif
 
-export: check-env
+export-as-envs: check-env
 	@echo 'export $(EXTRA_VARS)'
 
 # If the first argument is "install"...

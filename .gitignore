@@ -9,7 +9,6 @@ setenv*
 setenv.sh
 PrivateRules.mak
 build
-**/test/build
-**/test/scripts
 **/tests/build
 **/tests/scripts
+PrivateRules*.mak
