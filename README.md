@@ -28,13 +28,13 @@ Like the submodules for Terraform and Ansible, this repository does not have any
 variables when running the Makefile targets to avoid any deployment/installation on the
 wrong cluster my mistake.
 
-So, the first variables to setup are the **DATACENTER**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
-to the datacenter, environment and service we want to work with. These map to the folder structure under [environments](environments/) (`environments/<datacenter>/<environment>/<service>`), which contains the orchestration and installation files.
+So, the first variables to setup are the **DATACENTRE**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
+to the datacentre, environment and service we want to work with. These map to the folder structure under [environments](environments/) (`environments/<datacentre>/<environment>/<service>`), which contains the orchestration and installation files.
 
 For doing that please add a PrivateRules.mak with the following variables:
 
 ```
-DATACENTER="<datacenter>"
+DATACENTRE="<datacentre>"
 ENVIRONMENT="<environment>"
 SERVICE="<service>"
 TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
@@ -50,12 +50,12 @@ For Terraform the following specifics variables for the Gitlab's backend are alr
 ```
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
 GITLAB_PROJECT_ID?=39377838
-TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
-PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation
-ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
+TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/installation
+ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
 ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
 ```
 
@@ -81,9 +81,9 @@ for up-to-date setup and how to use recommendations.
 
 ## Project Structure
 
- This a single repository that can manage multiple datacenters, environments and services, so the first step is
+ This a single repository that can manage multiple datacentres, environments and services, so the first step is
  to select which one we want. Inside the **./environments/** folder, we have all the 
- configurations and variables separated by datacenter (cluster), environment and service.
+ configurations and variables separated by datacentre (cluster), environment and service.
 
 | Cluster           | Environment   | Service    | Folder Path                                      |
 | ----------------- | ------------- | ---------- | ------------------------------------------------ |
@@ -118,11 +118,11 @@ environments/
 └─── ...
 ```
 
-To add a new datacenter/environment/service, all that is required is to create the appropriate folder structure under [environments](environments/), add the necessary files there for orchestration and installation, and to ensure that the required variables are set in the PrivateRules.mak file as previously explained.
+To add a new datacentre/environment/service, all that is required is to create the appropriate folder structure under [environments](environments/), add the necessary files there for orchestration and installation, and to ensure that the required variables are set in the PrivateRules.mak file as previously explained.
 
 ## Modifying the Project Structure
 
-If the folder structure needs to be altered in some way, e.g. if a service or datacenter must be renamed, then the state file needs to be updated since its name directly references the folder structure.
+If the folder structure needs to be altered in some way, e.g. if a service or datacentre must be renamed, then the state file needs to be updated since its name directly references the folder structure.
 
 After the folder structure is updated, you must run the following commands for all services affected by the migration (by updating the PrivateRules.mak between each execution):
 

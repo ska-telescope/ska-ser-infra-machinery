@@ -5,7 +5,7 @@ MAKEFLAGS += --no-print-directory
 .PHONY: vars help check-env playbooks orch
 .DEFAULT_GOAL := help
 
-DATACENTER ?=
+DATACENTRE ?=
 ENVIRONMENT ?=
 SERVICE ?=
 TF_HTTP_USERNAME ?=
@@ -16,15 +16,15 @@ PLAYBOOKS_HOSTS ?=
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
 GITLAB_PROJECT_ID?=39377838
-TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTER}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
-PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation
-ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTER}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
+TF_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}-terraform-state/lock
+PLAYBOOKS_ROOT_DIR?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/installation
+ANSIBLE_CONFIG?=${BASE_PATH}/environments/${DATACENTRE}/${ENVIRONMENT}/${SERVICE}/installation/ansible.cfg
 ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
 
-EXTRA_VARS ?= DATACENTER="$(DATACENTER)" \
+EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
