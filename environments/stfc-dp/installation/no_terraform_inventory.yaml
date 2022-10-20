@@ -5,7 +5,7 @@ all:
         terminus_terminus:
           hosts:
             terminus:
-              ansible_host: 192.168.99.194
+              ansible_host: 130.246.214.45
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               calc_create_data2_vol: 'false'
