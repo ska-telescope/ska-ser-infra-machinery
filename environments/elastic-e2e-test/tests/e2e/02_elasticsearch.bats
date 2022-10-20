@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR"
+    REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR ELASTIC_PASSWORD"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -36,26 +36,46 @@ setup() {
     assert_success
 }
 
+# TODO: 
+# * Move test playbooks in installation/playbooks to elastic collection/tests
+# * Create make target on elastic job called "test" that runs the test playbooks against the cluster
+# * Remove all tests below
+# * Create a single test here calling the test make target, like:
+# @test 'ELASTICSEARCH: Elasticsearch works' {
+#     cd ${BASE_PATH}
+#    export PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
+#    run make playbooks elastic test
+#    assert_success
+# }
+
 @test 'ELASTICSEARCH: Elasticsearch is healthy' {
     run ansible-playbook \
-        -l "${ELASTICSEARCH_CLUSTER_NAME}-master" \
+        -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
+        -e "elasticsearch_password=${ELASTIC_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/cluster-health.yml
     assert_success
 }
 
-@test 'ELASTICSEARCH: Client works with cluster' {
+@test 'ELASTICSEARCH: Elasticsearch API access is configured' {
     run ansible-playbook \
-        -l "${ELASTICSEARCH_CLUSTER_NAME}-client" \
-        -e "elasticsearch_node_groups=${ELASTICSEARCH_CLUSTER_NAME}-master" \
+        -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
+        -e "elasticsearch_password=${ELASTIC_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
     assert_success
 }
 
-@test 'ELASTICSEARCH: Index CRUD and post events work' {
+@test 'ELASTICSEARCH: Elasticsearch loadbalancer is healthy' {
     run ansible-playbook \
-        -l "${ELASTICSEARCH_CLUSTER_NAME}-client" \
-        -e "elasticsearch_node_groups=${ELASTICSEARCH_CLUSTER_NAME}-master" \
-        -e "elasticsearch_index=${ELASTICSEARCH_CLUSTER_NAME}-idx" \
+        -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
+        -e "elasticsearch_password=${ELASTIC_PASSWORD}" \
+        ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
+    assert_success
+}
+
+@test 'ELASTICSEARCH: Elasticsearch index CRUD and post events work' {
+    run ansible-playbook \
+        -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
+        -e "elasticsearch_password=${ELASTIC_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/index-crud.yml
     assert_success
 }

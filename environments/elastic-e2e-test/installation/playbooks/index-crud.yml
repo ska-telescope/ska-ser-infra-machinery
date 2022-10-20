@@ -1,35 +1,53 @@
 #!/usr/bin/env ansible-playbook
----
 - name: Elasticsearch client works with cluster
-  hosts: all
+  hosts: "{{ target_hosts + '-loadbalancer' }}"
+  become: true
   tasks:
   - name: Set test variables
     set_fact:
+      elasticsearch_index: "{{ elasticsearch_cluster_name }}-index"
       event_messages: ["these", "are", "messages"]
-      elasticsearch_ip: "{{ hostvars[groups[elasticsearch_node_groups][0]].ip }}"
-  - name: Unauthorized Client -> Get index works
+  - name: Get index works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
       method: GET
       force: yes
       status_code: [200, 404]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     register: index_info
-  - name: Unauthorized Client -> Create index works
+  - name: Create index works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
       method: PUT
       force: yes
       status_code: [200]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     when: index_info.status == 404
-  - name: Unauthorized Client -> Get index works
+  - name: Get index works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
       method: GET
       force: yes
       status_code: [200]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
   - name: Unauthorized Client -> Delete all events works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_delete_endpoint }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_delete_endpoint }}"
       method: POST
       body_format: json
       body: |
@@ -40,9 +58,15 @@
         }
       force: yes
       status_code: [200]
-  - name: Unauthorized Client -> Send data works
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
+  - name: Send data works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_endpoint }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_endpoint }}"
       method: POST
       body_format: json
       body: |
@@ -51,21 +75,36 @@
         }
       force: yes
       status_code: [201]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     loop: "{{ event_messages }}"
-  - name: Unauthorized Client -> Count docs works
+  - name: Count docs works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_count_endpoint }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}{{ elasticsearch_doc_count_endpoint }}"
       method: GET
       status_code: [200]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     register: events
     failed_when: '(events.json.count | int) != (event_messages | length)'
-  - name: debug
-    debug:
-      var: events
-  - name: Unauthorized Client -> Delete index works
+  - name: Delete index works
     ansible.builtin.uri:
-      url: "http://{{ elasticsearch_ip }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
+      url: "https://{{ inventory_hostname }}:{{ elasticsearch_api_port }}/{{ elasticsearch_index }}"
       method: DELETE
       force: yes
       status_code: [200]
+      client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
+      client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
+      url_username: elastic
+      url_password: "{{ elasticsearch_password }}"
+    environment:
+      SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
   
