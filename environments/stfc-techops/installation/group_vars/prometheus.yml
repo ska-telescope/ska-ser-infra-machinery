@@ -10,6 +10,11 @@ k8s_bearer_token: "/etc/prometheus/bearer.token"
 localuser: ubuntu
 gateway_host: terminus
 
+prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
+prometheus_url: https://monitoring.skao.stfc:9090
+slack_channel: techops-alerts
+slack_channel_user: techops-user-alerts
+
 k8s_external_dns_entry: k8s.stfc.skao.int
 
 grafana_disable_admin_account_creation: "false"
