@@ -9,10 +9,10 @@ k8s_client_certificate: "/etc/prometheus/ca.crt"
 k8s_bearer_token: "/etc/prometheus/bearer.token"
 k8s_username: ""
 localuser: ubuntu
-gateway_host: jupiter
+gateway_host: terminus
 
 k8s_external_dns_entry: sdhp.stfc.skao.int
-
+thanos_alt_name: "sdhp.stfc.skao.int"
 grafana_disable_admin_account_creation: "false"
 
 project_name: "SKA-TechSDH&P"

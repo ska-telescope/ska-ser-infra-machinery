@@ -2,6 +2,32 @@ all:
   children:
     bifrost:
       children:
+        terminus_terminus:
+          hosts:
+            terminus:
+              ansible_host: 130.246.214.45
+              ansible_python_interpreter: python3
+              ansible_user: ubuntu
+              calc_create_data2_vol: 'false'
+              calc_create_data_vol: 'false'
+              calc_mount_data2_vol: 'false'
+              calc_mount_data_vol: 'false'
+              ceph_no_volumes: 1
+              common_single_host_mode: false
+              dashboard_admin_password: ehlafugr826b
+              data2_vol_diskid: ''
+              data_vol_diskid: ''
+              docker_vol_diskid: 7127dab3-1aab-4b93-b
+              grafana_admin_password: ehlafugr826b
+              log_docker: 'true'
+              monitor_interface: ens3
+              radosgw_interface: ens3
+              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
+              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
+                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
+              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
+                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
         jupiter_jupiter:
           hosts:
             jupiter:
