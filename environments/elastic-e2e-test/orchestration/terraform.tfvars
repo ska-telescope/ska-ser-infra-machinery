@@ -1,17 +1,17 @@
 # OpenStack Cloud Configurations
 openstack = {
   cloud      = "openstack"
-  project_id = "0505002d0063496bb0dea54c2a89f356"
+  project_id = "b5069610560e42bb837183ad5cd58ec0"
 }
 
 # OpenStack Instance defaults for the given OpenStack Cloud
 defaults = {
-  flavor            = "c3.large"
-  image             = "Ubuntu-18.04"
-  availability_zone = "nova"
-  network           = "internal"
+  flavor            = "c3.medium"
+  image             = "ubuntu-focal-20.04-nogui"
+  availability_zone = "ceph"
+  network           = "SKA-TechOps-Private"
   keypair           = "ska-techops"
-  jump_host         = "d3d5dcc8-9151-4892-82d8-4b766889c720"
+  jump_host         = "01a68010-cc61-4396-9690-cb7263d2412d"
 }
 
 environment = "elastic-e2e-test"

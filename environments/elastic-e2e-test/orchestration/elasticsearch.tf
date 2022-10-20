@@ -8,12 +8,12 @@ module "elasticsearch" {
   elasticsearch = {
     name = var.environment
     master = {
-      size               = 3
+      size               = 1
       data_volume_size   = 10
       docker_volume_size = 10
     }
     data = {
-      size               = 0
+      size               = 1
       data_volume_size   = 10
       docker_volume_size = 10
     }
@@ -22,10 +22,10 @@ module "elasticsearch" {
       docker_volume_size = 10
     }
     loadbalancer = {
-      deploy             = false
+      deploy             = true
       docker_volume_size = 10
       floating_ip = {
-        create = true
+        create = false
       }
     }
   }
