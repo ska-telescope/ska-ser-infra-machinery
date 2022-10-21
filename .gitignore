@@ -8,3 +8,4 @@ setenv*.sh
 **/ssh.config
 setenv.sh
 PrivateRules.mak
+build
