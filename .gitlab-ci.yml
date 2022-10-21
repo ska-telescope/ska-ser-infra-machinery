@@ -5,6 +5,15 @@ variables:
 
 stages:
   - lint
+  - test
+
+test-runner:
+  stage: test
+  tags:
+    - ska-techops-iac-gitlab-runner
+  script:
+    - make orch init
+    - TF_HTTP_USERNAME="domingosnunes" TF_HTTP_PASSWORD="glpat-KPszpYThf1za8ZcSKrjf" ENVIRONMENT="stfc-techops" make orch plan
 
 include:
 - project: 'ska-telescope/templates-repository'
