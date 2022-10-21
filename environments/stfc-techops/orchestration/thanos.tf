@@ -6,27 +6,27 @@ module "thanos" {
   }
 
   configuration = {
-    name = "thanos"
-    image = "ubuntu-2004-lts"
-    applications = ["thanos", "node_exporter"] 
-    volumes = [ 
+    name         = "thanos"
+    image        = "ubuntu-2004-lts"
+    applications = ["thanos", "node_exporter"]
+    volumes = [
       {
         mount_point = "/var/lib/containers"
-        name = "containers"
-        size = 20
+        name        = "containers"
+        size        = 20
       },
       {
         mount_point = "/etc/thanos/data/dir"
-        name = "thanos_data"
-        size = 50
+        name        = "thanos_data"
+        size        = 50
       },
-       {
+      {
         mount_point = "/etc/thanos/thanos-compact"
-        name = "thanos_compact"
-        size = 50
-      }  
+        name        = "thanos_compact"
+        size        = 50
+      }
     ]
   }
 
-  
+
 }
