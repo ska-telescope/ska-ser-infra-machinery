@@ -11,6 +11,11 @@ test-runner:
   stage: test
   tags:
     - ska-techops-iac-gitlab-runner
+  before_script:
+    - apt update
+    - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
+    - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
+
   variables:
     TF_HTTP_USERNAME: "domingosnunes"
     TF_HTTP_PASSWORD: "glpat-KPszpYThf1za8ZcSKrjf"
