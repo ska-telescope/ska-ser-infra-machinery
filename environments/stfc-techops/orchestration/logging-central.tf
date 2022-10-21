@@ -8,12 +8,12 @@ module "ska-techops-logging-central-prod" {
   elasticsearch = {
     name   = "ska-techops-logging-central-prod"
     master = {}
-    data = {}
+    data   = {}
     kibana = {}
     loadbalancer = {
       floating_ip = {
         address = "130.246.214.33"
-        create = false
+        create  = false
         network = "External"
       }
     }
