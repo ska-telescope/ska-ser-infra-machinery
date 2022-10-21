@@ -28,7 +28,6 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	BASE_PATH="$(BASE_PATH)" \
 	GITLAB_PROJECT_ID="$(GITLAB_PROJECT_ID)" \
 	TF_ROOT_DIR="$(TF_ROOT_DIR)" \
-	TF_ROOT_DIR="$(TF_ROOT_DIR)" \
 	TF_HTTP_ADDRESS="$(TF_HTTP_ADDRESS)" \
 	TF_HTTP_LOCK_ADDRESS="$(TF_HTTP_LOCK_ADDRESS)" \
 	TF_HTTP_UNLOCK_ADDRESS="$(TF_HTTP_UNLOCK_ADDRESS)" \
@@ -51,23 +50,7 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD)
 
 vars:  ### Current variables
-	@echo "ENVIRONMENT=$(ENVIRONMENT)"
-	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
-	@echo "TF_HTTP_USERNAME=$(TF_HTTP_USERNAME)"
-	@echo "TF_ROOT_DIR=$(TF_ROOT_DIR)"
-	@echo "PLAYBOOKS_ROOT_DIR=$(PLAYBOOKS_ROOT_DIR)"
-	@echo "ANSIBLE_COLLECTIONS_PATHS=$(ANSIBLE_COLLECTIONS_PATHS)"
-	@echo "ANSIBLE_CONFIG=$(ANSIBLE_CONFIG)"
 	@echo "BASE_PATH=$(BASE_PATH)"
-	@echo "TF_HTTP_ADDRESS=$(TF_HTTP_ADDRESS)"
-	@echo "TF_HTTP_LOCK_ADDRESS=$(TF_HTTP_LOCK_ADDRESS)"
-	@echo "TF_HTTP_UNLOCK_ADDRESS=$(TF_HTTP_UNLOCK_ADDRESS)"
-	@echo "PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)"
-	@echo "TF_INVENTORY_DIR=$(TF_INVENTORY_DIR)"
-	@echo "TF_TARGET=$(TF_TARGET)"
-	@echo "CA_CERT_PASS=$(CA_CERT_PASS)"
-	@echo "ELASTIC_PASSWORD=$(ELASTIC_PASSWORD)"	
-	@echo "ELASTIC_HAPROXY_STATS_PASS=$(ELASTIC_HAPROXY_STATS_PASS)"
 
 check-env: ## Check ENVIRONMENT variable
 ifndef ENVIRONMENT
@@ -102,15 +85,25 @@ endif
 orch: check-env ## Access Orchestration submodule targets
 	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
 
+print_targets:
+	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {p=index($$1,":")} {printf "\033[36m%-30s\033[0m %s\n", substr($$1,p+1), $$2}';
+
 help:  ## Show Help
-	@echo "Vars:";
+	@echo "";
+	@echo -e "\033[32mBase vars:\033[0m"
 	@make vars;
 	@echo "";
-	@echo "Main targets:"
-	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo -e "\033[32mOrchestration Vars:\033[0m";
+	@cd ska-ser-orchestration && make vars;
 	@echo "";
-	@echo "Orchestration targets - make orch <target>:";
-	@cd ska-ser-orchestration && grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}';
+	@echo -e "\033[32mInstallation Vars:\033[0m";
+	@cd ska-ser-ansible-collections && make vars_recursive;
 	@echo "";
-	@echo "Installation targets - make orch <target>:";
-	@cd ska-ser-ansible-collections && make help-from-submodule;
+	@echo -e "\033[32mMain targets:\033[0m"
+	@make print_targets
+	@echo "";
+	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
+	@cd ska-ser-orchestration && make print_targets;
+	@echo "";
+	@echo -e "\033[32mInstallation targets - make orch <target>:\033[0m";
+	@cd ska-ser-ansible-collections && make print_targets;
