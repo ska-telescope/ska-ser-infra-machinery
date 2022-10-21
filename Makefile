@@ -10,6 +10,9 @@ TF_HTTP_USERNAME ?=
 TF_INVENTORY_DIR ?=
 PLAYBOOKS_HOSTS ?=
 
+-include .make/terraform.mk
+-include .make/python.mk
+-include .make/elastic.mk
 -include PrivateRules.mak
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
