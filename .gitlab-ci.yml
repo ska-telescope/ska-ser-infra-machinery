@@ -24,8 +24,8 @@ test-runner:
     - make orch init
     - make orch plan
 
-include:
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
+# include:
+# - project: 'ska-telescope/templates-repository'
+#   file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
+# - project: 'ska-telescope/templates-repository'
+#   file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
