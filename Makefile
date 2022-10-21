@@ -12,10 +12,7 @@ PLAYBOOKS_HOSTS ?=
 
 -include .make/terraform.mk
 -include .make/python.mk
-<<<<<<< HEAD
 -include .make/elastic.mk
-=======
->>>>>>> main
 -include PrivateRules.mak
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
