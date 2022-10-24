@@ -80,6 +80,27 @@ and [installation](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collecti
 for up-to-date setup and how to use recommendations.
 
 ## Testing
+### Elasticsearch API Key creation and query
+
+A set of make targets were created to help with the creation and query of Elasticsearch API keys.
+These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
+
+The available `make` targets are:
+
+- `elastic-check`: Check the status of the Elasticsearch cluster.
+- `elastic-key-list`: List all the existing API keys.
+- `elastic-key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
+- `elastic-key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
+- `elastic-key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
+- `elastic-key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
+
+These make targets need the following environment variables to be set:
+- `ELASTIC_PASSWORD`: Password for the `elastic` user.
+- `CA_CERT_PASS`: Password for the CA certificate.
+
+Furthermore, access to the Elasticsearch cluster requires an existing client certificate to exist on the local machine. The most straightforward way to ensure this, is to run these make targets from *Terminus*.
+
+## Project Structured
 
 We've added a make target - **test** - to trigger a set of [BATS](https://github.com/bats-core) tests
 to test an environment. This allows us to, either manually or in a scheduled pipeline, to run checks
