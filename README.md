@@ -204,13 +204,13 @@ This a single repository that can manage multiple environments, so the first ste
 to select which one we want. Inside the **./environments/** folder, we have all the
 configurations and variables separated by cluster.
 
-| Cluster           | Environment   |
-| ----------------- | -------       |
-| STFC TechOps      | stfc-techops  |
-| STFC TechSDH&P    | stfc-techsdhp |
-| EngageSKA         | engage        |
-| PSI Low           | psi-low       |
-| PSI Mid           | psi-mid       |
+| Cluster        | Folder Name   |
+| -------------- | ------------- |
+| STFC TechOps   | stfc-techops  |
+| STFC TechSDH&P | stfc-techsdhp |
+| EngageSKA      | engage        |
+| PSI Low        | psi-low       |
+| PSI Mid        | psi-mid       |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
