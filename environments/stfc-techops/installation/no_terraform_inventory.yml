@@ -14,11 +14,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: 7127dab3-1aab-4b93-b
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               monitor_interface: ens3
               radosgw_interface: ens3
@@ -40,11 +40,11 @@ all:
           calc_mount_data_vol: 'true'
           ceph_no_volumes: 1
           common_single_host_mode: false
-          dashboard_admin_password: ehlafugr826b
+          dashboard_admin_password: ''
           data2_vol_diskid: ''
           data_vol_diskid: 864c1b4f-6629-4e6f-b
           docker_vol_diskid: fbbb174d-0325-4586-b
-          grafana_admin_password: ehlafugr826b
+          grafana_admin_password: ''
           log_docker: 'true'
           log_kubernetes: 'true'
           monitor_interface: ens3
@@ -65,11 +65,11 @@ all:
           calc_mount_data_vol: 'true'
           ceph_no_volumes: 1
           common_single_host_mode: false
-          dashboard_admin_password: ehlafugr826b
+          dashboard_admin_password: ''
           data2_vol_diskid: ''
           data_vol_diskid: 784eac27-661b-4d22-8
           docker_vol_diskid: 79714736-40c1-4f18-8
-          grafana_admin_password: ehlafugr826b
+          grafana_admin_password: ''
           log_docker: 'true'
           log_kubernetes: 'true'
           monitor_interface: ens3
@@ -90,11 +90,11 @@ all:
           calc_mount_data_vol: 'true'
           ceph_no_volumes: 1
           common_single_host_mode: false
-          dashboard_admin_password: ehlafugr826b
+          dashboard_admin_password: ''
           data2_vol_diskid: ''
           data_vol_diskid: e71be556-3c35-4b73-9
           docker_vol_diskid: f9de7f22-9e9a-4b10-b
-          grafana_admin_password: ehlafugr826b
+          grafana_admin_password: ''
           log_docker: 'true'
           log_kubernetes: 'true'
           monitor_interface: ens3
@@ -120,11 +120,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: eb74a2bc-b2ac-4705-b
               data_vol_diskid: 072591b2-989f-4abc-b
               docker_vol_diskid: e85044a8-1bee-452b-b
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -145,11 +145,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: aacbb133-422b-4dc6-b
               data_vol_diskid: 3602a383-5c7b-4443-b
               docker_vol_diskid: a20500cc-177f-43b6-b
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -170,11 +170,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: df66fb37-bb93-4e07-a
               data_vol_diskid: 446cafa0-8029-4afb-8
               docker_vol_diskid: 9ed65eb8-1a3d-42e2-b
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -200,11 +200,11 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: 8b0e6522-7c93-4059-a
               docker_vol_diskid: dd4cd868-8218-4555-a
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'false'
               monitor_interface: ens3
@@ -227,11 +227,11 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: 86138239-1acf-4fd9-b
               docker_vol_diskid: cfd2c34a-19fb-4a2f-a
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'false'
               monitor_interface: ens3
@@ -254,11 +254,11 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: 2fe33a5e-05d8-44f8-b
               docker_vol_diskid: 0fd42df9-877e-4914-8
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'false'
               monitor_interface: ens3
@@ -281,8 +281,8 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
-              grafana_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
+              grafana_admin_password: ''
               log_docker: 'true'
               monitor_interface: ens3
               radosgw_interface: ens3
@@ -304,11 +304,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -329,11 +329,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -354,11 +354,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -381,11 +381,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               monitor_interface: ens3
               radosgw_interface: ens3
@@ -407,11 +407,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -439,11 +439,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -466,11 +466,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -493,11 +493,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -520,11 +520,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -547,11 +547,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -574,11 +574,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -601,11 +601,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -628,11 +628,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -655,11 +655,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -682,11 +682,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -709,11 +709,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -736,11 +736,11 @@ all:
                   calc_mount_data_vol: 'false'
                   ceph_no_volumes: 1
                   common_single_host_mode: false
-                  dashboard_admin_password: ehlafugr826b
+                  dashboard_admin_password: ''
                   data2_vol_diskid: ''
                   data_vol_diskid: ''
                   docker_vol_diskid: ''
-                  grafana_admin_password: ehlafugr826b
+                  grafana_admin_password: ''
                   log_docker: 'true'
                   log_kubernetes: 'true'
                   monitor_interface: ens3
@@ -799,11 +799,11 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: da9526df-646a-4c88-9
               docker_vol_diskid: e51def7d-b3c3-4666-9
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               monitor_interface: ens3
               radosgw_interface: ens3
@@ -1584,8 +1584,8 @@ all:
           ansible_user: ubuntu
           ceph_no_volumes: 1
           common_single_host_mode: false
-          dashboard_admin_password: ehlafugr826b
-          grafana_admin_password: ehlafugr826b
+          dashboard_admin_password: ''
+          grafana_admin_password: ''
           log_docker: 'true'
           monitor_interface: ens3
           radosgw_interface: ens3
