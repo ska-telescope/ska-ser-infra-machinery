@@ -10,6 +10,8 @@ TF_HTTP_USERNAME ?=
 TF_INVENTORY_DIR ?=
 PLAYBOOKS_HOSTS ?=
 
+-include .make/terraform.mk
+-include .make/python.mk
 -include PrivateRules.mak
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
@@ -18,6 +20,7 @@ TF_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/orchestration"
 TF_HTTP_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state"
 TF_HTTP_LOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
 TF_HTTP_UNLOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
+TERRAFORM_LINT_TARGET:=$(shell find environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 PLAYBOOKS_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
 ANSIBLE_CONFIG?="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
 ANSIBLE_COLLECTIONS_PATHS?="${BASE_PATH}/ska-ser-ansible-collections"
