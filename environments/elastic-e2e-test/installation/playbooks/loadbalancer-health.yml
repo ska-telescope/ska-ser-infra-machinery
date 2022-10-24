@@ -22,7 +22,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     register: health_info

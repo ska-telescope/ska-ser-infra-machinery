@@ -16,7 +16,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     register: index_info
@@ -29,7 +29,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     when: index_info.status == 404
@@ -42,7 +42,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
   - name: Unauthorized Client -> Delete all events works
@@ -61,7 +61,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
   - name: Send data works
@@ -78,7 +78,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     loop: "{{ event_messages }}"
@@ -90,7 +90,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
     register: events
@@ -104,7 +104,7 @@
       client_cert: "{{ certificates_dir }}/{{ inventory_hostname }}.crt"
       client_key: "{{ certificates_dir }}/{{ inventory_hostname }}.key"
       url_username: elastic
-      url_password: "{{ elasticsearch_password }}"
+      url_password: "{{ elastic_password }}"
     environment:
       SSL_CERT_FILE: "{{ certificates_dir }}/ca-certificate.crt"
   
