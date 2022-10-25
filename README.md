@@ -96,9 +96,19 @@ The available `make` targets are:
 
 These make targets need the following environment variables to be set:
 - `ELASTIC_PASSWORD`: Password for the `elastic` user.
-- `CA_CERT_PASS`: Password for the CA certificate.
 
-Furthermore, access to the Elasticsearch cluster requires an existing client certificate to exist on the local machine. The most straightforward way to ensure this, is to run these make targets from *Terminus*.
+Under `.make/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
+If you are using a different cluster, you will need to change the values of the environment variables.
+
+```
+ELASTIC_USER ?= elastic
+LOGGING_URL ?= https://logging.stfc.skao.int:9200
+LOADBALANCER_IP ?= logging.stfc.skao.int
+CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
+CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
+CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
+PEM_FILE ?= ~/.ssh/ska-techops.pem
+```
 
 ## Project Structured
 
@@ -109,9 +119,9 @@ installation to services.
 
 Currently, the following test environments are available:
 
-| Environment       | Folder Name     | Goal |
-| ----------------- | -------------   | --- |
-| elastic-e2e-test  | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| Environment      | Folder Name     | Goal                                                                   |
+| ---------------- | --------------- | ---------------------------------------------------------------------- |
+| elastic-e2e-test | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
 To trigger tests, after sourcing **setenv.sh**, simply do:
 
