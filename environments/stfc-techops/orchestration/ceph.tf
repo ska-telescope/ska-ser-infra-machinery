@@ -6,13 +6,13 @@ module "ceph_cluster" {
   }
 
   ceph = {
-    name   = "ceph"
+    name = "ceph"
     master = {
-      size = 3
+      size             = 3
       data_volume_size = 10,
-      wal_volume_size = 10,
-      flavor = "c3.large"
-      image = "ubuntu-focal-20.04-nogui"  
+      wal_volume_size  = 10,
+      flavor           = "c3.large"
+      image            = "ubuntu-focal-20.04-nogui"
     }
     worker = {
       size = 0
