@@ -97,7 +97,7 @@ The available `make` targets are:
 These make targets need the following environment variables to be set:
 - `ELASTIC_PASSWORD`: Password for the `elastic` user.
 
-Under `.make/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
+Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
 If you are using a different cluster, you will need to change the values of the environment variables.
 
 ```
