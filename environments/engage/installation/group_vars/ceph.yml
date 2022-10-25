@@ -1,7 +1,6 @@
 ansible_user: ubuntu
 
 cephadm_ceph_release: quincy
-#cephadm_image: quay.ceph.io/ceph-ci/ceph:{{ cephadm_ceph_release }}
 cephadm_image: quay.io/ceph/ceph:v17.2.5
 
 cephadm_recreate: false
