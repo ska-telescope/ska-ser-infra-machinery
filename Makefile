@@ -20,10 +20,15 @@ TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terrafo
 TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock
 TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
+<<<<<<< HEAD
 ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
+=======
+INVENTORY_FILE?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
+ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+>>>>>>> 10ca46d (ST-1409: Fixed previous merge issues)
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
-TERRAFORM_LINT_TARGETS="$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )"
+TERRAFORM_LINT_TARGETS?="$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )"
 
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
