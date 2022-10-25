@@ -6,6 +6,7 @@ MAKEFLAGS += --no-print-directory
 
 ENVIRONMENT ?=
 TF_HTTP_USERNAME ?=
+TERRAFORM_LINT_TARGETS?=$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 
 -include .make/base.mk
 -include .make/bats.mk
@@ -28,7 +29,6 @@ ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
 >>>>>>> 10ca46d (ST-1409: Fixed previous merge issues)
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=${BASE_PATH}/ska-ser-ansible-collections
-TERRAFORM_LINT_TARGETS?="$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )"
 
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
