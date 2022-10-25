@@ -1,5 +1,5 @@
 env.sh
-setenv*.sh
+setenv*
 **/.terraform
 **/*.lock.hcl
 **/clouds.yaml
@@ -8,3 +8,8 @@ setenv*.sh
 **/ssh.config
 setenv.sh
 PrivateRules.mak
+build
+**/test/build
+**/test/scripts
+**/tests/build
+**/tests/scripts

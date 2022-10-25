@@ -14,11 +14,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: false
-              dashboard_admin_password: ehlafugr826b
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: 7127dab3-1aab-4b93-b
-              grafana_admin_password: ehlafugr826b
+              grafana_admin_password: ''
               log_docker: 'true'
               monitor_interface: ens3
               radosgw_interface: ens3
@@ -40,11 +40,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: 17117a38-7b0a-4781-8
-              grafana_admin_password: FtJQw6zLHUsShm66
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -61,8 +59,6 @@ all:
           ansible_user: ubuntu
           ceph_no_volumes: 1
           common_single_host_mode: 'false'
-          dashboard_admin_password: guiW4MHoUQhAK64v
-          grafana_admin_password: FtJQw6zLHUsShm66
           monitor_interface: ens3
           radosgw_interface: ens3
         sdhp-storage-master-1:
@@ -71,8 +67,6 @@ all:
           ansible_user: ubuntu
           ceph_no_volumes: 1
           common_single_host_mode: 'false'
-          dashboard_admin_password: guiW4MHoUQhAK64v
-          grafana_admin_password: FtJQw6zLHUsShm66
           monitor_interface: ens3
           radosgw_interface: ens3
         sdhp-storage-master-2:
@@ -81,8 +75,6 @@ all:
           ansible_user: ubuntu
           ceph_no_volumes: 1
           common_single_host_mode: 'false'
-          dashboard_admin_password: guiW4MHoUQhAK64v
-          grafana_admin_password: FtJQw6zLHUsShm66
           monitor_interface: ens3
           radosgw_interface: ens3
     cluster:
@@ -102,11 +94,9 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: 1e5a5ae1-fec5-4f21-a
               docker_vol_diskid: c5658d75-d62f-4c7e-9
-              grafana_admin_password: FtJQw6zLHUsShm66
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -127,11 +117,9 @@ all:
               calc_mount_data_vol: 'true'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: 313e4a22-f377-4692-a
               docker_vol_diskid: 7fbc5a0c-5b42-43d2-9
-              grafana_admin_password: FtJQw6zLHUsShm66
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -152,11 +140,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -177,11 +163,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -202,11 +186,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -229,11 +211,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -254,11 +234,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -279,11 +257,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -304,11 +280,9 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -329,11 +303,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -354,11 +328,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -379,11 +353,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -404,11 +378,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -429,11 +403,11 @@ all:
               calc_mount_data_vol: 'false'
               ceph_no_volumes: 1
               common_single_host_mode: 'false'
-              dashboard_admin_password: guiW4MHoUQhAK64v
+              dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: FtJQw6zLHUsShm66
+              grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -762,8 +736,8 @@ all:
           ansible_user: ubuntu
           ceph_no_volumes: 1
           common_single_host_mode: 'false'
-          dashboard_admin_password: guiW4MHoUQhAK64v
-          grafana_admin_password: FtJQw6zLHUsShm66
+          dashboard_admin_password: ''
+          grafana_admin_password: ''
           monitor_interface: ens3
           radosgw_interface: ens3
     osds:

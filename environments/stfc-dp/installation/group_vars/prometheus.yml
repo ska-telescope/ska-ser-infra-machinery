@@ -19,6 +19,7 @@ slack_channel: dp-platform-alerts
 slack_channel_user: dp-platform-user-alerts
 
 
+thanos_alt_name: "sdhp.stfc.skao.int"
 grafana_disable_admin_account_creation: "false"
 
 project_name: "SKA-TechSDH&P"
