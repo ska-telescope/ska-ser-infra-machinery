@@ -6,8 +6,10 @@ all:
           hosts:
             terminus:
               ansible_host: 192.168.99.194
+              ip: 192.168.99.194
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -32,8 +34,10 @@ all:
       hosts:
         systems-monitoring1-master-0:
           ansible_host: 192.168.99.131
+          ip: 192.168.99.131
           ansible_python_interpreter: python3
           ansible_user: ubuntu
+          ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
           calc_create_data2_vol: 'false'
           calc_create_data_vol: 'true'
           calc_mount_data2_vol: 'false'
@@ -57,8 +61,10 @@ all:
             ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
         systems-monitoring1-master-1:
           ansible_host: 192.168.99.22
+          ip: 192.168.99.22
           ansible_python_interpreter: python3
           ansible_user: ubuntu
+          ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
           calc_create_data2_vol: 'false'
           calc_create_data_vol: 'true'
           calc_mount_data2_vol: 'false'
@@ -82,8 +88,10 @@ all:
             ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
         systems-monitoring1-master-2:
           ansible_host: 192.168.99.183
+          ip: 192.168.99.183
           ansible_python_interpreter: python3
           ansible_user: ubuntu
+          ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
           calc_create_data2_vol: 'false'
           calc_create_data_vol: 'true'
           calc_mount_data2_vol: 'false'
@@ -112,8 +120,10 @@ all:
           hosts:
             systems-storage1-master-0:
               ansible_host: 192.168.99.48
+              ip: 192.168.99.48
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'true'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -137,8 +147,10 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
             systems-storage1-master-1:
               ansible_host: 192.168.99.197
+              ip: 192.168.99.197
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'true'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -162,8 +174,10 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
             systems-storage1-master-2:
               ansible_host: 192.168.99.200
+              ip: 192.168.99.200
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'true'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -192,8 +206,10 @@ all:
           hosts:
             influxdb:
               ansible_host: 192.168.99.37
+              ip: 192.168.99.37
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -219,8 +235,10 @@ all:
           hosts:
             mariadb:
               ansible_host: 192.168.99.229
+              ip: 192.168.99.229
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -246,8 +264,10 @@ all:
           hosts:
             nexus:
               ansible_host: 192.168.99.204
+              ip: 192.168.99.204
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -273,8 +293,10 @@ all:
           hosts:
             prometheus:
               ansible_host: 192.168.99.153
+              ip: 192.168.99.153
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -296,8 +318,10 @@ all:
           hosts:
             systems-k8s1-master-0:
               ansible_host: 10.200.1.129
+              ip: 10.200.1.129
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -321,8 +345,10 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
             systems-k8s1-master-1:
               ansible_host: 10.200.1.204
+              ip: 10.200.1.204
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -346,8 +372,10 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
             systems-k8s1-master-2:
               ansible_host: 10.200.1.109
+              ip: 10.200.1.109
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -373,8 +401,10 @@ all:
           hosts:
             systems-k8s1-loadbalancer:
               ansible_host: 10.200.0.63
+              ip: 10.200.0.63
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -399,8 +429,10 @@ all:
           hosts:
             systems-k8s1-v100-worker-0:
               ansible_host: 10.200.2.77
+              ip: 10.200.2.77
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'false'
               calc_mount_data2_vol: 'false'
@@ -431,8 +463,10 @@ all:
               hosts:
                 systems-k8s1-worker-0:
                   ansible_host: 10.200.1.208
+                  ip: 10.200.1.208
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -458,8 +492,10 @@ all:
               hosts:
                 systems-k8s1-worker-10:
                   ansible_host: 10.200.2.69
+                  ip: 10.200.2.69
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -485,8 +521,10 @@ all:
               hosts:
                 systems-k8s1-worker-11:
                   ansible_host: 10.200.1.251
+                  ip: 10.200.1.251
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -512,8 +550,10 @@ all:
               hosts:
                 systems-k8s1-worker-1:
                   ansible_host: 10.200.0.50
+                  ip: 10.200.0.50
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -539,8 +579,10 @@ all:
               hosts:
                 systems-k8s1-worker-2:
                   ansible_host: 10.200.3.249
+                  ip: 10.200.3.249
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -566,8 +608,10 @@ all:
               hosts:
                 systems-k8s1-worker-3:
                   ansible_host: 10.200.1.145
+                  ip: 10.200.1.145
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -593,8 +637,10 @@ all:
               hosts:
                 systems-k8s1-worker-4:
                   ansible_host: 10.200.2.98
+                  ip: 10.200.2.98
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -620,8 +666,10 @@ all:
               hosts:
                 systems-k8s1-worker-5:
                   ansible_host: 10.200.0.42
+                  ip: 10.200.0.42
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -647,8 +695,10 @@ all:
               hosts:
                 systems-k8s1-worker-6:
                   ansible_host: 10.200.1.253
+                  ip: 10.200.1.253
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -674,8 +724,10 @@ all:
               hosts:
                 systems-k8s1-worker-7:
                   ansible_host: 10.200.2.163
+                  ip: 10.200.2.163
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -701,8 +753,10 @@ all:
               hosts:
                 systems-k8s1-worker-8:
                   ansible_host: 10.200.2.24
+                  ip: 10.200.2.24
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -728,8 +782,10 @@ all:
               hosts:
                 systems-k8s1-worker-9:
                   ansible_host: 10.200.3.7
+                  ip: 10.200.3.7
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
+                  ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
                   calc_create_data2_vol: 'false'
                   calc_create_data_vol: 'false'
                   calc_mount_data2_vol: 'false'
@@ -791,8 +847,10 @@ all:
           hosts:
             systems-logging1-loadbalancer:
               ansible_host: 192.168.99.127
+              ip: 192.168.99.127
               ansible_python_interpreter: python3
               ansible_user: ubuntu
+              ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
               calc_create_data2_vol: 'false'
               calc_create_data_vol: 'true'
               calc_mount_data2_vol: 'false'
@@ -1582,6 +1640,7 @@ all:
           ansible_connection: local
           ansible_python_interpreter: python3
           ansible_user: ubuntu
+          ansible_ssh_extra_args: -F ../environments/stfc-techops/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
           common_single_host_mode: false
           dashboard_admin_password: ''
