@@ -48,7 +48,8 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	PROM_OS_PROJECT_ID=$(PROM_OS_PROJECT_ID) \
 	GITLAB_TOKEN=$(GITLAB_TOKEN) \
 	KUBECONFIG=$(KUBECONFIG) \
-	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD)
+	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD) \
+	PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)
 
 BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/test
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
@@ -131,5 +132,5 @@ help:  ## Show Help
 	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
 	@cd ska-ser-orchestration && make print_targets;
 	@echo "";
-	@echo -e "\033[32mInstallation targets - make orch <target>:\033[0m";
+	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
 	@cd ska-ser-ansible-collections && make print_targets;
