@@ -1,0 +1,56 @@
+ansible_user: ubuntu
+
+cephadm_ceph_release: quincy
+cephadm_image: quay.io/ceph/ceph:v17.2.5
+
+cephadm_recreate: false
+cephadm_enable_dashboard: false
+cephadm_enable_firewalld: false
+cephadm_enable_monitoring: false
+#cephadm_bootstrap_additional_parameters: "--single-host-defaults"
+cephadm_ansible_distribution_release: "focal"
+cephadm_public_interface: "ens3"
+cephadm_public_network: "192.168.100.0/24"
+#cephadm_cluster_interface: ""
+#cephadm_cluster_network: ""
+
+#cephadm_osd_devices:
+#  - /dev/vdb
+#  - /dev/vdc
+
+cephadm_osd_spec: |
+  service_type: osd
+  service_id: osd_using_paths
+  placement:
+    host_pattern: '*'
+  spec:
+    data_devices:
+      paths:
+      - /dev/vdb
+    wal_devices:
+      paths:
+      - /dev/vdc
+
+cephadm_pools:
+  - name: cephfs_data
+    size: 2
+    pg_num: 8
+    pgp_num: 8
+  - name: cephfs_metadata
+    size: 2
+    pg_num: 8
+    pgp_num: 8
+  - name: volumes
+    size: 2
+    pg_num: 8
+    pgp_num: 8
+    application: rbd
+
+cephadm_bootstrap_configs:
+  - "set mon mon_data_avail_warn 10"
+  - "set mon mon_allow_pool_delete True"
+  - "set global osd_pool_default_min_size 1"
+
+cephadm_commands:
+  - "fs new cephfs cephfs_metadata cephfs_data"
+  - "orch apply mds cephfs --placement 1"

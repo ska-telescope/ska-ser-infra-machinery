@@ -7,6 +7,8 @@ MAKEFLAGS += --no-print-directory
 ENVIRONMENT ?=
 TF_HTTP_USERNAME ?=
 
+-include .make/base.mk
+-include .make/bats.mk
 -include .make/terraform.mk
 -include .make/python.mk
 -include PrivateRules.mak
@@ -19,7 +21,9 @@ TF_HTTP_LOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/t
 TF_HTTP_UNLOCK_ADDRESS?="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/terraform/state/${ENVIRONMENT}-terraform-state/lock"
 # TERRAFORM_LINT_TARGET=$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 PLAYBOOKS_ROOT_DIR?="${BASE_PATH}/environments/${ENVIRONMENT}/installation"
-ANSIBLE_CONFIG?="${BASE_PATH}/environments/${ENVIRONMENT}/installation/ansible.cfg"
+INVENTORY_FILE?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
+ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?="${BASE_PATH}/ska-ser-ansible-collections"
 
 EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
@@ -33,13 +37,14 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	TF_HTTP_LOCK_ADDRESS="$(TF_HTTP_LOCK_ADDRESS)" \
 	TF_HTTP_UNLOCK_ADDRESS="$(TF_HTTP_UNLOCK_ADDRESS)" \
 	PLAYBOOKS_ROOT_DIR="$(PLAYBOOKS_ROOT_DIR)" \
+	INVENTORY_FILE="$(INVENTORY_FILE)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
+	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
 	ANSIBLE_COLLECTIONS_PATHS="$(ANSIBLE_COLLECTIONS_PATHS)" \
 	AZUREAD_CLIENT_ID=$(AZUREAD_CLIENT_ID) \
 	AZUREAD_CLIENT_SECRET=$(AZUREAD_CLIENT_SECRET) \
 	AZUREAD_COOKIE_SECRET=$(AZUREAD_COOKIE_SECRET) \
 	AZUREAD_TENANT_ID=$(AZUREAD_TENANT_ID) \
-	INVENTORY_FILE=$(INVENTORY_FILE) \
 	SLACK_API_URL=$(SLACK_API_URL) \
 	SLACK_API_URL_USER=$(SLACK_API_URL_USER) \
 	PROM_OS_AUTH_URL=$(PROM_OS_AUTH_URL) \
@@ -48,7 +53,8 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	PROM_OS_PROJECT_ID=$(PROM_OS_PROJECT_ID) \
 	GITLAB_TOKEN=$(GITLAB_TOKEN) \
 	KUBECONFIG=$(KUBECONFIG) \
-	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD)
+	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD) \
+	PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)
 
 BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/test
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
@@ -131,5 +137,5 @@ help:  ## Show Help
 	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
 	@cd ska-ser-orchestration && make print_targets;
 	@echo "";
-	@echo -e "\033[32mInstallation targets - make orch <target>:\033[0m";
+	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
 	@cd ska-ser-ansible-collections && make print_targets;
