@@ -28,7 +28,7 @@ Like the submodules for Terraform and Ansible, this repository does not have any
 variables when running the Makefile targets to avoid any deployment/installation on the
 wrong cluster my mistake.
 
-So, the first variable to setup is the **ENVIRONMENT**. Like the name suggest, it points 
+So, the first variable to set up is the **ENVIRONMENT**. Like the name suggest, it points 
 to the environment we want to work with. For doing that please add a PrivateRules.mak with the following variables
 
 ```
@@ -80,6 +80,37 @@ and [installation](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collecti
 for up-to-date setup and how to use recommendations.
 
 ## Testing
+### Elasticsearch API Key creation and query
+
+A set of make targets were created to help with the creation and query of Elasticsearch API keys.
+These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
+
+The available `make` targets can be called with the command `make playbooks elastic` and are as follows:
+
+- `check`: Check the status of the Elasticsearch cluster.
+- `key-list`: List all the existing API keys.
+- `key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
+- `key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
+- `key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
+- `key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
+
+These make targets need the following environment variables to be set:
+- `ELASTIC_PASSWORD`: Password for the `elastic` user.
+
+Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
+If you are using a different cluster, you will need to change the values of the environment variables.
+
+```
+ELASTIC_USER ?= elastic
+LOGGING_URL ?= https://logging.stfc.skao.int:9200
+LOADBALANCER_IP ?= logging.stfc.skao.int
+CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
+CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
+CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
+PEM_FILE ?= ~/.ssh/ska-techops.pem
+```
+
+## Project Structured
 
 We've added a make target - **test** - to trigger a set of [BATS](https://github.com/bats-core) tests
 to test an environment. This allows us to, either manually or in a scheduled pipeline, to run checks
@@ -88,9 +119,9 @@ installation to services.
 
 Currently, the following test environments are available:
 
-| Environment       | Folder Name     | Goal |
-| ----------------- | -------------   | --- |
-| elastic-e2e-test  | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| Environment      | Folder Name     | Goal                                                                   |
+|------------------|-----------------|------------------------------------------------------------------------|
+| elastic-e2e-test | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
 To trigger tests, after sourcing **setenv.sh**, simply do:
 
@@ -99,7 +130,7 @@ make test
 ```
 
 By default, this will run the tests in - relative to *test/* - the environment's **unit/** and **e2e/** directories.
-We can trigger tests targetting individual targets, both relative to **test/** or by specifying absolute paths in
+We can trigger tests targeting individual targets, both relative to **test/** or by specifying absolute paths in
 *BATS_TEST_TARGETS*, using a comma separated list:
 
 ```
@@ -169,9 +200,9 @@ teardown_file() {
 
 ## Ad hoc
 
-The intances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
-purposes) to do manual ansible work, you can setup your shell and issue ansible commands from any working directory
-agains the environment's inventory. Please, use with caution:
+The instances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
+purposes) to do manual ansible work, you can set up your shell and issue ansible commands from any working directory
+against the environment's inventory. Please, use with caution:
 
 ```
 eval $(make export)
@@ -183,13 +214,13 @@ This a single repository that can manage multiple environments, so the first ste
 to select which one we want. Inside the **./environments/** folder, we have all the
 configurations and variables separated by cluster.
 
-| Cluster           | Environment   |
-| ----------------- | -------       |
-| STFC TechOps      | stfc-techops  |
-| STFC TechSDH&P    | stfc-techsdhp |
-| EngageSKA         | engage        |
-| PSI Low           | psi-low       |
-| PSI Mid           | psi-mid       |
+| Cluster        | Folder Name   |
+|----------------|---------------|
+| STFC TechOps   | stfc-techops  |
+| STFC TechSDH&P | stfc-techsdhp |
+| EngageSKA      | engage        |
+| PSI Low        | psi-low       |
+| PSI Mid        | psi-mid       |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -234,7 +265,7 @@ on the **ska-ser-orchestration** submodule.
 
 The **clouds.yaml** file should also be on this folder along the Terraform files.
 This is the only supported authentication for Openstack API. Go to the Openstack
-Web interface and created a new credencial on *Identity > Application Credentials*
+Web interface and created a new credential on *Identity > Application Credentials*
 page.
 
 Finally, you just have to init Terraform locally and apply the changes:
@@ -243,8 +274,8 @@ Finally, you just have to init Terraform locally and apply the changes:
 make orch init
 make orch apply
 ```
-Recommendation: Setup the **TF_TARGET** to only apply/destroy to a specific
-service/VM. The module name should be name on the first line of the module
+Recommendation: Set up the **TF_TARGET** to only apply/destroy to a specific
+service/VM. The module name should be the name on the first line of the module
 definition:
 
 ```
