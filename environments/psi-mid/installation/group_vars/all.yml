@@ -1,5 +1,1 @@
 debug: false
-
-# Unify these variables
-certificate_authority: certificate_authority
-gateway_hostname: terminus
