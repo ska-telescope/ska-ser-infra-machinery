@@ -7,12 +7,13 @@ variable "openstack" {
 
 variable "defaults" {
   type = object({
-    availability_zone = string
-    flavor            = string
-    jump_host         = string
-    image             = string
-    keypair           = string
-    network           = string
+    availability_zone   = string
+    flavor              = string
+    jump_host           = string
+    image               = string
+    keypair             = string
+    network             = string
+    floating_ip_network = optional(string)
   })
   description = "Set of default values used when creating OpenStack instances"
 }

@@ -174,7 +174,7 @@ purposes) to do manual ansible work, you can setup your shell and issue ansible 
 agains the environment's inventory. Please, use with caution:
 
 ```
-eval $(make export)
+eval $(make export-as-envs)
 ```
 
 ## Project Structure

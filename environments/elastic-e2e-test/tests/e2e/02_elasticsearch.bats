@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR CA_CERT_PASS ELASTIC_PASSWORD"
+    REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR CA_CERT_PASSWORD ELASTICSEARCH_PASSWORD"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -51,7 +51,7 @@ setup() {
 @test 'ELASTICSEARCH: Elasticsearch is healthy' {
     run ansible-playbook \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
-        -e "elastic_password=${ELASTIC_PASSWORD}" \
+        -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/cluster-health.yml
     assert_success
 }
@@ -59,7 +59,7 @@ setup() {
 @test 'ELASTICSEARCH: Elasticsearch API access is configured' {
     run ansible-playbook \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
-        -e "elastic_password=${ELASTIC_PASSWORD}" \
+        -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
     assert_success
 }
@@ -67,7 +67,7 @@ setup() {
 @test 'ELASTICSEARCH: Elasticsearch loadbalancer is healthy' {
     run ansible-playbook \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
-        -e "elastic_password=${ELASTIC_PASSWORD}" \
+        -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
     assert_success
 }
@@ -75,7 +75,7 @@ setup() {
 @test 'ELASTICSEARCH: Elasticsearch index CRUD and post events work' {
     run ansible-playbook \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
-        -e "elastic_password=${ELASTIC_PASSWORD}" \
+        -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/index-crud.yml
     assert_success
 }

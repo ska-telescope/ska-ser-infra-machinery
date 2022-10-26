@@ -1,0 +1,2 @@
+gitlab_runner_name: ska-techops-iac-gitlab-runner
+gitlab_runner_base_image: artefact.skao.int/ska-cicd-k8s-tools-build-deploy:0.8.2
