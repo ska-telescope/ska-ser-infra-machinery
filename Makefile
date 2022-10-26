@@ -11,6 +11,7 @@ TF_HTTP_USERNAME ?=
 -include .make/bats.mk
 -include .make/terraform.mk
 -include .make/python.mk
+#-include ska-ser-ansible-collections/resources/jobs/elastic.mk
 -include PrivateRules.mak
 
 BASE_PATH?="$(shell cd "$(dirname "$1")"; pwd -P)"
