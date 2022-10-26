@@ -12,6 +12,13 @@ localuser: ubuntu
 gateway_host: terminus
 
 k8s_external_dns_entry: sdhp.stfc.skao.int
+
+prometheus_alertmanager_url: http://monitoring.sdhp.skao:9093
+prometheus_url: https://monitoring.sdhp.skao:9090
+slack_channel: dp-platform-alerts
+slack_channel_user: dp-platform-user-alerts
+
+
 thanos_alt_name: "sdhp.stfc.skao.int"
 grafana_disable_admin_account_creation: "false"
 
