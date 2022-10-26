@@ -1,6 +1,6 @@
 ## STFC DP Environment
 
-To setup access to the STFC DP inventory, please do:
+To setup access to the STFC DP inventory, please make sure:
 
 ### STFC DP Instances
 * You are connected to the STFC DP VPN
