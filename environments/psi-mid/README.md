@@ -9,8 +9,8 @@ To setup access to the PSI-Mid inventory, please do:
   * \<ska-ser-infra-machinery path\>/resources/keys/psi-mid.pem
   * ~/.ssh/psi-mid.pem
 
-### Terminus
+### Certificate Authority Instance
 * You have **ska-techops.pem** SSH key in one of the following paths:
-  
+
   * \<ska-ser-infra-machinery path\>/resources/keys/ska-techops.pem
   * ~/.ssh/ska-techops.pem
