@@ -28,11 +28,15 @@ Like the submodules for Terraform and Ansible, this repository does not have any
 variables when running the Makefile targets to avoid any deployment/installation on the
 wrong cluster my mistake.
 
-So, the first variable to set up is the **ENVIRONMENT**. Like the name suggest, it points 
-to the environment we want to work with. For doing that please add a PrivateRules.mak with the following variables
+So, the first variables to setup are the **DATACENTRE**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
+to the datacentre, environment and service we want to work with. These map to the folder structure under [environments](environments/) (`environments/<datacentre>/<environment>/<service>`), which contains the orchestration and installation files.
+
+For doing that please add a PrivateRules.mak with the following variables:
 
 ```
-ENVIRONMENT="stfc-techops"
+DATACENTRE="<datacentre>"
+ENVIRONMENT="<environment>"
+SERVICE="<service>"
 TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
 TF_HTTP_PASSWORD="<user-token>"
 ```
@@ -46,16 +50,16 @@ For Terraform the following specifics variables for the Gitlab's backend are alr
 ```
 BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 GITLAB_PROJECT_ID?=39377838
-ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
-TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
-TF_INVENTORY_DIR?= $(PLAYBOOKS_ROOT_DIR)
-ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
+INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
+ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
-ANSIBLE_INVENTORY?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 ```
 
@@ -210,17 +214,18 @@ eval $(make export-as-envs)
 
 ## Project Structure
 
-This a single repository that can manage multiple environments, so the first step is
-to select which one we want. Inside the **./environments/** folder, we have all the
-configurations and variables separated by cluster.
+This a single repository that can manage multiple datacentres, environments and services, so the first step is
+to select which one we want. Inside the **./environments/** folder, we have all the 
+configurations and variables separated by datacentre (cluster), environment and service.
 
-| Cluster        | Folder Name   |
-|----------------|---------------|
-| STFC TechOps   | stfc-techops  |
-| STFC TechSDH&P | stfc-techsdhp |
-| EngageSKA      | engage        |
-| PSI Low        | psi-low       |
-| PSI Mid        | psi-mid       |
+
+| Cluster           | Environment   | Service    | Folder Path                                      |
+| ----------------- | ------------- | ---------- | ------------------------------------------------ |
+| STFC TechOps      | production    | monitoring | environments/stfc-techops/production/monitoring  |
+| STFC TechSDH&P    | dev           | logging    | environments/stfc-techsdhp/dev/logging           | 
+| EngageSKA         | production    | logging    | environments/engage/production/logging           |
+| PSI Low           | production    | ceph       | environments/psi-low/production/ceph             |
+| PSI Mid           | test          | ceph       | environments/psi-mid/test/ceph                   |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -228,28 +233,32 @@ and Ansible (installation). Like the example bellow:
 ```
 .
 ├── Makefile
-├── environments
-│   ├── <environment>
-│   │   ├── installation
-│   │   │   ├── ansible.cfg
-│   │   │   ├── group_vars
-│   │   │   │   └── *.yml
-│   │   │   ├── inventory.yml
-│   │   │   ├── playbooks
-│   │   │   │   └── *.yml
-│   │   │   └── ssh.config
-│   │   ├── orchestration
-│   │   │   ├── *.tf
-│   │   │   ├── clouds.yaml
-│   │   │   └── terraform.tfvars
-│   │   └── test
-│   │       ├── e2e # End-to-end tests
-│   │       │   └── *.bats
-│   │       ├── src # Custom functions to use in bats
-│   │       │   └── *.bash
-│   │       └── unit # Unit tests of functions in src/
-│   │           └── *.bats
-│   └── ...
+├── datacentres
+|   ├── <datacentre>
+|   |   ├──<environment>
+│   │   │   ├── installation
+│   │   │   │   │   ├── ansible.cfg
+│   │   │   │   │   ├── group_vars
+│   │   │   │   │   │   └── *.yml
+│   │   │   │   │   ├── inventory.yml
+│   │   │   │   │   ├── playbooks
+│   │   │   │   │   │   └── *.yml
+│   │   │   │   │   └── ssh.config
+|   |   |   ├── <service>    
+│   │   │   │   ├── orchestration
+│   │   │   │   │   ├── *.tf
+│   │   │   │   │   ├── clouds.yaml
+│   │   │   │   │   └── terraform.tfvars
+│   │   │   │   └── test
+│   │   │   │       ├── e2e # End-to-end tests
+│   │   │   │       │   └── *.bats
+│   │   │   │       ├── src # Custom functions to use in bats
+│   │   │   │       │   └── *.bash
+│   │   │   │       └── unit # Unit tests of functions in src/
+│   │   │   │           └── *.bats
+│   │   │   └── ...
+|   |   └── ...
+|   └── ... 
 ├── resources
 │   └── keys
 |   |   ├── *.pem
