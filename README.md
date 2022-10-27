@@ -26,18 +26,22 @@ make help
 
 Like the submodules for Terraform and Ansible, this repository does not have any default
 variables when running the Makefile targets to avoid any deployment/installation on the
-wrong cluster my mistake.
+wrong cluster by mistake.
 
-So, the first variable to set up is the **ENVIRONMENT**. Like the name suggest, it points 
-to the environment we want to work with. For doing that please add a PrivateRules.mak with the following variables
+So, the first variables to setup are the **DATACENTRE**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
+to the datacentre, environment and service we want to work with. These map to the folder structure under [datacentres](datacentres/) (`datacentres/<datacentre>/<environment>/<service>`), which contains the orchestration configuration files. At `datacentres/<datacentre>/<environment>/installation` you can find the environment's inventories you can configure using Ansible.
+
+Please add a PrivateRules.mak with the following variables:
 
 ```
-ENVIRONMENT="stfc-techops"
+DATACENTRE="<datacentre>"
+ENVIRONMENT="<environment>"
+SERVICE="<service>"
 TF_HTTP_USERNAME="<gitlab-username>" # Gitlab User token with the API scope
 TF_HTTP_PASSWORD="<user-token>"
 ```
 
-Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the API scope. If this variable is empty, the Makefile targets will not run for security reasons.
+Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the **API scope**. If this variable is empty, the Makefile targets will not run for security reasons.
 
 ### Other important variables
 
@@ -46,16 +50,16 @@ For Terraform the following specifics variables for the Gitlab's backend are alr
 ```
 BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 GITLAB_PROJECT_ID?=39377838
-ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
-TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
-TF_INVENTORY_DIR?= $(PLAYBOOKS_ROOT_DIR)
-ANSIBLE_CONFIG?=${PLAYBOOKS_ROOT_DIR}/ansible.cfg
+TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
+INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
+ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
-ANSIBLE_INVENTORY?=$(PLAYBOOKS_ROOT_DIR)/inventory.yml
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 ```
 
@@ -79,58 +83,83 @@ Always check the READMEs for [orchestration](https://gitlab.com/ska-telescope/sd
 and [installation](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/README.md)
 for up-to-date setup and how to use recommendations.
 
-## Testing
-### Elasticsearch API Key creation and query
+## Project Structure
 
-A set of make targets were created to help with the creation and query of Elasticsearch API keys.
-These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
+This a single repository that can manage multiple datacentres, environments and services, so the first step is
+to select which one we want. Inside the **./datacentres/** folder, we have all the 
+configurations and variables separated by datacentre (cluster), environment and service.
 
-The available `make` targets can be called with the command `make playbooks elastic` and are as follows:
 
-- `check`: Check the status of the Elasticsearch cluster.
-- `key-list`: List all the existing API keys.
-- `key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
-- `key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
-- `key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
-- `key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
+| Cluster           | Environment   | Service    | Folder Path                                      |
+| ----------------- | ------------- | ---------- | ------------------------------------------------ |
+| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/monitoring   |
+| STFC TechOps      | production    | logging    | datacentres/stfc-techops/production/logging      |
+| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/gitlab-runner|
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging          |
+| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/ceph                |
+| EngageSKA         | dev           | -          | datacentres/engage/  |
+| PSI Mid           | production    | -          | datacentres/psi-mid/  |
 
-These make targets need the following environment variables to be set:
-- `ELASTIC_PASSWORD`: Password for the `elastic` user.
-
-Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
-If you are using a different cluster, you will need to change the values of the environment variables.
+Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
+and Ansible (installation). Like the example bellow:
 
 ```
-ELASTIC_USER ?= elastic
-LOGGING_URL ?= https://logging.stfc.skao.int:9200
-LOADBALANCER_IP ?= logging.stfc.skao.int
-CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
-CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
-CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
-PEM_FILE ?= ~/.ssh/ska-techops.pem
+.
+├── Makefile
+├── datacentres
+|   ├── <datacentre>
+|   |   ├──<environment>
+│   │   │   ├── installation
+│   │   │   │   │   ├── ansible.cfg
+│   │   │   │   │   ├── group_vars
+│   │   │   │   │   │   └── *.yml
+│   │   │   │   │   ├── inventory.yml
+│   │   │   │   │   ├── playbooks
+│   │   │   │   │   │   └── *.yml
+│   │   │   │   │   └── ssh.config
+|   |   |   ├── <service>    
+│   │   │   │   ├── orchestration
+│   │   │   │   │   ├── *.tf
+│   │   │   │   │   ├── clouds.yaml
+│   │   │   │   │   └── terraform.tfvars
+│   │   │   ├── tests
+│   │   │   │   ├── e2e # End-to-end tests
+│   │   │   │   │   └── *.bats
+│   │   │   │   ├── src # Custom functions to use in bats
+│   │   │   │   │   └── *.bash
+│   │   │   │   └── unit # Unit tests of functions in src/
+│   │   │   │       └── *.bats
+│   │   │   └── ...
+|   |   └── ...
+|   └── ... 
+├── resources
+│   └── keys
+|   |   ├── *.pem
+├── ska-ser-ansible-collections
+└── ska-ser-orchestration
 ```
 
-## Project Structured
+## Environment tests
 
 We've added a make target - **test** - to trigger a set of [BATS](https://github.com/bats-core) tests
-to test an environment. This allows us to, either manually or in a scheduled pipeline, to run checks
+to test an environment. This allows us to, either manually or in a scheduled pipeline, run checks
 against a fresh or an existing environment. With this strategy, we can test every step from orchestration,
 installation to services.
 
 Currently, the following test environments are available:
 
-| Environment      | Folder Name     | Goal                                                                   |
-|------------------|-----------------|------------------------------------------------------------------------|
-| elastic-e2e-test | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| Cluster           | Environment   | Service    | Folder PATH                           | Goal                                                                   |
+| ----------------- | ------------- | ---------- |---------------------------------------|------------------------------------------------------------------------|
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
-To trigger tests, after sourcing **setenv.sh**, simply do:
+To trigger tests, do:
 
 ```
 make test
 ```
 
-By default, this will run the tests in - relative to *test/* - the environment's **unit/** and **e2e/** directories.
-We can trigger tests targeting individual targets, both relative to **test/** or by specifying absolute paths in
+By default, this will run the tests in - relative to *tests/* - the environment's **unit/** and **e2e/** directories.
+We can trigger tests targeting individual targets, both relative to **tests/** or by specifying absolute paths in
 *BATS_TEST_TARGETS*, using a comma separated list:
 
 ```
@@ -208,55 +237,6 @@ against the environment's inventory. Please, use with caution:
 eval $(make export-as-envs)
 ```
 
-## Project Structure
-
-This a single repository that can manage multiple environments, so the first step is
-to select which one we want. Inside the **./environments/** folder, we have all the
-configurations and variables separated by cluster.
-
-| Cluster        | Folder Name   |
-|----------------|---------------|
-| STFC TechOps   | stfc-techops  |
-| STFC TechSDH&P | stfc-techsdhp |
-| EngageSKA      | engage        |
-| PSI Low        | psi-low       |
-| PSI Mid        | psi-mid       |
-
-Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
-and Ansible (installation). Like the example bellow:
-
-```
-.
-├── Makefile
-├── environments
-│   ├── <environment>
-│   │   ├── installation
-│   │   │   ├── ansible.cfg
-│   │   │   ├── group_vars
-│   │   │   │   └── *.yml
-│   │   │   ├── inventory.yml
-│   │   │   ├── playbooks
-│   │   │   │   └── *.yml
-│   │   │   └── ssh.config
-│   │   ├── orchestration
-│   │   │   ├── *.tf
-│   │   │   ├── clouds.yaml
-│   │   │   └── terraform.tfvars
-│   │   └── test
-│   │       ├── e2e # End-to-end tests
-│   │       │   └── *.bats
-│   │       ├── src # Custom functions to use in bats
-│   │       │   └── *.bash
-│   │       └── unit # Unit tests of functions in src/
-│   │           └── *.bats
-│   └── ...
-├── resources
-│   └── keys
-|   |   ├── *.pem
-├── ska-ser-ansible-collections
-└── ska-ser-orchestration
-```
-
 ## Orchestration on Openstack
 
 Any Terraform files (*.tf) inside the orchestration folder will be
@@ -285,7 +265,7 @@ make orch apply TF_TARGET="module.<your-module-name>"
 
 ## Installation via Ansible
 
-The **ssf.config** and **inventory.yml** files automatically generated using:
+The **ssh.config** and **inventory.yml** files automatically generated using:
 
 ```
 make orch generate-inventory
@@ -295,5 +275,46 @@ This target call a script to retrieve the TF state from Gitlab and compiles the
 data to generate those two files and automatically moves them to the
 **$PLAYBOOKS_ROOT_DIR**.
 
+If you want to generate the complete inventory of an environment, please unset **SERVICE**. SERVICE can also be set, but only the service-specific inventory will be present.
+
+We can also generate the inventory bypassing the **jump_host**, by calling:
+
+```
+GENERATE_INVENTORY_ARGS="--no-jumphost" make orch generate-inventory
+```
+
+To use this option, please make sure the orchestration is well configured following [this](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/README.md).
+
 Finally, run the installation make targets of your choosing.
 
+## Utilities
+
+### Elasticsearch API Key creation and query
+
+A set of make targets were created to help with the creation and query of Elasticsearch API keys.
+These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
+
+The available `make` targets can be called with the command `make playbooks elastic` and are as follows:
+
+- `check`: Check the status of the Elasticsearch cluster.
+- `key-list`: List all the existing API keys.
+- `key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
+- `key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
+- `key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
+- `key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
+
+These make targets need the following environment variables to be set:
+- `ELASTICSEARCH_PASSWORD`: Password for the `elastic` user.
+
+Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
+If you are using a different cluster, you will need to change the values of the environment variables.
+
+```
+ELASTIC_USER ?= elastic
+LOGGING_URL ?= https://logging.stfc.skao.int:9200
+LOADBALANCER_IP ?= logging.stfc.skao.int
+CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
+CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
+CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
+PEM_FILE ?= ~/.ssh/ska-techops.pem
+```
