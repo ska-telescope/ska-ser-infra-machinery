@@ -1,5 +1,5 @@
 module "thanos" {
-  source   = "../../../ska-ser-orchestration/openstack-instance"
+  source   = "../../../../../ska-ser-orchestration/openstack-instance"
   defaults = var.defaults
   providers = {
     openstack = openstack
@@ -7,6 +7,7 @@ module "thanos" {
 
   configuration = {
     name         = "thanos"
+    flavor       = "l3.micro"
     image        = "ubuntu-2004-lts"
     applications = ["thanos", "node_exporter"]
     volumes = [

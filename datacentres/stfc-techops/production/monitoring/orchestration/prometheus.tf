@@ -1,5 +1,5 @@
 module "prometheus" {
-  source   = "../../../ska-ser-orchestration/openstack-instance"
+  source   = "../../../../../ska-ser-orchestration/openstack-instance"
   defaults = var.defaults
   providers = {
     openstack = openstack
@@ -7,6 +7,7 @@ module "prometheus" {
 
   configuration = {
     name         = "prometheus1"
+    flavor       = "l3.micro"
     image        = "ubuntu-2004-lts"
     applications = ["prometheus", "thanos_sidecar", "grafana", "node_exporter"]
     volumes = [

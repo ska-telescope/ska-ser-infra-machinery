@@ -4,9 +4,11 @@ MAKEFLAGS += --no-print-directory
 .PHONY: vars help check-env playbooks orch
 .DEFAULT_GOAL := help
 
+DATACENTRE ?=
 ENVIRONMENT ?=
+SERVICE ?=
 TF_HTTP_USERNAME ?=
-TERRAFORM_LINT_TARGETS?=$(shell find ./environments -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
+TERRAFORM_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 
 -include .make/base.mk
 -include .make/bats.mk
@@ -15,12 +17,13 @@ TERRAFORM_LINT_TARGETS?=$(shell find ./environments -name 'terraform.tf' | grep 
 
 BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 GITLAB_PROJECT_ID?=39377838
-ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/environments/$(ENVIRONMENT)
-TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(ENVIRONMENT)-terraform-state/lock
+ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
+TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
+TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
+TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
 INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
 ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
@@ -29,7 +32,9 @@ ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
 
-EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
+EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
+	ENVIRONMENT="$(ENVIRONMENT)" \
+	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
 	TF_HTTP_PASSWORD="$(TF_HTTP_PASSWORD)" \
 	BASE_PATH="$(BASE_PATH)" \
@@ -40,6 +45,7 @@ EXTRA_VARS ?= ENVIRONMENT="$(ENVIRONMENT)" \
 	TF_HTTP_LOCK_ADDRESS="$(TF_HTTP_LOCK_ADDRESS)" \
 	TF_HTTP_UNLOCK_ADDRESS="$(TF_HTTP_UNLOCK_ADDRESS)" \
 	PLAYBOOKS_ROOT_DIR="$(PLAYBOOKS_ROOT_DIR)" \
+	TF_INVENTORY_DIR="$(TF_INVENTORY_DIR)" \
 	INVENTORY="$(INVENTORY)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
 	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
@@ -68,6 +74,9 @@ vars:  ### Current variables
 	@echo "BASE_PATH=$(BASE_PATH)"
 
 check-env: ## Check environment configuration variables
+ifndef DATACENTRE
+	$(error DATACENTRE is undefined)
+endif
 ifndef ENVIRONMENT
 	$(error ENVIRONMENT is undefined)
 endif

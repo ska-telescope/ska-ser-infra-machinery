@@ -5,4 +5,4 @@ all:
       ip: 130.246.214.45
       ansible_python_interpreter: python3
       ansible_user: ubuntu
-      ansible_ssh_extra_args: -F ../environments/shared/ca.ssh.config
+      ansible_ssh_extra_args: -F ../datacentres/shared/ca.ssh.config
