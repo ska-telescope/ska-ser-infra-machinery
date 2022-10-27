@@ -26,10 +26,10 @@ make help
 
 Like the submodules for Terraform and Ansible, this repository does not have any default
 variables when running the Makefile targets to avoid any deployment/installation on the
-wrong cluster my mistake.
+wrong cluster by mistake.
 
 So, the first variables to setup are the **DATACENTRE**, **ENVIRONMENT**, and **SERVICE**. Like the name suggest, they point 
-to the datacentre, environment and service we want to work with. These map to the folder structure under [environments](environments/) (`environments/<datacentre>/<environment>/<service>`), which contains the orchestration and installation files.
+to the datacentre, environment and service we want to work with. These map to the folder structure under [datacentres](datacentres/) (`datacentres/<datacentre>/<environment>/<service>`), which contains the orchestration and installation files.
 
 For doing that please add a PrivateRules.mak with the following variables:
 
@@ -114,7 +114,7 @@ CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.k
 PEM_FILE ?= ~/.ssh/ska-techops.pem
 ```
 
-## Project Structured
+### End to End testing
 
 We've added a make target - **test** - to trigger a set of [BATS](https://github.com/bats-core) tests
 to test an environment. This allows us to, either manually or in a scheduled pipeline, to run checks
@@ -123,9 +123,9 @@ installation to services.
 
 Currently, the following test environments are available:
 
-| Environment      | Folder Name     | Goal                                                                   |
-|------------------|-----------------|------------------------------------------------------------------------|
-| elastic-e2e-test | EngageSKA (tbd) | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| Cluster           | Environment   | Service    | Folder PATH                           | Goal                                                                   |
+| ----------------- | ------------- | ---------- |---------------------------------------|------------------------------------------------------------------------|
+| STFC TechOps      | e2e           | logging    | datacentres/engage/production/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
 To trigger tests, after sourcing **setenv.sh**, simply do:
 
@@ -215,17 +215,20 @@ eval $(make export-as-envs)
 ## Project Structure
 
 This a single repository that can manage multiple datacentres, environments and services, so the first step is
-to select which one we want. Inside the **./environments/** folder, we have all the 
+to select which one we want. Inside the **./datacentres/** folder, we have all the 
 configurations and variables separated by datacentre (cluster), environment and service.
 
 
 | Cluster           | Environment   | Service    | Folder Path                                      |
 | ----------------- | ------------- | ---------- | ------------------------------------------------ |
-| STFC TechOps      | production    | monitoring | environments/stfc-techops/production/monitoring  |
-| STFC TechSDH&P    | dev           | logging    | environments/stfc-techsdhp/dev/logging           | 
-| EngageSKA         | production    | logging    | environments/engage/production/logging           |
-| PSI Low           | production    | ceph       | environments/psi-low/production/ceph             |
-| PSI Mid           | test          | ceph       | environments/psi-mid/test/ceph                   |
+| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/monitoring   |
+| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/ceph                |
+| STFC TechOps      | production    | logging    | datacentres/stfc-techops/production/logging      |
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/monitoring          |
+| STFC TechOps      | production    | gitlab-run | datacentres/stfc-techops/production/gitlab-runner|
+| STFC TechSDH&P    | dev           | logging    | datacentres/stfc-techsdhp/dev/logging            | 
+| EngageSKA         | dev           | -          | datacentres/engage/dev/                          |
+| PSI Mid           | production    | -          | datacentres/psi-mid/                             |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -249,13 +252,13 @@ and Ansible (installation). Like the example bellow:
 │   │   │   │   │   ├── *.tf
 │   │   │   │   │   ├── clouds.yaml
 │   │   │   │   │   └── terraform.tfvars
-│   │   │   │   └── test
-│   │   │   │       ├── e2e # End-to-end tests
-│   │   │   │       │   └── *.bats
-│   │   │   │       ├── src # Custom functions to use in bats
-│   │   │   │       │   └── *.bash
-│   │   │   │       └── unit # Unit tests of functions in src/
-│   │   │   │           └── *.bats
+│   │   │   ├── tests
+│   │   │   │   ├── e2e # End-to-end tests
+│   │   │   │   │   └── *.bats
+│   │   │   │   ├── src # Custom functions to use in bats
+│   │   │   │   │   └── *.bash
+│   │   │   │   └── unit # Unit tests of functions in src/
+│   │   │   │   └── *.bats
 │   │   │   └── ...
 |   |   └── ...
 |   └── ... 
@@ -294,7 +297,7 @@ make orch apply TF_TARGET="module.<your-module-name>"
 
 ## Installation via Ansible
 
-The **ssf.config** and **inventory.yml** files automatically generated using:
+The **ssh.config** and **inventory.yml** files automatically generated using:
 
 ```
 make orch generate-inventory
