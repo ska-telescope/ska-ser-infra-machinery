@@ -100,30 +100,3 @@ all:
             psi-mid-node-1: {}
             psi-mid-node-2: {}
             psi-mid-node-3: {}
-  hosts:
-    terminus:
-      ansible_host: terminus
-      ip: 130.246.214.45
-      ansible_python_interpreter: python3
-      ansible_user: ubuntu
-      ansible_ssh_extra_args: -F ../environments/psi-mid/installation/no_terraform.ssh.config
-      calc_create_data2_vol: 'false'
-      calc_create_data_vol: 'false'
-      calc_mount_data2_vol: 'false'
-      calc_mount_data_vol: 'false'
-      ceph_no_volumes: 1
-      common_single_host_mode: false
-      dashboard_admin_password: ''
-      data2_vol_diskid: ''
-      data_vol_diskid: ''
-      docker_vol_diskid: 7127dab3-1aab-4b93-b
-      grafana_admin_password: ''
-      log_docker: 'true'
-      monitor_interface: ens3
-      radosgw_interface: ens3
-      systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
-        ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
-      systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
-        ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
-      systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
-        ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
