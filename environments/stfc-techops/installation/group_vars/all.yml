@@ -1,8 +1,2 @@
 debug: false
 
-## ElasticSearch
-elasticsearch_reinstall: true
-
-
-## Certificates:
-# certificates_recreate: false

@@ -30,7 +30,6 @@ all:
                 ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
               systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
                 ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
-    ca:
       hosts:
         systems-monitoring1-master-0:
           ansible_host: 192.168.99.131
@@ -113,7 +112,6 @@ all:
             ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
           systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
             ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
-    ca_revoke: {}
     clients:
       children:
         systems_storage1_master:
