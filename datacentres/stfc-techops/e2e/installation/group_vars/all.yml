@@ -1,10 +1,10 @@
 debug: false
 ansible_ssh_timeout: 60
 
-elasticsearch_cluster_name: elastic-e2e-test
+elasticsearch_cluster_name: stfc-techops-e2e-logging
 elasticsearch_memory: 8G
 elasticsearch_java_mem: 4g
-elasticsearch_dns: elastic-e2e-test-loadbalancer
+elasticsearch_dns: stfc-techops-e2e-logging-loadbalancer
 elasticsearch_reinstall: true
 elasticsearch_clean_data_volume: true
 elasticsearch_first_install: true

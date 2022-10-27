@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_PATH PLAYBOOKS_ROOT_DIR"
+    REQUIRED_ENV_VARS="BASE_PATH PLAYBOOKS_ROOT_DIR DATACENTRE ENVIRONMENT"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -39,14 +39,13 @@ setup() {
 
 @test 'INVENTORY: Failure to ping unknown group' {
     cd ${BASE_PATH}
-    export PLAYBOOKS_HOSTS="some_unknown_group"
-    run make playbooks ping
+    run make playbooks ping PLAYBOOKS_HOSTS="some_unknown_group"
     assert_failure
 }
 
 @test 'INVENTORY: Ping all instances' { # bats-ignore-failure
     cd ${BASE_PATH}
-    run make playbooks ping
+    run make playbooks ping PLAYBOOKS_HOSTS="all"
     assert_success
 }
 

@@ -1,7 +1,3 @@
-variable "environment" {
-  type = string
-}
-
 variable "openstack" {
   type = object({
     cloud      = string

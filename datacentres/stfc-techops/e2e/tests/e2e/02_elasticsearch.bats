@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_PATH ENVIRONMENT ANSIBLE_COLLECTIONS_PATHS PLAYBOOKS_ROOT_DIR CA_CERT_PASSWORD ELASTICSEARCH_PASSWORD"
+    REQUIRED_ENV_VARS="BASE_PATH DATACENTRE ENVIRONMENT SERVICE ANSIBLE_COLLECTIONS_PATHS INVENTORY PLAYBOOKS_ROOT_DIR CA_CERT_PASSWORD ELASTICSEARCH_PASSWORD"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -19,20 +19,18 @@ setup() {
     shouldSkipTest "${BATS_TEST_FILENAME}" "${BATS_TEST_NAME}"
     prepareTest
 
-    ELASTICSEARCH_CLUSTER_NAME=${ENVIRONMENT}
+    ELASTICSEARCH_CLUSTER_NAME=${DATACENTRE}-${ENVIRONMENT}-${SERVICE}
 }
 
 @test 'ELASTICSEARCH: Cluster hosts are reachable' {
     cd ${BASE_PATH}
-    export PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
-    run make playbooks ping 
+    run make playbooks ping PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
     assert_success
 }
 
 @test 'ELASTICSEARCH: Elasticsearch installs' {
     cd ${BASE_PATH}
-    export PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
-    run make playbooks elastic install
+    run make playbooks elastic install PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
     assert_success
 }
 
@@ -50,6 +48,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch is healthy' {
     run ansible-playbook \
+        -i ${INVENTORY} \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
         -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/cluster-health.yml
@@ -58,6 +57,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch API access is configured' {
     run ansible-playbook \
+        -i ${INVENTORY} \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
         -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
@@ -66,6 +66,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch loadbalancer is healthy' {
     run ansible-playbook \
+        -i ${INVENTORY} \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
         -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/client-health.yml
@@ -74,6 +75,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch index CRUD and post events work' {
     run ansible-playbook \
+        -i ${INVENTORY} \
         -e "target_hosts=${ELASTICSEARCH_CLUSTER_NAME}" \
         -e "elasticsearch_password=${ELASTICSEARCH_PASSWORD}" \
         ${PLAYBOOKS_ROOT_DIR}/playbooks/index-crud.yml

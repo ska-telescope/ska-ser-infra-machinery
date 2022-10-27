@@ -1,12 +1,12 @@
 module "elasticsearch" {
-  source   = "../../../ska-ser-orchestration/openstack-elasticsearch-cluster"
+  source   = "../../../../../ska-ser-orchestration/openstack-elasticsearch-cluster"
   defaults = var.defaults
   providers = {
     openstack = openstack
   }
 
   elasticsearch = {
-    name = var.environment
+    name = "stfc-techops-e2e-logging"
     master = {
       size               = 1
       data_volume_size   = 10

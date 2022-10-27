@@ -1,5 +1,5 @@
 module "ceph_cluster" {
-  source   = "../../../ska-ser-orchestration/openstack-ceph-cluster"
+  source   = "../../../../../ska-ser-orchestration/openstack-ceph-cluster"
   defaults = var.defaults
   providers = {
     openstack = openstack
