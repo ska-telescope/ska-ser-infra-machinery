@@ -1,7 +1,7 @@
 SHELL=/usr/bin/env bash
 MAKEFLAGS += --no-print-directory
 
-.PHONY: im-check-env im-vars im-help im-test im-test-install im-test-uninstall im-test-reinstall infra-check-env playbooks orch
+.PHONY: im-check-env im-setup-vault im-get-vault im-edit-vault im-rotate-vault-secret vars export-as-envs playbooks orch im-check-test-env im-test im-test-install im-test-uninstall im-test-reinstall im-help
 .DEFAULT_GOAL := help
 
 DATACENTRE ?=
@@ -36,7 +36,17 @@ ANSIBLE_CONFIG?="$(PLAYBOOKS_ROOT_DIR)/ansible.cfg"
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
-EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
+## ANSIBLE_VAULT_PROVIDER must be one of: plain-text, ansible-vault or hashicorp-vault
+DEFAULT_TEXT_EDITOR?=vim
+ANSIBLE_VAULT_EXTRA_ARGS?=
+ANSIBLE_VAULT_PROVIDER?=ansible-vault
+ANSIBLE_VAULT_PATH?=$(BASE_PATH)/vault.yml
+ANSIBLE_VAULT_PASSWORD?=
+
+# Include environment specific vars and secrets
+-include $(BASE_PATH)/PrivateRules.mak
+
+ENVIRONMENT_VARIABLES ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -54,25 +64,7 @@ EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
 	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
 	ANSIBLE_COLLECTIONS_PATHS="$(ANSIBLE_COLLECTIONS_PATHS)" \
-	AZUREAD_CLIENT_ID=$(AZUREAD_CLIENT_ID) \
-	AZUREAD_CLIENT_SECRET=$(AZUREAD_CLIENT_SECRET) \
-	AZUREAD_COOKIE_SECRET=$(AZUREAD_COOKIE_SECRET) \
-	AZUREAD_TENANT_ID=$(AZUREAD_TENANT_ID) \
-	SLACK_API_URL=$(SLACK_API_URL) \
-	SLACK_API_URL_USER=$(SLACK_API_URL_USER) \
-	PROM_OS_AUTH_URL=$(PROM_OS_AUTH_URL) \
-	PROM_OS_USERNAME=$(PROM_OS_USERNAME) \
-	PROM_OS_PASSWORD=$(PROM_OS_PASSWORD) \
-	PROM_OS_PROJECT_ID=$(PROM_OS_PROJECT_ID) \
-	GITLAB_TOKEN=$(GITLAB_TOKEN) \
-	KUBECONFIG=$(KUBECONFIG) \
-	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD) \
-	PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS) \
-	ELASTICSEARCH_PASSWORD=$(ELASTICSEARCH_PASSWORD)
-	
-
-im-vars:  ### Current variables
-	@echo "BASE_PATH=$(BASE_PATH)"
+	ANSIBLE_VAULT_EXTRA_ARGS="$(ANSIBLE_VAULT_EXTRA_ARGS)"
 
 im-check-env: ## Check environment configuration variables
 ifndef DATACENTRE
@@ -89,8 +81,77 @@ ifndef TF_HTTP_PASSWORD
 endif
 	@echo "OK."
 
-export-as-envs: infra-check-env ## Print export of EXTRA_VARS
-	@echo 'export $(EXTRA_VARS)'
+im-setup-vault: ## Loads vault as ansible variables
+# plain-text provider
+ifndef ANSIBLE_VAULT_PROVIDER
+	$(error ANSIBLE_VAULT_PROVIDER is undefined)
+endif
+ifeq ($(ANSIBLE_VAULT_PROVIDER),plain-text)
+ifeq ($(ANSIBLE_VAULT_PATH),)
+	$(error ANSIBLE_VAULT_PATH is undefined)
+endif
+ANSIBLE_VAULT_EXTRA_ARGS := --extra-vars @$(ANSIBLE_VAULT_PATH)
+$(shell chmod 600 $(ANSIBLE_VAULT_PATH))
+im-get-vault:
+	@cat $(ANSIBLE_VAULT_PATH)
+im-edit-vault:
+	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_VAULT_PATH)
+endif
+# ansible-vault provider
+ifeq ($(ANSIBLE_VAULT_PROVIDER),ansible-vault)
+ifeq ($(ANSIBLE_VAULT_PATH),)
+	$(error ANSIBLE_VAULT_PATH is undefined)
+endif
+ifeq ($(ANSIBLE_VAULT_PASSWORD),)
+	$(error ANSIBLE_VAULT_PASSWORD is undefined)
+endif
+ANSIBLE_VAULT_EXTRA_ARGS := --extra-vars @$(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
+$(shell echo "$(ANSIBLE_VAULT_PASSWORD)" > $(BASE_PATH)/vault.password && chmod 600 $(BASE_PATH)/vault.password)
+im-get-vault:
+	@ansible-vault view $(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
+im-edit-vault:
+	@ansible-vault edit $(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
+im-rotate-vault-secret:
+	@echo "Rekeying $(ANSIBLE_VAULT_PATH)"
+	@echo "New vault password: "; read -s VAULT_PASSWORD; \
+		echo "$$VAULT_PASSWORD" | sed 's#\(.\{3\}\)\(.*\)\(.\{3\}\)#\1*************\3#'; \
+		echo "$$VAULT_PASSWORD" > $(BASE_PATH)/new-vault.password && chmod 600 $(BASE_PATH)/new-vault.password; \
+		echo "Please update ANSIBLE_VAULT_PASSWORD to the contents of $(BASE_PATH)/new-vault.password";
+	@ansible-vault rekey --vault-password-file $(BASE_PATH)/vault.password --new-vault-password-file $(BASE_PATH)/new-vault.password
+endif
+# hashicorp-vault provider
+ifeq ($(ANSIBLE_VAULT_PROVIDER),hashicorp-vault)
+	$(error Vault provider 'hashicorp-vault' is undefined)
+endif
+
+vars:  ### Current variables
+	@echo "";
+	@echo -e "\033[32mMain vars:\033[0m"
+	@echo "BASE_PATH=$(BASE_PATH)"
+	@echo "DATACENTRE=$(DATACENTRE)"
+	@echo "ENVIRONMENT=$(ENVIRONMENT)"
+	@echo "SERVICE=$(SERVICE)"
+	@echo "TF_HTTP_USERNAME=$(TF_HTTP_USERNAME)"
+	@echo "TF_HTTP_PASSWORD=$(TF_HTTP_PASSWORD)"
+	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
+	@echo "ENVIRONMENT_ROOT_DIR=$(ENVIRONMENT_ROOT_DIR)"
+	@echo "TF_ROOT_DIR=$(TF_ROOT_DIR)"
+	@echo "TF_HTTP_ADDRESS=$(TF_HTTP_ADDRESS)"
+	@echo "TF_HTTP_LOCK_ADDRESS=$(TF_HTTP_LOCK_ADDRESS)"
+	@echo "TF_HTTP_UNLOCK_ADDRESS=$(TF_HTTP_UNLOCK_ADDRESS)"
+	@echo "PLAYBOOKS_ROOT_DIR=$(PLAYBOOKS_ROOT_DIR)"
+	@echo "INVENTORY=$(INVENTORY)"
+	@echo "ANSIBLE_VAULT_PATH=$(ANSIBLE_VAULT_PATH)"
+	@echo "";
+	@echo -e "\033[32mOrchestration vars:\033[0m";
+	@cd ska-ser-orchestration && $(ENVIRONMENT_VARIABLES) $(MAKE) vars;
+	@echo "";
+	@echo -e "\033[32mInstallation vars:\033[0m";
+	@cd ska-ser-ansible-collections && $(ENVIRONMENT_VARIABLES) $(MAKE) vars;
+	@echo "";
+
+export-as-envs: im-check-env
+	@echo 'export $(ENVIRONMENT_VARIABLES)'
 
 # If the first argument is "install"...
 ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
@@ -100,8 +161,8 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
   $(eval $(TARGET_ARGS):;@:)
 endif
 
-playbooks: im-check-env ## Access Ansible Collections submodule targets
-	@cd ska-ser-ansible-collections && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
+playbooks: im-check-env setup-vault ## Access Ansible Collections submodule targets
+	@cd ska-ser-ansible-collections && $(ENVIRONMENT_VARIABLES) $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
 ifeq (orch,$(firstword $(MAKECMDGOALS)))
@@ -112,9 +173,7 @@ ifeq (orch,$(firstword $(MAKECMDGOALS)))
 endif
 
 orch: im-check-env ## Access Orchestration submodule targets
-	@echo $(TF_INVENTORY_DIR);
-	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
-
+	@cd ska-ser-orchestration && $(ENVIRONMENT_VARIABLES) $(MAKE) $(TARGET_ARGS)
 
 ## Testing
 RANDOM_STRING ?= $(shell echo $$RANDOM | md5sum | head -c 3; echo)
@@ -134,7 +193,7 @@ BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_CORE_VERSION = v1.8.0
 
-check-test-env:
+im-check-test-env:
 ifeq ($(SKIP_BATS_TESTS),true)
 	@echo "No tests found on $(BATS_TESTS_DIR)"
 endif
@@ -148,7 +207,7 @@ ifndef ENVIRONMENT
 	$(error ENVIRONMENT is undefined)
 endif
 
-test: check-test-env
+im-test: im-check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
 
 	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="unit $(SERVICE) cleanup" $(MAKE) --no-print-directory bats-test
@@ -158,10 +217,10 @@ test-cleanup: check-test-env
 
 	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
 
-test-install: check-test-env
+im-test-install: im-check-test-env
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
 
-test-uninstall: check-test-env
+im-test-uninstall: im-check-test-env
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
 im-test-reinstall: im-test-uninstall im-test-install

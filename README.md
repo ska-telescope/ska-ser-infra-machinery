@@ -94,7 +94,7 @@ configurations and variables separated by datacentre (cluster), environment and 
 | ----------------- | ------------- | ---------- | ------------------------------------------------ |
 | STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/monitoring   |
 | STFC TechOps      | production    | logging    | datacentres/stfc-techops/production/logging      |
-| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/gitlab-runner|
+| STFC TechOps      | production    | gitlab_runner | datacentres/stfc-techops/production/gitlab_runner|
 | STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging          |
 | STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/ceph                |
 | EngageSKA         | dev           | -          | datacentres/engage/  |
