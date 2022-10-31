@@ -7,9 +7,9 @@ module "nexus" {
 
   configuration = {
     applications = ["nexus"]
-    name   = "nexus-bang-22"
-    flavor = "c3.medium"
-    image  = "ubuntu-jammy-22.04"
+    name         = "nexus-bang-22"
+    flavor       = "c3.medium"
+    image        = "ubuntu-jammy-22.04"
     volumes = [
       {
         mount_point = "/var/lib/docker"
