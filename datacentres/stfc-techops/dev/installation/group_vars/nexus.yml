@@ -30,7 +30,7 @@ nexus_user_password_gitlab: "{{ vault_nexus_user_password_gitlab }}"
 nexus_user_password_publisher: "{{ vault_nexus_user_password_publisher }}"
 nexus_user_password_quarantiner: "{{ vault_nexus_user_password_quarantiner }}"
 nexus_public_hostname: 'artefact.skatelescope.org'
-nexus_public_scheme: https
+nexus_public_scheme: http
 httpd_setup_enable: false
 nexus_default_port: 8881
 nexus_docker_hosted_port: 9080
