@@ -6,6 +6,7 @@ module "nexus" {
   }
 
   configuration = {
+    applications = ["nexus"]
     name   = "nexus-bang-22"
     flavor = "c3.medium"
     image  = "ubuntu-jammy-22.04"
