@@ -8,7 +8,7 @@ module "nexus" {
   configuration = {
     name   = "nexus-bang-22"
     flavor = "c3.medium"
-    image  = "ubuntu-focal-20.04-gui"
+    image  = "ubuntu-jammy-22.04"
     volumes = [
       {
         mount_point = "/var/lib/docker"
