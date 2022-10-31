@@ -2,6 +2,7 @@
 debug: true
 production: true
 containerd_version: 1.4.4-1
+ntp_sync_server: 1.fedora.pool.ntp.org
 
 ############
 
