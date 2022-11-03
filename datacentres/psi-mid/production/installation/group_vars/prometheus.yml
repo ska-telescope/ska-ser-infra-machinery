@@ -2,7 +2,7 @@
 debug: true
 production: true
 # can only do one cluster - v1
-k8s_api_server_addr: "10.200.0.63"
+k8s_api_server_addr: "10.110.8.4"
 k8s_api_server_port: "6443"
 k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
 k8s_client_certificate: "/etc/prometheus/ca.crt"
@@ -15,7 +15,7 @@ prometheus_url: https://monitoring.skao.stfc:9090
 slack_channel: psi-mid-alerts
 slack_channel_user: psi-mid-user-alerts
 
-k8s_external_dns_entry: k8s.stfc.skao.int
+k8s_external_dns_entry: 
 
 grafana_disable_admin_account_creation: "false"
 
