@@ -38,7 +38,8 @@ ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
 ## ANSIBLE_VAULT_PROVIDER must be one of: plain-text, ansible-vault or hashicorp-vault
 DEFAULT_TEXT_EDITOR?=vim
-ANSIBLE_VAULT_EXTRA_ARGS?=
+# pass datacentre, env (environment is reserved in ansible) and service variables
+ANSIBLE_VAULT_EXTRA_ARGS?=--extra-vars 'datacentre=$(DATACENTRE) env=$(ENVIRONMENT) service=$(SERVICE)'
 ANSIBLE_VAULT_PROVIDER?=ansible-vault
 ANSIBLE_VAULT_PATH?=$(BASE_PATH)/vault.yml
 ANSIBLE_VAULT_PASSWORD?=
@@ -90,7 +91,7 @@ ifeq ($(ANSIBLE_VAULT_PROVIDER),plain-text)
 ifeq ($(ANSIBLE_VAULT_PATH),)
 	$(error ANSIBLE_VAULT_PATH is undefined)
 endif
-ANSIBLE_VAULT_EXTRA_ARGS := --extra-vars @$(ANSIBLE_VAULT_PATH)
+ANSIBLE_VAULT_EXTRA_ARGS += --extra-vars @$(ANSIBLE_VAULT_PATH)
 $(shell chmod 600 $(ANSIBLE_VAULT_PATH))
 im-get-vault:
 	@cat $(ANSIBLE_VAULT_PATH)
@@ -105,7 +106,7 @@ endif
 ifeq ($(ANSIBLE_VAULT_PASSWORD),)
 	$(error ANSIBLE_VAULT_PASSWORD is undefined)
 endif
-ANSIBLE_VAULT_EXTRA_ARGS := --extra-vars @$(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
+ANSIBLE_VAULT_EXTRA_ARGS += --extra-vars @$(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
 $(shell echo "$(ANSIBLE_VAULT_PASSWORD)" > $(BASE_PATH)/vault.password && chmod 600 $(BASE_PATH)/vault.password)
 im-get-vault:
 	@ansible-vault view $(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
@@ -161,7 +162,7 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
   $(eval $(TARGET_ARGS):;@:)
 endif
 
-playbooks: im-check-env setup-vault ## Access Ansible Collections submodule targets
+playbooks: im-check-env im-setup-vault ## Access Ansible Collections submodule targets
 	@cd ska-ser-ansible-collections && $(ENVIRONMENT_VARIABLES) $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
