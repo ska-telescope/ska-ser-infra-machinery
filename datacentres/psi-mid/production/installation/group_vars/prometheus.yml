@@ -30,22 +30,11 @@ prometheus_global:
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
-    regex: 192\.168\.99\.194 :9100
+    regex: 192\.168\.99\.194:9100
     replacement: terminus:9100
     source_labels:
     - instance
     target_label: instance
-
-elasticsearch_instance_add_cluster_label:
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
-    source_labels: [instance]
-    target_label: cluster
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
-    source_labels: [instance]
-    target_label: cluster
-
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -70,7 +59,7 @@ prometheus_scrape_configs:
   - job_name: "gitlab-runner"
     static_configs:
     - targets:
-      - "10.200.0.63:9252"
+      - "10.110.8.4:9252"
 
   - job_name: "elasticsearch"
     file_sd_configs:
@@ -91,11 +80,11 @@ prometheus_scrape_configs:
   - job_name: "kube-state-metrics"
     static_configs:
     - targets:
-      - "10.200.0.63:32080"  # load balancer
+      - "10.110.8.4:32080" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.99\.222:32080
-      replacement: systems-k8s1-loadbalancer:32080
+      regex: 192\.168\.128\.47:32080
+      replacement: rmdskadevdu011:32080
       source_labels:
         - instance
       target_label: instance
@@ -103,11 +92,11 @@ prometheus_scrape_configs:
   - job_name: "k8stelemetry"
     static_configs:
     - targets:
-      - "10.200.0.63:32081"  # load balancer
+      - "10.110.8.4:32081" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.99\.222:32081
-      replacement: systems-k8s1-loadbalancer:32081
+      regex: 192\.168\.128\.47:32081
+      replacement: rmdskadevdu011:32081
       source_labels:
         - instance
       target_label: instance
