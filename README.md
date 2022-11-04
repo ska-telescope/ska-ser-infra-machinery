@@ -63,7 +63,7 @@ ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOO
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 ```
 
-Change them carefully if you really need it. 
+Change them carefully if you really need it.
 
 The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective  group variables.
 
@@ -179,7 +179,7 @@ We can also run specific test cases using included in the runnable targets. This
 (full or short name) by setting *BATS_RUN_TESTS* in a comma separated list:
 
 ```
-make test BATS_RUN_TESTS="<test case name>,[other targets]" 
+make test BATS_RUN_TESTS="<test case name>,[other targets]"
 ```
 
 Also, to overcome some bats-core lack of functionality - for instance, stopping execution of tests when a test case fails -
