@@ -36,18 +36,76 @@ ANSIBLE_CONFIG?="$(PLAYBOOKS_ROOT_DIR)/ansible.cfg"
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
-## ANSIBLE_VAULT_PROVIDER must be one of: plain-text, ansible-vault or hashicorp-vault
-DEFAULT_TEXT_EDITOR?=vim
+DEFAULT_TEXT_EDITOR?=vi
+ANSIBLE_EXTRA_VARS?=--extra-vars 'datacentre=$(DATACENTRE) env=$(ENVIRONMENT) service=$(SERVICE)'
+
+## ANSIBLE_SECRETS_PROVIDER must be one of: plain-text, ansible-vault or hashicorp-vault
 # pass datacentre, env (environment is reserved in ansible) and service variables
-ANSIBLE_VAULT_EXTRA_ARGS?=--extra-vars 'datacentre=$(DATACENTRE) env=$(ENVIRONMENT) service=$(SERVICE)'
-ANSIBLE_VAULT_PROVIDER?=ansible-vault
-ANSIBLE_VAULT_PATH?=$(BASE_PATH)/vault.yml
-ANSIBLE_VAULT_PASSWORD?=
+ANSIBLE_SECRETS_PROVIDER?=ansible-vault
+ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
+ANSIBLE_SECRETS_PASSWORD?=
 
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
 
-ENVIRONMENT_VARIABLES ?= DATACENTRE="$(DATACENTRE)" \
+check-env: ## Check environment configuration variables
+ifndef DATACENTRE
+	$(error DATACENTRE is undefined)
+endif
+ifndef ENVIRONMENT
+	$(error ENVIRONMENT is undefined)
+endif
+ifndef TF_HTTP_USERNAME
+	$(error TF_HTTP_USERNAME is undefined)
+endif
+ifndef TF_HTTP_PASSWORD
+	$(error TF_HTTP_PASSWORD is undefined)
+endif
+
+setup-secrets: ## Loads secrets as ansible variables
+# plain-text provider
+ifndef ANSIBLE_SECRETS_PROVIDER
+	$(error ANSIBLE_SECRETS_PROVIDER is undefined)
+endif
+ifeq ($(ANSIBLE_SECRETS_PROVIDER),plain-text)
+ifeq ($(ANSIBLE_SECRETS_PATH),)
+	$(error ANSIBLE_SECRETS_PATH is undefined)
+endif
+ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
+$(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
+get-secrets:
+	@cat $(ANSIBLE_SECRETS_PATH)
+edit-secrets:
+	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_SECRETS_PATH)
+endif
+# ansible-vault provider
+ifeq ($(ANSIBLE_SECRETS_PROVIDER),ansible-vault)
+ifeq ($(ANSIBLE_SECRETS_PATH),)
+	$(error ANSIBLE_SECRETS_PATH is undefined)
+endif
+ifeq ($(ANSIBLE_SECRETS_PASSWORD),)
+	$(error ANSIBLE_SECRETS_PASSWORD is undefined)
+endif
+ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+$(shell echo "$(ANSIBLE_SECRETS_PASSWORD)" > $(BASE_PATH)/secrets.password && chmod 600 $(BASE_PATH)/secrets.password)
+get-secrets:
+	@ansible-vault view $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+edit-secrets:
+	@ansible-vault edit $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+rotate-secrets-password:
+	@echo "Rekeying $(ANSIBLE_SECRETS_PATH)"
+	@echo "New secrets password: "; read -s SECRETS_PASSWORD; \
+		echo "$$SECRETS_PASSWORD" | sed 's#\(.\{3\}\)\(.*\)\(.\{3\}\)#\1*************\3#'; \
+		echo "$$SECRETS_PASSWORD" > $(BASE_PATH)/new-secrets.password && chmod 600 $(BASE_PATH)/new-secrets.password; \
+		echo "Please update ANSIBLE_SECRETS_PASSWORD to the contents of $(BASE_PATH)/new-secrets.password";
+	@ansible-vault rekey --vault-password-file $(BASE_PATH)/secrets.password --new-vault-password-file $(BASE_PATH)/new-secrets.password
+endif
+# hashicorp-vault provider
+ifeq ($(ANSIBLE_SECRETS_PROVIDER),hashicorp-vault)
+	$(error Secrets provider 'hashicorp-vault' is undefined)
+endif
+
+ENV_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -65,7 +123,7 @@ ENVIRONMENT_VARIABLES ?= DATACENTRE="$(DATACENTRE)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
 	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
 	ANSIBLE_COLLECTIONS_PATHS="$(ANSIBLE_COLLECTIONS_PATHS)" \
-	ANSIBLE_VAULT_EXTRA_ARGS="$(ANSIBLE_VAULT_EXTRA_ARGS)"
+	ANSIBLE_EXTRA_VARS="$(ANSIBLE_EXTRA_VARS)"
 
 im-check-env: ## Check environment configuration variables
 ifndef DATACENTRE
@@ -142,17 +200,17 @@ vars:  ### Current variables
 	@echo "TF_HTTP_UNLOCK_ADDRESS=$(TF_HTTP_UNLOCK_ADDRESS)"
 	@echo "PLAYBOOKS_ROOT_DIR=$(PLAYBOOKS_ROOT_DIR)"
 	@echo "INVENTORY=$(INVENTORY)"
-	@echo "ANSIBLE_VAULT_PATH=$(ANSIBLE_VAULT_PATH)"
+	@echo "ANSIBLE_SECRETS_PATH=$(ANSIBLE_SECRETS_PATH)"
 	@echo "";
 	@echo -e "\033[32mOrchestration vars:\033[0m";
-	@cd ska-ser-orchestration && $(ENVIRONMENT_VARIABLES) $(MAKE) vars;
+	@cd ska-ser-orchestration && $(ENV_VARS) $(MAKE) vars;
 	@echo "";
 	@echo -e "\033[32mInstallation vars:\033[0m";
-	@cd ska-ser-ansible-collections && $(ENVIRONMENT_VARIABLES) $(MAKE) vars;
+	@cd ska-ser-ansible-collections && $(ENV_VARS) $(MAKE) vars;
 	@echo "";
 
 export-as-envs: im-check-env
-	@echo 'export $(ENVIRONMENT_VARIABLES)'
+	@echo 'export $(ENV_VARS)'
 
 # If the first argument is "install"...
 ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
@@ -163,7 +221,7 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
 endif
 
 playbooks: im-check-env im-setup-vault ## Access Ansible Collections submodule targets
-	@cd ska-ser-ansible-collections && $(ENVIRONMENT_VARIABLES) $(MAKE) $(TARGET_ARGS)
+	@cd ska-ser-ansible-collections && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
 ifeq (orch,$(firstword $(MAKECMDGOALS)))
@@ -174,13 +232,13 @@ ifeq (orch,$(firstword $(MAKECMDGOALS)))
 endif
 
 orch: im-check-env ## Access Orchestration submodule targets
-	@cd ska-ser-orchestration && $(ENVIRONMENT_VARIABLES) $(MAKE) $(TARGET_ARGS)
+	@cd ska-ser-orchestration && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
 
 ## Testing
 RANDOM_STRING ?= $(shell echo $$RANDOM | md5sum | head -c 3; echo)
 TF_VAR_group_name ?= $(DATACENTRE)-e2e-$(SERVICE)-local-$(RANDOM_STRING)
 
-TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
+TEST_ENV_VARS ?= $(ENV_VARS) \
 	OS_CLOUD=$(DATACENTRE) \
 	TF_HTTP_USERNAME="" \
 	TF_HTTP_PASSWORD="" \
@@ -215,14 +273,13 @@ im-test: im-check-test-env
 	
 test-cleanup: check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
-
-	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
+	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
 
 im-test-install: im-check-test-env
-	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
 
 im-test-uninstall: im-check-test-env
-	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
+	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
 im-test-reinstall: im-test-uninstall im-test-install
 
@@ -232,10 +289,10 @@ im-help:  ## Show Help
 	@make im-vars;
 	@echo "";
 	@echo -e "\033[32mOrchestration Vars:\033[0m";
-	@cd ska-ser-orchestration && $(EXTRA_VARS) make vars;
+	@cd ska-ser-orchestration && $(ENV_VARS) make vars;
 	@echo "";
 	@echo -e "\033[32mInstallation Vars:\033[0m";
-	@cd ska-ser-ansible-collections && $(EXTRA_VARS) make ac-vars-recursive;
+	@cd ska-ser-ansible-collections && $(ENV_VARS) make ac-vars-recursive;
 	@echo "";
 	@echo -e "\033[32mMain Targets:\033[0m"
 	@make help-print-targets

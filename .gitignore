@@ -17,3 +17,4 @@ PrivateRules*.mak
 **/.terraform.tfstate.lock.info
 *vault.*
 *secret.*
+*secrets.*

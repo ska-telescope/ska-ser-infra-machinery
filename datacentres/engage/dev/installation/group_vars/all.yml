@@ -1,1 +1,6 @@
 debug: false
+
+# Mandatory variables -> Add to ALL environments with their respective value
+nexus: 192.168.93.109
+ca_host: posorio-test-instance
+ca_cert_password: "{{ vault.shared.ca.password | mandatory }}"
