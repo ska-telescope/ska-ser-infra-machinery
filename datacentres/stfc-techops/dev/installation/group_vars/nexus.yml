@@ -1,6 +1,6 @@
 ---
-debug: true
-production: true
+nexus_debug: true
+nexus_production: true
 
 ############
 nexus_upgrade: true
