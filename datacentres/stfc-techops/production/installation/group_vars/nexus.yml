@@ -1,15 +1,10 @@
 ---
-nexus_debug: true
-nexus_production: true
-
 ############
 nexus_upgrade: false
 
 # Pin versions for production
 nexus_docker_deb_version: 5:20.10.21~3-0~ubuntu-jammy
 nexus_containerd_version: 1.6.9-1
-nexus_containerd_ubuntu_version: jammy
-nexus_ubuntu_version: jammy
 nexus_version: '3.42.0-01'
 
 nexus_public_hostname: 'nexus.skao.stfc'
