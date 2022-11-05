@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR TF_HTTP_ADDRESS TF_HTTP_LOCK_ADDRESS TF_HTTP_UNLOCK_ADDRESS"
+    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -11,7 +11,7 @@ setup_file() {
     done
 
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
-    TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
+    TEST_TMP_DIR=${BASE_PATH}/${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     mkdir -p ${TEST_TMP_DIR}
 }
 
@@ -25,7 +25,7 @@ setup() {
     prepareTest
 
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
-    TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
+    TEST_TMP_DIR=${BASE_PATH}/${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 }
@@ -44,7 +44,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy Plan' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
     run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
@@ -56,7 +56,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color"
+    export TF_ARGUMENTS="-input=false -no-color -var-file=$DATACENTRE.tfvars"
     export TF_AUTO_APPROVE=true
     run make orch destroy
     assert_success
@@ -64,7 +64,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy is idempotent' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
     run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
