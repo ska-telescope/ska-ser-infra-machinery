@@ -45,7 +45,6 @@ setup() {
 }
 
 @test 'INVENTORY: Ansible inventory exists' {
-    
     assert_exist ${PLAYBOOKS_ROOT_DIR}/inventory.yml
 }
 

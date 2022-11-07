@@ -143,7 +143,7 @@ TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
 	ANSIBLE_SSH_ARGS="$(TEST_ANSIBLE_SSH_ARGS)" \
 	
 # End-to-end variables
-BATS_TESTS_DIR ?= tests/e2e
+BATS_TESTS_DIR ?= $(CURDIR)/tests/e2e
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_TEST_TARGETS := "unit $(SERVICE)"
 BATS_CORE_VERSION = v1.8.0
