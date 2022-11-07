@@ -31,7 +31,7 @@ prometheus_global:
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
-    regex: 130\.246\.214\.45):9100
+    regex: 130\.246\.214\.45:9100
     replacement: terminus:9100
     source_labels:
     - instance
