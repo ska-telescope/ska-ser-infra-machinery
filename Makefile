@@ -10,9 +10,6 @@ SERVICE ?=
 TF_HTTP_USERNAME ?=
 TF_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 
-# We are defining our own local help target that recurses sub modules
-HELP_DEFINED := 1
-
 -include .make/base.mk
 -include .make/bats.mk
 -include .make/terraform.mk
@@ -39,7 +36,7 @@ ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
-TF_EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
+EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -96,8 +93,8 @@ ifndef TF_HTTP_PASSWORD
 endif
 	@echo "OK."
 
-export-as-envs: infra-check-env ## Print export of TF_EXTRA_VARS
-	@echo 'export $(TF_EXTRA_VARS)'
+export-as-envs: infra-check-env ## Print export of EXTRA_VARS
+	@echo 'export $(EXTRA_VARS)'
 
 ifeq ($(SKIP_BATS_TESTS),true)
 im-test: infra-check-env
@@ -105,14 +102,14 @@ im-test: infra-check-env
 else
 im-test: infra-check-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
 endif
 
 im-test-install: infra-check-env
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
 
 im-test-uninstall: infra-check-env
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
 im-test-reinstall: im-test-uninstall im-test-install
 
