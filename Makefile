@@ -100,7 +100,7 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
   $(eval $(TARGET_ARGS):;@:)
 endif
 
-playbooks: check-env ## Access Ansible Collections submodule targets
+playbooks: im-check-env ## Access Ansible Collections submodule targets
 	@cd ska-ser-ansible-collections && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
@@ -111,7 +111,7 @@ ifeq (orch,$(firstword $(MAKECMDGOALS)))
   $(eval $(TARGET_ARGS):;@:)
 endif
 
-orch: check-env ## Access Orchestration submodule targets
+orch: im-check-env ## Access Orchestration submodule targets
 	@echo $(TF_INVENTORY_DIR);
 	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
 
@@ -143,7 +143,7 @@ TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
 	ANSIBLE_SSH_ARGS="$(TEST_ANSIBLE_SSH_ARGS)" \
 	
 # End-to-end variables
-BATS_TESTS_DIR ?= $(CURDIR)/tests/e2e
+BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_TEST_TARGETS := "unit $(SERVICE)"
 BATS_CORE_VERSION = v1.8.0
@@ -172,7 +172,7 @@ im-test-reinstall: im-test-uninstall im-test-install
 im-help:  ## Show Help
 	@echo "";
 	@echo -e "\033[32mBase Vars:\033[0m"
-	@make vars;
+	@make im-vars;
 	@echo "";
 	@echo -e "\033[32mOrchestration Vars:\033[0m";
 	@cd ska-ser-orchestration && $(EXTRA_VARS) make vars;
