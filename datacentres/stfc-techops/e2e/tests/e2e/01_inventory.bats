@@ -6,7 +6,7 @@ setup_file() {
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
-            exit 1   
+            exit 1
         fi
     done
 
@@ -39,13 +39,13 @@ setup() {
 
 @test 'INVENTORY: Failure to ping unknown group' {
     cd ${BASE_PATH}
-    run make playbooks ping PLAYBOOKS_HOSTS="some_unknown_group"
+    run make playbooks ac-ping PLAYBOOKS_HOSTS="some_unknown_group"
     assert_failure
 }
 
 @test 'INVENTORY: Ping all instances' { # bats-ignore-failure
     cd ${BASE_PATH}
-    run make playbooks ping PLAYBOOKS_HOSTS="all"
+    run make playbooks ac-ping PLAYBOOKS_HOSTS="all"
     assert_success
 }
 

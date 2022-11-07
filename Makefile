@@ -1,14 +1,14 @@
 SHELL=/usr/bin/env bash
 MAKEFLAGS += --no-print-directory
 
-.PHONY: vars help check-env playbooks orch
+.PHONY: im-check-env im-vars im-help im-test im-test-install im-test-uninstall im-test-reinstall infra-check-env playbooks orch
 .DEFAULT_GOAL := help
 
 DATACENTRE ?=
 ENVIRONMENT ?=
 SERVICE ?=
 TF_HTTP_USERNAME ?=
-TERRAFORM_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
+TF_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
 
 -include .make/base.mk
 -include .make/bats.mk
@@ -16,6 +16,13 @@ TERRAFORM_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -
 -include .make/python.mk
 
 BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
+
+# Include environment specific vars and secrets
+-include $(BASE_PATH)/PrivateRules.mak
+
+# must include infra after Private Vars
+-include .make/infra.mk
+
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
 TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
@@ -28,9 +35,6 @@ INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
 ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
-
-# Include environment specific vars and secrets
--include $(BASE_PATH)/PrivateRules.mak
 
 EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
@@ -71,10 +75,10 @@ SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "fal
 BATS_TEST_TARGETS ?= "unit e2e"
 BATS_CORE_VERSION = v1.8.0
 
-vars:  ### Current variables
+im-vars:  ### Current variables
 	@echo "BASE_PATH=$(BASE_PATH)"
 
-check-env: ## Check environment configuration variables
+im-check-env: ## Check environment configuration variables
 ifndef DATACENTRE
 	$(error DATACENTRE is undefined)
 endif
@@ -87,68 +91,44 @@ endif
 ifndef TF_HTTP_PASSWORD
 	$(error TF_HTTP_PASSWORD is undefined)
 endif
+	@echo "OK."
 
-export-as-envs: check-env
+export-as-envs: infra-check-env ## Print export of EXTRA_VARS
 	@echo 'export $(EXTRA_VARS)'
 
-# If the first argument is "install"...
-ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
-  # use the rest as arguments for "playbooks"
-  TARGET_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  # ...and turn them into do-nothing targets
-  $(eval $(TARGET_ARGS):;@:)
-endif
-
-playbooks: check-env ## Access Ansible Collections submodule targets
-	@cd ska-ser-ansible-collections && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
-	
-# If the first argument is "orch"...
-ifeq (orch,$(firstword $(MAKECMDGOALS)))
-  # use the rest as arguments for "orch"
-  TARGET_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  # ...and turn them into do-nothing targets
-  $(eval $(TARGET_ARGS):;@:)
-endif
-
-orch: check-env ## Access Orchestration submodule targets
-	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
-
 ifeq ($(SKIP_BATS_TESTS),true)
-test: check-env
+im-test: infra-check-env
 	@echo "No tests found for '$(ENVIRONMENT)'"
 else
-test: check-env
+im-test: infra-check-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
 endif
 
-test-install: check-env
+im-test-install: infra-check-env
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
 
-test-uninstall: check-env
+im-test-uninstall: infra-check-env
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
-test-reinstall: test-uninstall test-install
+im-test-reinstall: im-test-uninstall im-test-install
 
-print_targets:
-	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ": .*?## "}; {p=index($$1,":")} {printf "\033[36m%-30s\033[0m %s\n", substr($$1,p+1), $$2}';
-
-help:  ## Show Help
+im-help:  ## Show Help
 	@echo "";
-	@echo -e "\033[32mBase vars:\033[0m"
+	@echo -e "\033[32mBase Vars:\033[0m"
 	@make vars;
 	@echo "";
 	@echo -e "\033[32mOrchestration Vars:\033[0m";
 	@cd ska-ser-orchestration && make vars;
 	@echo "";
 	@echo -e "\033[32mInstallation Vars:\033[0m";
-	@cd ska-ser-ansible-collections && make vars_recursive;
+	@cd ska-ser-ansible-collections && make ac-vars-recursive;
 	@echo "";
-	@echo -e "\033[32mMain targets:\033[0m"
-	@make print_targets
+	@echo -e "\033[32mMain Targets:\033[0m"
+	@make help-print-targets
 	@echo "";
-	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
-	@cd ska-ser-orchestration && make print_targets;
+	@echo -e "\033[32mOrchestration Targets - make orch <target>:\033[0m";
+	@cd ska-ser-orchestration && make help-print-targets;
 	@echo "";
-	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
-	@cd ska-ser-ansible-collections && make print_targets;
+	@echo -e "\033[32mInstallation Targets - make playbooks <target>:\033[0m";
+	@cd ska-ser-ansible-collections && make help-print-targets;

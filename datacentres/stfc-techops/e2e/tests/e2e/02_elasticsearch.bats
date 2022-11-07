@@ -6,7 +6,7 @@ setup_file() {
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
-            exit 1   
+            exit 1
         fi
     done
 }
@@ -24,7 +24,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Cluster hosts are reachable' {
     cd ${BASE_PATH}
-    run make playbooks ping PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
+    run make playbooks ac-ping PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
     assert_success
 }
 
@@ -34,7 +34,7 @@ setup() {
     assert_success
 }
 
-# TODO: 
+# TODO:
 # * Move test playbooks in installation/playbooks to elastic collection/tests
 # * Create make target on elastic job called "test" that runs the test playbooks against the cluster
 # * Remove all tests below
