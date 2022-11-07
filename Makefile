@@ -37,11 +37,11 @@ ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOO
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
 DEFAULT_TEXT_EDITOR?=vi
-ANSIBLE_EXTRA_VARS?=--extra-vars 'datacentre=$(DATACENTRE) env=$(ENVIRONMENT) service=$(SERVICE)'
+ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE)'
 
-## ANSIBLE_SECRETS_PROVIDER must be one of: plain-text, ansible-vault or hashicorp-vault
+## ANSIBLE_SECRETS_PROVIDER must be one of: legacy, plain-text, ansible-vault or hashicorp-vault
 # pass datacentre, env (environment is reserved in ansible) and service variables
-ANSIBLE_SECRETS_PROVIDER?=ansible-vault
+ANSIBLE_SECRETS_PROVIDER?=legacy
 ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
 ANSIBLE_SECRETS_PASSWORD?=
 
@@ -63,11 +63,44 @@ ifndef TF_HTTP_PASSWORD
 endif
 
 setup-secrets: ## Loads secrets as ansible variables
-# plain-text provider
 ifndef ANSIBLE_SECRETS_PROVIDER
 	$(error ANSIBLE_SECRETS_PROVIDER is undefined)
 endif
+
+# legacy provider
+ifeq ($(ANSIBLE_SECRETS_PROVIDER),legacy)
+# It is used as a legacy approach, by injecting into a 'secrets' variable the values
+# present in PrivateRules.mak. The variable names are lower-case representations of what
+# is in PrivateRules.mak
+# Finally, we can set whatever variable in group_vars/host_vars as:
+# some_var: "{{ secrets['lower case of variable in PrivateRules.mak'] }}
+ifeq ($(ANSIBLE_SECRETS_PATH),)
+	$(error ANSIBLE_SECRETS_PATH is undefined)
+endif
+ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
+$(shell cat $(BASE_PATH)/PrivateRules.mak | \
+	grep -v "DATACENTRE=" | \
+	grep -v "ENVIRONMENT=" | \
+	grep -v "SERVICE=" | \
+	grep -v "^#" | \
+	grep "\S" | \
+	sed "s#^\([a-zA-Z0-9_-]\+\)[ ]*\(=\|\?=\|:=\)[ ]*\(.*\)#  \1: \3##" | \
+	sed "s#^\(  [a-zA-Z0-9_-]\+\):#\L\1:#" | \
+	sed '1s#^#secrets:\n#' \
+	> $(ANSIBLE_SECRETS_PATH) \
+)
+$(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
+get-secrets:
+	@cat $(ANSIBLE_SECRETS_PATH)
+edit-secrets:
+	@$(DEFAULT_TEXT_EDITOR) PrivateRules.mak
+endif
+
+# plain-text provider
 ifeq ($(ANSIBLE_SECRETS_PROVIDER),plain-text)
+# It should be used to inject an yaml structured set of variables, passed with '--extra-vars'
+# Finally, we can set whatever variable in group_vars/host_vars as:
+# some_var: "{{ some.yaml.path.in.secrets }}
 ifeq ($(ANSIBLE_SECRETS_PATH),)
 	$(error ANSIBLE_SECRETS_PATH is undefined)
 endif
@@ -78,8 +111,14 @@ get-secrets:
 edit-secrets:
 	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_SECRETS_PATH)
 endif
+
 # ansible-vault provider
 ifeq ($(ANSIBLE_SECRETS_PROVIDER),ansible-vault)
+# This provider uses the ansible vaulted file at $(ANSIBLE_SECRETS_PATH)
+# It is encrypted by the password $(ANSIBLE_SECRETS_PASSWORD) and it is decrypted on usage by ansible
+# It should be used to inject an yaml structured set of variables, passed with '--extra-vars'
+# Finally, we can set whatever variable in group_vars/host_vars as:
+# some_var: "{{ some.yaml.path.in.secrets }}
 ifeq ($(ANSIBLE_SECRETS_PATH),)
 	$(error ANSIBLE_SECRETS_PATH is undefined)
 endif
@@ -100,6 +139,7 @@ rotate-secrets-password:
 		echo "Please update ANSIBLE_SECRETS_PASSWORD to the contents of $(BASE_PATH)/new-secrets.password";
 	@ansible-vault rekey --vault-password-file $(BASE_PATH)/secrets.password --new-vault-password-file $(BASE_PATH)/new-secrets.password
 endif
+
 # hashicorp-vault provider
 ifeq ($(ANSIBLE_SECRETS_PROVIDER),hashicorp-vault)
 	$(error Secrets provider 'hashicorp-vault' is undefined)
