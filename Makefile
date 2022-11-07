@@ -36,7 +36,7 @@ ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
-EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
+TF_EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -93,8 +93,8 @@ ifndef TF_HTTP_PASSWORD
 endif
 	@echo "OK."
 
-export-as-envs: infra-check-env ## Print export of EXTRA_VARS
-	@echo 'export $(EXTRA_VARS)'
+export-as-envs: infra-check-env ## Print export of TF_EXTRA_VARS
+	@echo 'export $(TF_EXTRA_VARS)'
 
 ifeq ($(SKIP_BATS_TESTS),true)
 im-test: infra-check-env
@@ -102,14 +102,14 @@ im-test: infra-check-env
 else
 im-test: infra-check-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
-	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
 endif
 
 im-test-install: infra-check-env
-	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
 
 im-test-uninstall: infra-check-env
-	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
+	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
 im-test-reinstall: im-test-uninstall im-test-install
 
