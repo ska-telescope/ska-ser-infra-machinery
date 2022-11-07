@@ -2,7 +2,7 @@
 debug: true
 production: true
 # can only do one cluster - v1
-k8s_api_server_addr: "10.110.8.4"
+k8s_api_server_addr: "142.73.34.170"
 k8s_api_server_port: "6443"
 k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
 k8s_client_certificate: "/etc/prometheus/ca.crt"
@@ -31,7 +31,7 @@ prometheus_global:
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
-    regex: 192\.168\.99\.194:9100
+    regex: 130\.246\.214\.45):9100
     replacement: terminus:9100
     source_labels:
     - instance
@@ -60,7 +60,7 @@ prometheus_scrape_configs:
   - job_name: "gitlab-runner"
     static_configs:
     - targets:
-      - "10.110.8.4:9252"
+      - "142.73.34.170:9252"
 
   - job_name: "elasticsearch"
     file_sd_configs:
@@ -81,10 +81,10 @@ prometheus_scrape_configs:
   - job_name: "kube-state-metrics"
     static_configs:
     - targets:
-      - "10.110.8.4:32080" # load balancer
+      - "142.73.34.170:32080" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.128\.47:32080
+      regex: 142\.73\.34\.170:32080
       replacement: rmdskadevdu011:32080
       source_labels:
         - instance
@@ -93,10 +93,10 @@ prometheus_scrape_configs:
   - job_name: "k8stelemetry"
     static_configs:
     - targets:
-      - "10.110.8.4:32081" # load balancer
+      - "142.73.34.170:32081" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.128\.47:32081
+      regex: 142\.73\.34\.170:32081
       replacement: rmdskadevdu011:32081
       source_labels:
         - instance
