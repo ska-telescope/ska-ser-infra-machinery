@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR TF_HTTP_ADDRESS TF_HTTP_LOCK_ADDRESS TF_HTTP_UNLOCK_ADDRESS"
+    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -30,48 +30,45 @@ setup() {
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 }
 
-@test 'ORCHESTRATION: Clean' {
+@test 'ORCHESTRATION_TEARDOWN: Clean' {
     cd ${BASE_PATH}
     run make orch clean
     assert_success
 }
 
-@test 'ORCHESTRATION: Init' {
+@test 'ORCHESTRATION_TEARDOWN: Init' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false"
     run make orch init
     assert_success
 }
 
-@test 'ORCHESTRATION: Plan' {
+@test 'ORCHESTRATION_TEARDOWN: Destroy Plan' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
-    run make orch plan
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
+    run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
-    # Allow nothing to be added if infrastructure is up to date
-    # or only to be added, if it is non existing.
+    assert_equal ${PLAN_TO_ADD} 0
     assert_equal ${PLAN_TO_UPDATE} 0
-    assert_equal ${PLAN_TO_DESTROY} 0
+    assert [ ${PLAN_TO_DESTROY} -gt 0 ]
 }
 
-@test 'ORCHESTRATION: Apply' {
+@test 'ORCHESTRATION_TEARDOWN: Destroy' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color"
+    export TF_ARGUMENTS="-input=false -no-color -var-file=$DATACENTRE.tfvars"
     export TF_AUTO_APPROVE=true
-    run make orch apply
+    run make orch destroy
     assert_success
 }
 
-@test 'ORCHESTRATION: Plan is idempotent' {
+@test 'ORCHESTRATION_TEARDOWN: Destroy is idempotent' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
-    run make orch plan
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
+    run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
-    # Allow nothing to be added, changed or destroyed
     assert_equal ${PLAN_TO_ADD} 0
     assert_equal ${PLAN_TO_UPDATE} 0
     assert_equal ${PLAN_TO_DESTROY} 0

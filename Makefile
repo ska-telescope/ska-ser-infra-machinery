@@ -32,11 +32,11 @@ TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
 TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
 INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
-ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
+ANSIBLE_CONFIG?="$(PLAYBOOKS_ROOT_DIR)/ansible.cfg"
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
-TF_EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
+EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
 	SERVICE="$(SERVICE)" \
 	TF_HTTP_USERNAME="$(TF_HTTP_USERNAME)" \
@@ -49,7 +49,7 @@ TF_EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	TF_HTTP_LOCK_ADDRESS="$(TF_HTTP_LOCK_ADDRESS)" \
 	TF_HTTP_UNLOCK_ADDRESS="$(TF_HTTP_UNLOCK_ADDRESS)" \
 	PLAYBOOKS_ROOT_DIR="$(PLAYBOOKS_ROOT_DIR)" \
-	TF_INVENTORY_DIR="$(TF_INVENTORY_DIR)" \
+	TF_INVENTORY_DIR=$(TF_INVENTORY_DIR) \
 	INVENTORY="$(INVENTORY)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
 	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
@@ -69,11 +69,7 @@ TF_EXTRA_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	CA_CERT_PASSWORD=$(CA_CERT_PASSWORD) \
 	PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS) \
 	ELASTICSEARCH_PASSWORD=$(ELASTICSEARCH_PASSWORD)
-
-BATS_TESTS_DIR ?= $(ENVIRONMENT_ROOT_DIR)/tests
-SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
-BATS_TEST_TARGETS ?= "unit e2e"
-BATS_CORE_VERSION = v1.8.0
+	
 
 im-vars:  ### Current variables
 	@echo "BASE_PATH=$(BASE_PATH)"
@@ -93,42 +89,102 @@ ifndef TF_HTTP_PASSWORD
 endif
 	@echo "OK."
 
-export-as-envs: infra-check-env ## Print export of TF_EXTRA_VARS
-	@echo 'export $(TF_EXTRA_VARS)'
+export-as-envs: infra-check-env ## Print export of EXTRA_VARS
+	@echo 'export $(EXTRA_VARS)'
 
-ifeq ($(SKIP_BATS_TESTS),true)
-im-test: infra-check-env
-	@echo "No tests found for '$(ENVIRONMENT)'"
-else
-im-test: infra-check-env
-	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+# If the first argument is "install"...
+ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
+  # use the rest as arguments for "playbooks"
+  TARGET_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(TARGET_ARGS):;@:)
 endif
 
-im-test-install: infra-check-env
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+playbooks: im-check-env ## Access Ansible Collections submodule targets
+	@cd ska-ser-ansible-collections && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
+	
+# If the first argument is "orch"...
+ifeq (orch,$(firstword $(MAKECMDGOALS)))
+  # use the rest as arguments for "orch"
+  TARGET_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(TARGET_ARGS):;@:)
+endif
 
-im-test-uninstall: infra-check-env
-	@$(TF_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
+orch: im-check-env ## Access Orchestration submodule targets
+	@echo $(TF_INVENTORY_DIR);
+	@cd ska-ser-orchestration && $(EXTRA_VARS) $(MAKE) $(TARGET_ARGS)
+
+
+## Testing
+
+TEST_TF_ROOT_DIR=$(BASE_PATH)/ska-ser-orchestration/tests/e2e/$(SERVICE)
+TEST_TF_HTTP_ADDRESS=""
+TEST_TF_HTTP_LOCK_ADDRESS=""
+TEST_TF_HTTP_UNLOCK_ADDRESS=""
+TEST_PLAYBOOKS_ROOT_DIR=$(BASE_PATH)/ska-ser-ansible-collections/ansible_collections/ska_collections/$(SERVICE)/tests/e2e
+TEST_TF_INVENTORY_DIR=$(TEST_PLAYBOOKS_ROOT_DIR)
+TEST_INVENTORY=$(TEST_PLAYBOOKS_ROOT_DIR)
+TEST_ANSIBLE_CONFIG=$(TEST_PLAYBOOKS_ROOT_DIR)/ansible.cfg
+TEST_ANSIBLE_SSH_ARGS=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(TEST_PLAYBOOKS_ROOT_DIR)/ssh.config
+
+TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
+	OS_CLOUD=$(DATACENTRE) \
+	TF_HTTP_USERNAME=$(TEST_TF_HTTP_USERNAME) \
+	TF_HTTP_PASSWORD=$(TEST_TF_HTTP_PASSWORD) \
+	TF_ROOT_DIR="$(TEST_TF_ROOT_DIR)" \
+	TF_HTTP_ADDRESS=$(TEST_TF_HTTP_ADDRESS) \
+	TF_HTTP_LOCK_ADDRESS=$(TEST_TF_HTTP_LOCK_ADDRESS) \
+	TF_HTTP_UNLOCK_ADDRESS=$(TEST_TF_HTTP_UNLOCK_ADDRESS) \
+	PLAYBOOKS_ROOT_DIR=$(TEST_PLAYBOOKS_ROOT_DIR)  \
+	TF_INVENTORY_DIR=$(TEST_TF_INVENTORY_DIR) \
+	INVENTORY=$(TEST_INVENTORY) \
+	ANSIBLE_CONFIG=$(TEST_ANSIBLE_CONFIG) \
+	ANSIBLE_SSH_ARGS="$(TEST_ANSIBLE_SSH_ARGS)" \
+	
+# End-to-end variables
+BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
+SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
+BATS_TEST_TARGETS := "unit $(SERVICE)"
+BATS_CORE_VERSION = v1.8.0
+
+check-test-env:
+ifeq ($(SKIP_BATS_TESTS),true)
+	@echo "No tests found on $(BATS_TESTS_DIR)"
+endif
+ifndef SERVICE
+	$(error SERVICE is undefined);
+endif
+
+test: check-test-env
+	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
+
+	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+
+test-install: check-test-env
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install
+
+test-uninstall: check-test-env
+	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-uninstall
 
 im-test-reinstall: im-test-uninstall im-test-install
 
 im-help:  ## Show Help
 	@echo "";
 	@echo -e "\033[32mBase Vars:\033[0m"
-	@make vars;
+	@make im-vars;
 	@echo "";
 	@echo -e "\033[32mOrchestration Vars:\033[0m";
-	@cd ska-ser-orchestration && make vars;
+	@cd ska-ser-orchestration && $(EXTRA_VARS) make vars;
 	@echo "";
 	@echo -e "\033[32mInstallation Vars:\033[0m";
-	@cd ska-ser-ansible-collections && make ac-vars-recursive;
+	@cd ska-ser-ansible-collections && $(EXTRA_VARS) make ac-vars-recursive;
 	@echo "";
 	@echo -e "\033[32mMain Targets:\033[0m"
 	@make help-print-targets
 	@echo "";
-	@echo -e "\033[32mOrchestration Targets - make orch <target>:\033[0m";
+	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
 	@cd ska-ser-orchestration && make help-print-targets;
 	@echo "";
-	@echo -e "\033[32mInstallation Targets - make playbooks <target>:\033[0m";
+	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
 	@cd ska-ser-ansible-collections && make help-print-targets;
