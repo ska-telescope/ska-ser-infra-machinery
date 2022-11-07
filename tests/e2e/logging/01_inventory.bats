@@ -28,7 +28,7 @@ setup() {
 
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
-    TEST_STATE_JSON=${TEST_TMP_DIR}/tfstate.json
+    TEST_STATE_JSON=${BASE_DIR}/build/tfstate.json
 }
 
 @test 'INVENTORY: Generate JSON tfstate' {
