@@ -11,8 +11,8 @@ localuser: svc_skadev_ansible
 localgroup: admin
 gateway_host: terminus
 
-prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
-prometheus_url: https://monitoring.skao.stfc:9090
+prometheus_alertmanager_url: http://142.73.34.170:9093
+prometheus_url: https://142.73.34.170:9090
 slack_channel: psi-mid-alerts
 slack_channel_user: psi-mid-user-alerts
 
@@ -52,32 +52,34 @@ prometheus_scrape_configs:
           - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:8080"
 
   - job_name: "node"
-    file_sd_configs:
-    - files:
-      - 'node_exporter.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+    static_configs:
+    - targets:
+      - "142.73.34.170:9100"
+      - "142.73.34.171:9100"
+      - "142.73.34.172:9100"
+      - "142.73.34.173:9100"
 
   - job_name: "gitlab-runner"
     static_configs:
     - targets:
       - "142.73.34.170:9252"
 
-  - job_name: "elasticsearch"
-    file_sd_configs:
-    - files:
-      - 'elasticsearch_exporter.json'
-
   - job_name: "docker"
-    file_sd_configs:
-    - files:
-      - 'docker_exporter.json'
+    static_configs:
+    - targets:
+      - "142.73.34.170:9323"
+      - "142.73.34.171:9323"
+      - "142.73.34.172:9323"
+      - "142.73.34.172:9323"
 
   - job_name: "kube-proxy"
-    file_sd_configs:
-    - files:
-      - 'kube-proxy.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
-
+    static_configs:
+    - targets:
+      - "142.73.34.170:10249"
+      - "142.73.34.171:10249"
+      - "142.73.34.172:10249"
+      - "142.73.34.172:10249"
+  
   - job_name: "kube-state-metrics"
     static_configs:
     - targets:
@@ -103,9 +105,12 @@ prometheus_scrape_configs:
       target_label: instance
 
   - job_name: "ceph_cluster"
-    file_sd_configs:
-    - files:
-      - 'ceph-mgr.json'
+    static_configs:
+    - targets:
+      - "142.73.34.170:9283"
+      - "142.73.34.171:9283"
+      - "142.73.34.172:9283"
+      - "142.73.34.172:9283"
 
 # node exporter versions
 node_exporter_version: 0.18.1-1.el7
