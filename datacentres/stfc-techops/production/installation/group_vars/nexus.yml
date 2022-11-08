@@ -1,0 +1,210 @@
+---
+############
+nexus_upgrade: false
+
+# Pin versions for production
+nexus_docker_deb_version: 5:20.10.21~3-0~ubuntu-jammy
+nexus_containerd_version: 1.6.9-1
+nexus_version: '3.42.0-01'
+
+nexus_public_hostname: 'nexus.skao.stfc'
+nexus_docker_hosted_port: 9080
+nexus_docker_proxy_port: 9081
+nexus_docker_group_port: 9082
+nexus_engage_proxy_port: 9083
+nexus_central_proxy_port: 9084
+nexus_gitlab_proxy_port: 9085
+
+nexus_privileges:
+  - name: ska-all-repos-read
+    description: 'Read & Browse access to all repos'
+    repository: '*'
+    type: repository-view
+    format: '*'
+    actions:
+      - read
+      - browse
+  - name: ska-project-deploy
+    description: 'Deployments to all ska-projects'
+    format: '*'
+    repository: '*'
+    type: repository-admin
+    actions:
+      - add
+      - edit
+      - update
+  - name: docker-login-privilege
+    type: repository-content-selector
+    contentSelector: docker-login
+    description: 'Login to Docker registry'
+    repository: '*'
+    actions:
+      - read
+      - browse
+
+nexus_roles:
+  - id: SKAAdmins # maps to the LDAP group
+    name: skaadmins
+    description: All SKA Admins
+    privileges:
+      - nx-all
+    roles: []
+  - id: 'skao-nexus-users'  # can map to a LDAP group id, also used as a key to update a role
+    name: 'skao-nexus-users'
+    description: 'LDAP skao-nexus-users mapping for admin privileges'
+    privileges:
+      - nx-all
+    roles: []
+  - id: 'ITDept'  # can map to a LDAP group id, also used as a key to update a role
+    name: 'ITDept'
+    description: 'LDAP SKAO IT mapping for admin privileges'
+    privileges:
+      - nx-all
+    roles: []
+  - id: SKADeveloppers # maps to the LDAP group
+    name: skadevelopers
+    description: All SKA developers
+    privileges:
+      - nx-search-read
+      - ska-all-repos-read
+      - ska-project-deploy
+      - nx-component-upload
+    roles: []
+  - id: ReadOnly # maps to the LDAP group
+    name: readonly
+    description: Read only access
+    privileges:
+      - nx-search-read
+      - ska-all-repos-read
+    roles: []
+  - id: SKAReadWrite # maps to the LDAP group
+    name: skareadwrite
+    description: SKA Read write access
+    privileges:
+      - nx-search-read
+      - ska-all-repos-read
+      - ska-project-deploy
+      - nx-component-upload
+    roles: []
+
+nexus_local_users:
+  - username: gitlab # used as key to update
+    first_name: gitlab
+    last_name: CI
+    email: system-team-support@skatelescope.org
+    password: "{{ nexus_user_password_gitlab }}"
+    roles:
+      - SKADeveloppers # role ID here
+  - username: publisher # used as key to update
+    first_name: publisher
+    last_name: CI
+    email: system-team-support@skatelescope.org
+    password: "{{ nexus_user_password_publisher }}"
+    roles:
+      - SKAReadWrite # role ID here
+
+nexus_blobstores: []
+
+nexus_delete_default_repos: true
+nexus_config_maven: false
+nexus_config_pypi: false
+nexus_config_docker: true
+nexus_config_raw: false
+nexus_config_rubygems: false
+nexus_config_bower: false
+nexus_config_npm: false
+nexus_config_gitlfs: false
+nexus_config_yum: false
+nexus_config_apt: false
+nexus_config_helm: false
+nexus_config_r: false
+nexus_config_p2: false
+nexus_config_conda: false
+nexus_config_go: false
+
+nexus_npm_bearer_token_realm: false
+nexus_docker_bearer_token_realm: true  # required for docker anonymous access
+nexus_nuget_api_key_realm: false # no .Net
+nexus_rut_auth_realm: false
+# nexus_rut_auth_header: "X-Remote-User"
+
+nexus_repos_cleanup_policies:
+  - name: delete-k8s-creds
+    format: raw
+    mode:
+    notes: "This policy deletes k8s credentials after 1 day they are uploaded (i.e. created)"
+    criteria:
+      lastBlobUpdated: 1
+  - name: docker_latest_cleanup
+    format: docker
+    mode:
+    notes: "Purge :latest tags/images"
+    criteria:
+      regexKey: ".*latest"
+
+nexus_repos_docker_hosted:
+  - name: docker-internal
+    http_port: "{{ nexus_docker_hosted_port }}"
+    blob_store: "default"
+    v1_enabled: True
+    write_policy: allow  # one of "allow", "allow_once" or "deny"
+    force_basic_auth: False # enable anonymous access by disabling basic auth
+    cleanup_policies:
+      - docker_latest_cleanup
+
+nexus_repos_docker_proxy:
+  - name: docker-proxy
+    http_port: "{{ nexus_docker_proxy_port }}"
+    blob_store: "default"
+    v1_enabled: True
+    index_type: "HUB"
+    remote_url: "https://registry-1.docker.io"
+    use_nexus_certificates_to_access_index: false
+    cache_foreign_layers: true
+    foreign_layer_url_whitelist:
+      - ".*"
+    maximum_component_age: 10080
+    maximum_metadata_age: 10080
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+  - name: central-proxy
+    http_port: "{{ nexus_central_proxy_port }}"
+    blob_store: "default"
+    v1_enabled: True
+    index_type: "REGISTRY"
+    remote_url: "https://artefact.skao.int"
+    use_nexus_certificates_to_access_index: false
+    cache_foreign_layers: true
+    foreign_layer_url_whitelist:
+      - ".*"
+    maximum_component_age: 10080
+    maximum_metadata_age: 10080
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+
+  - name: gitlab-proxy
+    http_port: "{{ nexus_gitlab_proxy_port }}"
+    blob_store: "default"
+    v1_enabled: True
+    index_type: "REGISTRY"
+    remote_url: "https://registry.gitlab.com"
+    use_nexus_certificates_to_access_index: false
+    cache_foreign_layers: true
+    foreign_layer_url_whitelist:
+      - ".*"
+    maximum_component_age: 10080
+    maximum_metadata_age: 10080
+    negative_cache_enabled: true
+    negative_cache_ttl: 1440
+
+
+nexus_repos_docker_group:
+  - name: docker-all
+    http_port: "{{ nexus_docker_group_port }}"
+    blob_store: "default"
+    v1_enabled: True
+    member_repos:
+      - docker-internal
+      - central-proxy
+      - gitlab-proxy
+      - docker-proxy
