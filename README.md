@@ -43,6 +43,20 @@ TF_HTTP_PASSWORD="<user-token>"
 
 Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the **API scope**. If this variable is empty, the Makefile targets will not run for security reasons.
 
+### Secrets management
+
+Currently we are refactoring the playbooks in ska-ser-ansible-collections to only use variables defined within the playbook's default variables and ansible group_vars/host_vars. Also, for increased security and easability of use, we've introduced new mechanisms to use secret variables in ansible. The particular provider to use, is set by the variable `ANSIBLE_SECRETS_PROVIDER`.
+
+* **legacy** (default) - Converts variables in PrivateRules.mak to an yaml file (in `ANSIBLE_SECRETS_PATH`) and adds it as extra vars to ansible-playbook calls. The variables will be under the "umbrella" value of "secrets".
+* plain-text - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`. The variables are expected to be under the "umbrella" value of "secrets".
+* ansible-vault - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`, protected by the password specified by `ANSIBLE_SECRETS_PASSWORD`. Ansible will decrypt the secrets file at the time of usage, so that it is not exposed. The variables are expected to be under the "umbrella" value of "secrets".
+
+This also allows us to define variables based on the **secrets** variable and **environment variables**. For that, on any ansible variables file, do:
+
+`some_variable: "{{ lookup('ansible.builtin.env', 'SOME_VARIABLE', default=secrets['some_variable']) | mandatory }}"`
+
+Wether we define `SOME_VARIABLE` as an environment variable, or `SOME_VARIABLE=value` in PrivateRules.mak, we can pass secrets without declare them in any Makefile. Using the **mandatory** filter, also makes Ansible throw an error if it is not defined.
+
 ### Other important variables
 
 For Terraform the following specifics variables for the Gitlab's backend are already set in the Makefile:
@@ -230,7 +244,7 @@ teardown_file() {
 ## Ad hoc
 
 The instances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
-purposes) to do manual ansible work, you can set up your shell and issue ansible commands from any working directory
+purposes) to do manual Ansible work, you can set up your shell and issue Ansible commands from any working directory
 against the environment's inventory. Please, use with caution:
 
 ```
@@ -292,29 +306,20 @@ Finally, run the installation make targets of your choosing.
 ### Elasticsearch API Key creation and query
 
 A set of make targets were created to help with the creation and query of Elasticsearch API keys.
-These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
-
-The available `make` targets can be called with the command `make playbooks elastic` and are as follows:
-
-- `check`: Check the status of the Elasticsearch cluster.
-- `key-list`: List all the existing API keys.
-- `key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
-- `key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
-- `key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
-- `key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
-
-These make targets need the following environment variables to be set:
-- `ELASTICSEARCH_PASSWORD`: Password for the `elastic` user.
-
-Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
-If you are using a different cluster, you will need to change the values of the environment variables.
+To create api-keys, simply define them in an appropriate ansible variable file:
 
 ```
-ELASTIC_USER ?= elastic
-LOGGING_URL ?= https://logging.stfc.skao.int:9200
-LOADBALANCER_IP ?= logging.stfc.skao.int
-CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
-CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
-CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
-PEM_FILE ?= ~/.ssh/ska-techops.pem
+elasticsearch_api_keys:
+    some_key:
+        duration: <optional duration, defaults to infinity>
+        description: <some appropriate description of the api key>
+        role_descriptiors: <set of roles to restrict the permissions of the api key>
 ```
+
+This is a declarative approach, therefore keys present will be created, keys removed will be deleted (invalidated). Also, keys genereated outside of this target (without the appropriate metadata) are not considered. To do that, run:
+
+`make playbooks logging update-api-keys PLAYBOOKS_HOSTS=<elasticsearch cluster group>`
+
+When running this target, make sure you note down the api-key, as it is only visible once. To list the managed keys, do:
+
+`make playbooks logging list-api-keys PLAYBOOKS_HOSTS=<elasticsearch cluster group>`
