@@ -22,6 +22,8 @@ setup() {
     ELASTICSEARCH_CLUSTER_NAME=${TF_VAR_image_name}
 
     LOGGING_ROLE_PATH=${ANSIBLE_COLLECTIONS_PATHS}/ansible_collections/ska_collections/logging
+
+    ANSIBLE_PLAYBOOK_ARGUMENTS="-e 'elasticsearch_dns=$ELASTICSEARCH_CLUSTER_NAME-loadbalancer elasticsearch_cluster_name=$ELASTICSEARCH_CLUSTER_NAME'"
 }
 
 @test 'ELASTICSEARCH: Cluster hosts are reachable' {
@@ -32,13 +34,13 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch installs' {
     cd ${BASE_PATH}
-    run make playbooks logging install PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}" ANSIBLE_PLAYBOOK_ARGUMENTS="-e 'elasticsearch_dns=$ELASTICSEARCH_CLUSTER_NAME-loadbalancer elasticsearch_cluster_name=$ELASTICSEARCH_CLUSTER_NAME'"
+    run make playbooks logging install PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}" ANSIBLE_PLAYBOOK_ARGUMENTS="${ANSIBLE_PLAYBOOK_ARGUMENTS}"
     assert_success
 }
 
 @test 'ELASTICSEARCH: Elasticsearch e2e tests' {
     cd ${BASE_PATH}
-    run make playbooks logging test_e2e PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}" ANSIBLE_PLAYBOOK_ARGUMENTS="-e 'elasticsearch_dns=$ELASTICSEARCH_CLUSTER_NAME-loadbalancer elasticsearch_cluster_name=$ELASTICSEARCH_CLUSTER_NAME'"
+    run make playbooks logging test_e2e PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}" ANSIBLE_PLAYBOOK_ARGUMENTS="${ANSIBLE_PLAYBOOK_ARGUMENTS}"
     assert_success
 }
 

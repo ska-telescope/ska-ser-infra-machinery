@@ -28,13 +28,7 @@ setup() {
 
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
-    TEST_STATE_JSON=${BASE_DIR}/build/tfstate.json
-}
-
-@test 'INVENTORY: Generate JSON tfstate' {
-    cd ${BASE_PATH}
-    cat "${TF_ROOT_DIR}/terraform.tfstate" > ${TEST_STATE_JSON}
-    assert_success
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_image_name}.json
 }
 
 @test 'INVENTORY: Generate inventory' {
@@ -65,5 +59,6 @@ setup() {
 }
 
 teardown() {
+
     finalizeTest
 }

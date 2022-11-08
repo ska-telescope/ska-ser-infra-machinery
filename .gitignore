@@ -12,3 +12,4 @@ build
 tests/**/build
 tests/**/scripts
 PrivateRules*.mak
+**/terraform.tfstate

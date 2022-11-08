@@ -25,8 +25,8 @@ BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
-TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
+TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration/$(SERVICE)
+TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/pmakerojects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
 TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
@@ -117,18 +117,11 @@ orch: im-check-env ## Access Orchestration submodule targets
 
 
 ## Testing
-TEST_ENVIRONMENT=e2e
-TEST_TF_ROOT_DIR=$(BASE_PATH)/ska-ser-orchestration/tests/e2e/$(SERVICE)
 TEST_TF_HTTP_USERNAME="user"
 TEST_TF_HTTP_PASSWORD="pass"
 TEST_TF_HTTP_ADDRESS=""
 TEST_TF_HTTP_LOCK_ADDRESS=""
 TEST_TF_HTTP_UNLOCK_ADDRESS=""
-TEST_PLAYBOOKS_ROOT_DIR=$(BASE_PATH)/ska-ser-ansible-collections/ansible_collections/ska_collections/$(SERVICE)/tests/e2e
-TEST_TF_INVENTORY_DIR=$(TEST_PLAYBOOKS_ROOT_DIR)
-TEST_INVENTORY=$(TEST_PLAYBOOKS_ROOT_DIR)
-TEST_ANSIBLE_CONFIG=$(TEST_PLAYBOOKS_ROOT_DIR)/ansible.cfg
-TEST_ANSIBLE_SSH_ARGS=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(TEST_PLAYBOOKS_ROOT_DIR)/ssh.config
 TEST_ELASTICSEARCH_PASSWORD=elastic_e2e
 TEST_ELASTIC_HAPROXY_STATS_PASSWORD=elastic_e2e
 TEST_KIBANA_VIEWER_PASSWORD=elastic_e2e
@@ -137,18 +130,11 @@ TF_VAR_image_name ?= $(DATACENTRE)-e2e-$(SERVICE)-local-$(RANDOM_STRING)
 
 TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
 	OS_CLOUD=$(DATACENTRE) \
-	ENVIRONMENT=$(TEST_ENVIRONMENT) \
 	TF_HTTP_USERNAME=$(TEST_TF_HTTP_USERNAME) \
 	TF_HTTP_PASSWORD=$(TEST_TF_HTTP_PASSWORD) \
-	TF_ROOT_DIR="$(TEST_TF_ROOT_DIR)" \
 	TF_HTTP_ADDRESS=$(TEST_TF_HTTP_ADDRESS) \
 	TF_HTTP_LOCK_ADDRESS=$(TEST_TF_HTTP_LOCK_ADDRESS) \
 	TF_HTTP_UNLOCK_ADDRESS=$(TEST_TF_HTTP_UNLOCK_ADDRESS) \
-	PLAYBOOKS_ROOT_DIR=$(TEST_PLAYBOOKS_ROOT_DIR)  \
-	TF_INVENTORY_DIR=$(TEST_TF_INVENTORY_DIR) \
-	INVENTORY=$(TEST_INVENTORY) \
-	ANSIBLE_CONFIG=$(TEST_ANSIBLE_CONFIG) \
-	ANSIBLE_SSH_ARGS="$(TEST_ANSIBLE_SSH_ARGS)" \
 	ELASTICSEARCH_PASSWORD="$(TEST_ELASTICSEARCH_PASSWORD)" \
 	ELASTIC_HAPROXY_STATS_PASSWORD="$(TEST_ELASTIC_HAPROXY_STATS_PASSWORD)" \
 	KIBANA_VIEWER_PASSWORD="$(TEST_KIBANA_VIEWER_PASSWORD)" \
@@ -157,7 +143,6 @@ TEST_EXTRA_VARS ?= $(EXTRA_VARS) \
 # End-to-end variables
 BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
-BATS_TEST_TARGETS := "unit $(SERVICE)"
 BATS_CORE_VERSION = v1.8.0
 
 check-test-env:
@@ -167,11 +152,22 @@ endif
 ifndef SERVICE
 	$(error SERVICE is undefined);
 endif
+ifndef DATACENTRE
+	$(error DATACENTRE is undefined)
+endif
+ifndef ENVIRONMENT
+	$(error ENVIRONMENT is undefined)
+endif
 
 test: check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
 
-	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS=$(BATS_TEST_TARGETS) $(MAKE) --no-print-directory bats-test
+	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="unit $(SERVICE) cleanup" $(MAKE) --no-print-directory bats-test
+	
+test-cleanup: check-test-env
+	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
+
+	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
 
 test-install: check-test-env
 	@$(EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) $(MAKE) --no-print-directory bats-install

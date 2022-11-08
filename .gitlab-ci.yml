@@ -5,21 +5,16 @@ variables:
   TERRAFORM_VERSION: "1.2.8"
   CA_CERT_PASSWORD: $CA_CERT_PASSWORD
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
 stages:
+  - lint
   - test
 
-.requirements: &install_reqs
-  - poetry config virtualenvs.create false
-  # We don't want editable mode (https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs)
-  - poetry install --no-root
-
-
-test_e2e:
-  variables:
-    SERVICE: logging
-    DATACENTRE: stfc-techops
-    TF_VAR_image_name: $DATACENTRE-e2e-$SERVICE-ci-$CI_PIPELINE_ID
-  stage: test
+.base_job:
   tags:
     - ska-techops-iac-gitlab-runner
   before_script:
@@ -27,41 +22,39 @@ test_e2e:
     - apt update
     - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
     - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
-    - *install_reqs
-  script:
+    - poetry config virtualenvs.create false
+    - poetry install --no-root
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
-    - cp .secure_files/clouds.yaml ska-ser-orchestration/tests/e2e/logging/clouds.yaml
+    - cp .secure_files/clouds.yaml datacentres/stfc-techops/e2e/orchestration/${SERVICE}/clouds.yaml
     - cp .secure_files/ska-techops.pem resources/keys/ska-techops.pem
+
+.test_e2e:
+  variables:
+    ENVIRONMENT: e2e
+  extends: .base_job
+  stage: test
+  script:
     - make test
+  allow_failure: false
   artifacts:
     paths:
-      - tests/e2e/build/
+      - build/
     when: always
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: always
     - when: manual
 
-# build_clean_e2e:
-#   variables:
-#     TERRAFORM_VERSION: "1.2.8"
-#     DATACENTRE: stfc-techops
-#     SERVICE: logging
-#     CA_CERT_PASSWORD: $CA_CERT_PASSWORD
-#     TF_ARGUMENTS: '-input=false -no-color -var-file="$DATACENTRE".tfvars'
-#     TF_AUTO_APPROVE: "true"
-#   stage: post_test
-#   dependencies: 
-#     - test_e2e
-#   before_script:
-#     - cp tests/e2e/build/tfstate.json ska-ser-orchestration/tests/e2e/logging/terraform.tfstate
-#   script:
-#     - make orch init
-#     - make orch destroy
-#   when: on_failure
+test_e2e_logging:
+  extends: .test_e2e
+  variables:
+    SERVICE: logging
+    DATACENTRE: stfc-techops
+    TF_VAR_image_name: $DATACENTRE-$ENVIRONMENT-$SERVICE-ci-$CI_PIPELINE_ID
 
-# include:
-# - project: 'ska-telescope/templates-repository'
-#   file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
-# - project: 'ska-telescope/templates-repository'
-#   file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
+include:
+  - local: "**/base_job.yml"
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
