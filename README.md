@@ -244,9 +244,9 @@ analysed and applied. So every service/VM is described there and use the modules
 on the **ska-ser-orchestration** submodule.
 
 The **clouds.yaml** file should also be on this folder along the Terraform files.
-This is the only supported authentication for Openstack API. Go to the Openstack
-Web interface and created a new credential on *Identity > Application Credentials*
-page.
+This is the only supported authentication for Openstack API. To get this file, go 
+to the Openstack Web interface and created a new credential on 
+*Identity > Application Credentials* page.
 
 Finally, you just have to init Terraform locally and apply the changes:
 
