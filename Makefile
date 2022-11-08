@@ -1,7 +1,7 @@
 SHELL=/usr/bin/env bash
 MAKEFLAGS += --no-print-directory
 
-.PHONY: im-check-env im-setup-vault im-get-vault im-edit-vault im-rotate-vault-secret vars export-as-envs playbooks orch im-check-test-env im-test im-test-install im-test-uninstall im-test-reinstall im-help
+.PHONY: im-check-env im-setup-secrets im-get-secrets im-edit-secrets im-rotate-secrets-password im-vars export-as-envs playbooks orch im-check-test-env im-test im-test-install im-test-uninstall im-test-reinstall im-help
 .DEFAULT_GOAL := help
 
 DATACENTRE ?=
@@ -48,7 +48,7 @@ ANSIBLE_SECRETS_PASSWORD?=
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
 
-check-env: ## Check environment configuration variables
+im-check-env: ## Check environment configuration variables
 ifndef DATACENTRE
 	$(error DATACENTRE is undefined)
 endif
@@ -62,7 +62,7 @@ ifndef TF_HTTP_PASSWORD
 	$(error TF_HTTP_PASSWORD is undefined)
 endif
 
-setup-secrets: ## Loads secrets as ansible variables
+im-setup-secrets: ## Loads secrets as ansible variables
 ifndef ANSIBLE_SECRETS_PROVIDER
 	$(error ANSIBLE_SECRETS_PROVIDER is undefined)
 endif
@@ -90,9 +90,9 @@ $(shell cat $(BASE_PATH)/PrivateRules.mak | \
 	> $(ANSIBLE_SECRETS_PATH) \
 )
 $(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
-get-secrets:
+im-get-secrets:
 	@cat $(ANSIBLE_SECRETS_PATH)
-edit-secrets:
+im-edit-secrets:
 	@$(DEFAULT_TEXT_EDITOR) PrivateRules.mak
 endif
 
@@ -106,9 +106,9 @@ ifeq ($(ANSIBLE_SECRETS_PATH),)
 endif
 ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
 $(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
-get-secrets:
+im-get-secrets:
 	@cat $(ANSIBLE_SECRETS_PATH)
-edit-secrets:
+im-edit-secrets:
 	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_SECRETS_PATH)
 endif
 
@@ -127,11 +127,11 @@ ifeq ($(ANSIBLE_SECRETS_PASSWORD),)
 endif
 ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
 $(shell echo "$(ANSIBLE_SECRETS_PASSWORD)" > $(BASE_PATH)/secrets.password && chmod 600 $(BASE_PATH)/secrets.password)
-get-secrets:
+im-get-secrets:
 	@ansible-vault view $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
-edit-secrets:
+im-edit-secrets:
 	@ansible-vault edit $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
-rotate-secrets-password:
+im-rotate-secrets-password:
 	@echo "Rekeying $(ANSIBLE_SECRETS_PATH)"
 	@echo "New secrets password: "; read -s SECRETS_PASSWORD; \
 		echo "$$SECRETS_PASSWORD" | sed 's#\(.\{3\}\)\(.*\)\(.\{3\}\)#\1*************\3#'; \
@@ -165,65 +165,7 @@ ENV_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ANSIBLE_COLLECTIONS_PATHS="$(ANSIBLE_COLLECTIONS_PATHS)" \
 	ANSIBLE_EXTRA_VARS="$(ANSIBLE_EXTRA_VARS)"
 
-im-check-env: ## Check environment configuration variables
-ifndef DATACENTRE
-	$(error DATACENTRE is undefined)
-endif
-ifndef ENVIRONMENT
-	$(error ENVIRONMENT is undefined)
-endif
-ifndef TF_HTTP_USERNAME
-	$(error TF_HTTP_USERNAME is undefined)
-endif
-ifndef TF_HTTP_PASSWORD
-	$(error TF_HTTP_PASSWORD is undefined)
-endif
-	@echo "OK."
-
-im-setup-vault: ## Loads vault as ansible variables
-# plain-text provider
-ifndef ANSIBLE_VAULT_PROVIDER
-	$(error ANSIBLE_VAULT_PROVIDER is undefined)
-endif
-ifeq ($(ANSIBLE_VAULT_PROVIDER),plain-text)
-ifeq ($(ANSIBLE_VAULT_PATH),)
-	$(error ANSIBLE_VAULT_PATH is undefined)
-endif
-ANSIBLE_VAULT_EXTRA_ARGS += --extra-vars @$(ANSIBLE_VAULT_PATH)
-$(shell chmod 600 $(ANSIBLE_VAULT_PATH))
-im-get-vault:
-	@cat $(ANSIBLE_VAULT_PATH)
-im-edit-vault:
-	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_VAULT_PATH)
-endif
-# ansible-vault provider
-ifeq ($(ANSIBLE_VAULT_PROVIDER),ansible-vault)
-ifeq ($(ANSIBLE_VAULT_PATH),)
-	$(error ANSIBLE_VAULT_PATH is undefined)
-endif
-ifeq ($(ANSIBLE_VAULT_PASSWORD),)
-	$(error ANSIBLE_VAULT_PASSWORD is undefined)
-endif
-ANSIBLE_VAULT_EXTRA_ARGS += --extra-vars @$(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
-$(shell echo "$(ANSIBLE_VAULT_PASSWORD)" > $(BASE_PATH)/vault.password && chmod 600 $(BASE_PATH)/vault.password)
-im-get-vault:
-	@ansible-vault view $(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
-im-edit-vault:
-	@ansible-vault edit $(ANSIBLE_VAULT_PATH) --vault-password-file $(BASE_PATH)/vault.password
-im-rotate-vault-secret:
-	@echo "Rekeying $(ANSIBLE_VAULT_PATH)"
-	@echo "New vault password: "; read -s VAULT_PASSWORD; \
-		echo "$$VAULT_PASSWORD" | sed 's#\(.\{3\}\)\(.*\)\(.\{3\}\)#\1*************\3#'; \
-		echo "$$VAULT_PASSWORD" > $(BASE_PATH)/new-vault.password && chmod 600 $(BASE_PATH)/new-vault.password; \
-		echo "Please update ANSIBLE_VAULT_PASSWORD to the contents of $(BASE_PATH)/new-vault.password";
-	@ansible-vault rekey --vault-password-file $(BASE_PATH)/vault.password --new-vault-password-file $(BASE_PATH)/new-vault.password
-endif
-# hashicorp-vault provider
-ifeq ($(ANSIBLE_VAULT_PROVIDER),hashicorp-vault)
-	$(error Vault provider 'hashicorp-vault' is undefined)
-endif
-
-vars:  ### Current variables
+im-vars:  ### Current variables
 	@echo "";
 	@echo -e "\033[32mMain vars:\033[0m"
 	@echo "BASE_PATH=$(BASE_PATH)"
@@ -260,7 +202,7 @@ ifeq (playbooks,$(firstword $(MAKECMDGOALS)))
   $(eval $(TARGET_ARGS):;@:)
 endif
 
-playbooks: im-check-env im-setup-vault ## Access Ansible Collections submodule targets
+playbooks: im-check-env im-setup-secrets ## Access Ansible Collections submodule targets
 	@cd ska-ser-ansible-collections && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
 	
 # If the first argument is "orch"...
@@ -328,17 +270,11 @@ im-help:  ## Show Help
 	@echo -e "\033[32mBase Vars:\033[0m"
 	@make im-vars;
 	@echo "";
-	@echo -e "\033[32mOrchestration Vars:\033[0m";
-	@cd ska-ser-orchestration && $(ENV_VARS) make vars;
-	@echo "";
-	@echo -e "\033[32mInstallation Vars:\033[0m";
-	@cd ska-ser-ansible-collections && $(ENV_VARS) make ac-vars-recursive;
-	@echo "";
 	@echo -e "\033[32mMain Targets:\033[0m"
-	@make help-print-targets
+	@make help
 	@echo "";
 	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
-	@cd ska-ser-orchestration && make help-print-targets;
+	@cd ska-ser-orchestration && make help;
 	@echo "";
 	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
-	@cd ska-ser-ansible-collections && make help-print-targets;
+	@cd ska-ser-ansible-collections && make help;
