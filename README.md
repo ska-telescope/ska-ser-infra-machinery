@@ -19,7 +19,7 @@ each submodule for an updated list of requirements:
 The Makefile has a help target to print these variables and all available targets:
 
 ```
-make help
+make im-help
 ```
 
 ## Environment Variables
@@ -63,7 +63,7 @@ ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOO
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 ```
 
-Change them carefully if you really need it. 
+Change them carefully if you really need it.
 
 The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective  group variables.
 
@@ -141,7 +141,7 @@ and Ansible (installation). Like the example bellow:
 
 ## Environment tests
 
-We've added a make target - **test** - to trigger a set of [BATS](https://github.com/bats-core) tests
+We've added a make target - **im-test** - to trigger a set of [BATS](https://github.com/bats-core) tests
 to test an environment. This allows us to, either manually or in a scheduled pipeline, run checks
 against a fresh or an existing environment. With this strategy, we can test every step from orchestration,
 installation to services.
@@ -155,7 +155,7 @@ Currently, the following test environments are available:
 To trigger tests, do:
 
 ```
-make test
+make im-test
 ```
 
 By default, this will run the tests in - relative to *tests/* - the environment's **unit/** and **e2e/** directories.
@@ -163,23 +163,23 @@ We can trigger tests targeting individual targets, both relative to **tests/** o
 *BATS_TEST_TARGETS*, using a comma separated list:
 
 ```
-make test BATS_TEST_TARGETS="<test file name>.bats,[other targets]"
+make im-test BATS_TEST_TARGETS="<test file name>.bats,[other targets]"
 ```
 
 We can skip any test files in the runnable test targets by setting *BATS_SKIP_TESTS* using a comma separated list. This
 supports both filenames and test case names:
 
 ```
-make test BATS_SKIP_TESTS="<test case name>,<test file name>.bats,[other targets]"
+make im-test BATS_SKIP_TESTS="<test case name>,<test file name>.bats,[other targets]"
 
-# example: make test BATS_SKIP_TESTS="INVENTORY: Ansible inventory exists,99_orchestration_teardown.bats"
+# example: make im-test BATS_SKIP_TESTS="INVENTORY: Ansible inventory exists,99_orchestration_teardown.bats"
 ```
 
 We can also run specific test cases using included in the runnable targets. This can be achieved by adding its name
 (full or short name) by setting *BATS_RUN_TESTS* in a comma separated list:
 
 ```
-make test BATS_RUN_TESTS="<test case name>,[other targets]" 
+make im-test BATS_RUN_TESTS="<test case name>,[other targets]"
 ```
 
 Also, to overcome some bats-core lack of functionality - for instance, stopping execution of tests when a test case fails -
