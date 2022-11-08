@@ -9,10 +9,6 @@ stages:
   - test
 
 .requirements: &install_reqs
-  - pip install poetry
-  # Create virtual environment in local root directory
-  # - poetry config virtualenvs.in-project true
-  # We don't need virtual environments. If we want caching of actual packages this needs to be true
   - poetry config virtualenvs.create false
   # We don't want editable mode (https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs)
   - poetry install --no-root
@@ -22,6 +18,7 @@ test_e2e:
   variables:
     SERVICE: logging
     DATACENTRE: stfc-techops
+    TF_VAR_image_name: $DATACENTRE-e2e-$SERVICE-ci-$CI_PIPELINE_ID
   stage: test
   tags:
     - ska-techops-iac-gitlab-runner
@@ -36,11 +33,14 @@ test_e2e:
     - cp .secure_files/clouds.yaml ska-ser-orchestration/tests/e2e/logging/clouds.yaml
     - cp .secure_files/ska-techops.pem resources/keys/ska-techops.pem
     - make test
-  # when: manual
   artifacts:
     paths:
       - tests/e2e/build/
     when: always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
+    - when: manual
 
 # build_clean_e2e:
 #   variables:
