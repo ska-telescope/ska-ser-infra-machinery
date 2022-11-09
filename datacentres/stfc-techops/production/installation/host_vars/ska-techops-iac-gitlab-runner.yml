@@ -1,4 +1,4 @@
 gitlab_runner_name: ska-techops-iac-gitlab-runner
 gitlab_runner_base_image: artefact.skao.int/ska-cicd-k8s-tools-build-deploy:0.8.2
 
-gitlab_runner_registration_token: "{{ lookup('ansible.builtin.env', 'GITLAB_RUNNER_REGISTRATION_TOKEN', default=secrets['gitlab_runner_registration_token']) | mandatory }}
+gitlab_runner_registration_token: "{{ lookup('ansible.builtin.env', 'GITLAB_RUNNER_REGISTRATION_TOKEN', default=secrets['gitlab_runner_registration_token']) | mandatory }}"

@@ -79,7 +79,16 @@ ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
 Change them carefully if you really need it.
 
-The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective  group variables.
+The PLAYBOOKS_ROOT_DIR/INVENTORY indicates where is the inventory file and the respective group variables. Also, with the introduction of datacentre, environment and service notions, as well as secrets, the following variables are also critical:
+
+```
+ANSIBLE_SECRETS_PROVIDER?=legacy
+ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
+ANSIBLE_SECRETS_PASSWORD?=
+ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE)'
+```
+
+If using secrets with datacentre or environment as keys, we can generically describe them and use the values injected here.
 
 # How to use
 
@@ -106,13 +115,16 @@ configurations and variables separated by datacentre (cluster), environment and 
 
 | Cluster           | Environment   | Service    | Folder Path                                      |
 | ----------------- | ------------- | ---------- | ------------------------------------------------ |
-| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/monitoring   |
-| STFC TechOps      | production    | logging    | datacentres/stfc-techops/production/logging      |
-| STFC TechOps      | production    | gitlab_runner | datacentres/stfc-techops/production/gitlab_runner|
-| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging          |
-| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/ceph                |
+| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/orchestration/monitoring       |
+| STFC TechOps      | production    | nexus-cache | datacentres/stfc-techops/production/orchestration/nexus-cache     |
+| STFC TechOps      | production    | logging     | datacentres/stfc-techops/production/orchestration/logging         |
+| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/orchestration/gitlab-runner |
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/orchestration/logging |
+| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/orchestration/ceph    |
+| STFC TechOps      | dev           | nexus      | datacentres/stfc-techops/dev/orchestration/nexus   |
+| STFC DP           | production    | -          | datacentres/stfc-dp/ |
+| PSI Mid           | production    | -          | datacentres/psi-mid/ |
 | EngageSKA         | dev           | -          | datacentres/engage/  |
-| PSI Mid           | production    | -          | datacentres/psi-mid/  |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -131,21 +143,23 @@ and Ansible (installation). Like the example bellow:
 │   │   │   │   │   ├── playbooks
 │   │   │   │   │   │   └── *.yml
 │   │   │   │   │   └── ssh.config
-|   |   |   ├── <service>    
-│   │   │   │   ├── orchestration
+│   │   │   ├── orchestration
+|   |   |   |   ├── <service>
 │   │   │   │   │   ├── *.tf
 │   │   │   │   │   ├── clouds.yaml
 │   │   │   │   │   └── terraform.tfvars
-│   │   │   ├── tests
-│   │   │   │   ├── e2e # End-to-end tests
-│   │   │   │   │   └── *.bats
-│   │   │   │   ├── src # Custom functions to use in bats
-│   │   │   │   │   └── *.bash
-│   │   │   │   └── unit # Unit tests of functions in src/
-│   │   │   │       └── *.bats
-│   │   │   └── ...
 |   |   └── ...
 |   └── ... 
+├── tests
+│   └── e2e
+|   |   ├── unit
+|   |   |   ├── *.bats
+|   |   ├── cleanup
+|   |   |   ├── *.bats
+|   |   ├── logging
+|   |   |   ├── *.bats
+|   |   ├── resources
+|   |   |   ├── *.sh
 ├── resources
 │   └── keys
 |   |   ├── *.pem
@@ -164,7 +178,7 @@ Currently, the following test environments are available:
 
 | Cluster           | Environment   | Service    | Folder PATH                           | Goal                                                                   |
 | ----------------- | ------------- | ---------- |---------------------------------------|------------------------------------------------------------------------|
-| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/orchestration/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
 To trigger tests, do:
 
