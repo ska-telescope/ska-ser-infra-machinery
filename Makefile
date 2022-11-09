@@ -274,7 +274,7 @@ im-help:  ## Show Help
 	@make help
 	@echo "";
 	@echo -e "\033[32mOrchestration targets - make orch <target>:\033[0m";
-	@cd ska-ser-orchestration && make help;
+	@cd ska-ser-orchestration && make help-print-targets;
 	@echo "";
 	@echo -e "\033[32mInstallation targets - make playbooks <target>:\033[0m";
-	@cd ska-ser-ansible-collections && make help;
+	@cd ska-ser-ansible-collections && make help-print-targets;
