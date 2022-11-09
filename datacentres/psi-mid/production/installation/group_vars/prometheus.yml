@@ -9,7 +9,7 @@ k8s_client_certificate: "/etc/prometheus/ca.crt"
 k8s_bearer_token: "/etc/prometheus/bearer.token"
 localuser: svc_skadev_ansible
 localgroup: admin
-gateway_host: terminus
+ca_host: terminus
 
 prometheus_alertmanager_url: http://142.73.34.170:9093
 prometheus_url: https://142.73.34.170:9090
