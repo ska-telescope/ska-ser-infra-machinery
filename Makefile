@@ -35,9 +35,10 @@ INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
 ANSIBLE_CONFIG?="$(PLAYBOOKS_ROOT_DIR)/ansible.cfg"
 ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
+CI_PIPELINE_ID ?= $(shell echo "local-$$(whoami)" | head -c 16)
 
 DEFAULT_TEXT_EDITOR?=vi
-ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE)'
+ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE) ska_ci_pipeline_id=$(CI_PIPELINE_ID)'
 
 ## ANSIBLE_SECRETS_PROVIDER must be one of: legacy, plain-text, ansible-vault or hashicorp-vault
 # pass datacentre, env (environment is reserved in ansible) and service variables
@@ -78,16 +79,17 @@ ifeq ($(ANSIBLE_SECRETS_PATH),)
 	$(error ANSIBLE_SECRETS_PATH is undefined)
 endif
 ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
-$(shell cat $(BASE_PATH)/PrivateRules.mak | \
+$(shell touch $(BASE_PATH)/PrivateRules.mak; \
+	rm $(ANSIBLE_SECRETS_PATH); echo "secrets:" > $(ANSIBLE_SECRETS_PATH); \
+	cat $(BASE_PATH)/PrivateRules.mak | \
 	grep -v "DATACENTRE=" | \
 	grep -v "ENVIRONMENT=" | \
 	grep -v "SERVICE=" | \
 	grep -v "^#" | \
 	grep "\S" | \
 	sed "s#^\([a-zA-Z0-9_-]\+\)[ ]*\(=\|\?=\|:=\)[ ]*\(.*\)#  \1: \3##" | \
-	sed "s#^\(  [a-zA-Z0-9_-]\+\):#\L\1:#" | \
-	sed '1s#^#secrets:\n#' \
-	> $(ANSIBLE_SECRETS_PATH) \
+	sed "s#^\(  [a-zA-Z0-9_-]\+\):#\L\1:#" \
+	>> $(ANSIBLE_SECRETS_PATH) \
 )
 $(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
 im-get-secrets:
@@ -217,17 +219,13 @@ orch: im-check-env ## Access Orchestration submodule targets
 	@cd ska-ser-orchestration && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
 
 ## Testing
-RANDOM_STRING ?= $(shell echo $$RANDOM | md5sum | head -c 3; echo)
-TF_VAR_group_name ?= $(DATACENTRE)-e2e-$(SERVICE)-local-$(RANDOM_STRING)
-
 TEST_ENV_VARS ?= $(ENV_VARS) \
-	OS_CLOUD=$(DATACENTRE) \
 	TF_HTTP_USERNAME="username" \
 	TF_HTTP_PASSWORD="password" \
-	ELASTICSEARCH_PASSWORD=elastic_e2e \
-	ELASTIC_HAPROXY_STATS_PASSWORD=elastic_e2e \
-	KIBANA_VIEWER_PASSWORD=elastic_e2e \
-	TF_VAR_group_name="$(TF_VAR_group_name)" \
+	TF_VAR_datacentre="$(DATACENTRE)" \
+	TF_VAR_environment="$(ENVIRONMENT)" \
+	TF_VAR_service="$(SERVICE)" \
+	TF_VAR_ci_pipeline_id="$(CI_PIPELINE_ID)"
 	
 # End-to-end variables
 BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
@@ -249,12 +247,11 @@ ifndef ENVIRONMENT
 endif
 
 im-test: im-check-test-env
-	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
-
-	@$(TEST_EXTRA_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="unit $(SERVICE) cleanup" $(MAKE) --no-print-directory bats-test
+	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
+	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="unit setup $(SERVICE) cleanup" $(MAKE) --no-print-directory bats-test
 	
-test-cleanup: check-test-env
-	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory test-install; fi
+im-test-cleanup: im-check-test-env
+	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
 	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
 
 im-test-install: im-check-test-env

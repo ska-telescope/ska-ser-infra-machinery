@@ -1,12 +1,12 @@
 # OpenStack Cloud Configurations
 openstack = {
-  cloud      = "stfc-techops"
+  cloud      = "openstack"
   project_id = "b5069610560e42bb837183ad5cd58ec0"
 }
 
 # OpenStack Instance defaults for the given OpenStack Cloud
 defaults = {
-  flavor              = "l3.micro"
+  flavor              = "c3.medium"
   image               = "ubuntu-focal-20.04-nogui"
   availability_zone   = "ceph"
   network             = "SKA-TechOps-Private"
