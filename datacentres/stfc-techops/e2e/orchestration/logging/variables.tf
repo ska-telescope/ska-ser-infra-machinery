@@ -1,4 +1,4 @@
-variable "image_name" {
+variable "group_name" {
   type = string
   description = "The name of the e2e group"
 }

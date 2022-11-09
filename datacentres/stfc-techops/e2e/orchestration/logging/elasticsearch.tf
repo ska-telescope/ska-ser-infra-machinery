@@ -6,7 +6,7 @@ module "elasticsearch" {
   }
 
   elasticsearch = {
-    name = var.image_name
+    name = var.group_name
     master = {
       size               = 1
       data_volume_size   = 10

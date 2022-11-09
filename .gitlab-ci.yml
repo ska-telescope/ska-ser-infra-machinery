@@ -50,10 +50,9 @@ test_e2e_logging:
   variables:
     SERVICE: logging
     DATACENTRE: stfc-techops
-    TF_VAR_image_name: $DATACENTRE-$ENVIRONMENT-$SERVICE-ci-$CI_PIPELINE_ID
+    TF_VAR_group_name: $DATACENTRE-$ENVIRONMENT-$SERVICE-ci-$CI_PIPELINE_ID
 
 include:
-  - local: "**/base_job.yml"
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
   - project: 'ska-telescope/templates-repository'

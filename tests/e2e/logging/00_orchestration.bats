@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR TF_VAR_image_name"
+    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR TF_VAR_group_name"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -29,7 +29,7 @@ setup() {
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 
-    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_image_name}.json
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_group_name}.json
 }
 
 @test 'ORCHESTRATION: Clean' {

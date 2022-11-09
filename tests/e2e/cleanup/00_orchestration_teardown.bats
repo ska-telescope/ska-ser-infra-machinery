@@ -29,7 +29,7 @@ setup() {
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 
-    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_image_name}.json
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_group_name}.json
 }
 
 @test 'ORCHESTRATION_TEARDOWN: Generate tfstate from BUILD json' {
