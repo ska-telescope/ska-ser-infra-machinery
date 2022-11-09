@@ -12,3 +12,6 @@ build
 tests/**/build
 tests/**/scripts
 PrivateRules*.mak
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/.terraform.tfstate.lock.info

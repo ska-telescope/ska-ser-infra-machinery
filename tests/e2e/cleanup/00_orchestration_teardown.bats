@@ -28,6 +28,14 @@ setup() {
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
+
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_group_name}.json
+}
+
+@test 'ORCHESTRATION_TEARDOWN: Generate tfstate from BUILD json' {
+    cd ${BASE_PATH}
+    cat ${TEST_STATE_JSON} > "${TF_ROOT_DIR}/terraform.tfstate"
+    assert_success
 }
 
 @test 'ORCHESTRATION_TEARDOWN: Clean' {
@@ -44,7 +52,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy Plan' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
     run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
@@ -56,7 +64,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -var-file=$DATACENTRE.tfvars"
+    export TF_ARGUMENTS="-input=false -no-color"
     export TF_AUTO_APPROVE=true
     run make orch destroy
     assert_success
@@ -64,7 +72,7 @@ setup() {
 
 @test 'ORCHESTRATION_TEARDOWN: Destroy is idempotent' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
     run make orch plan-destroy
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
