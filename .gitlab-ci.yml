@@ -3,7 +3,6 @@ image: $SKA_K8S_TOOLS_BUILD_DEPLOY
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   TERRAFORM_VERSION: "1.2.8"
-  CA_CERT_PASSWORD: $CA_CERT_PASSWORD
 
 workflow:
   rules:
@@ -25,7 +24,8 @@ stages:
     - poetry config virtualenvs.create false
     - poetry install --no-root
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
-    - cp .secure_files/clouds.yaml datacentres/stfc-techops/e2e/orchestration/${SERVICE}/clouds.yaml
+    - cp .secure_files/${DATACENTRE}.clouds.yaml datacentres/${DATACENTRE}/e2e/orchestration/${SERVICE}/clouds.yaml
+    - cp .secure_files/ska-e2e-test.pem resources/keys/ska-e2e-test.pem
     - cp .secure_files/ska-techops.pem resources/keys/ska-techops.pem
 
 .test_e2e:
@@ -34,11 +34,14 @@ stages:
   extends: .base_job
   stage: test
   script:
-    - make test
+    - make im-test
+  after_script:
+    - make im-test-cleanup
   allow_failure: false
   artifacts:
     paths:
       - build/
+      - tests/e2e/build/
     when: always
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
@@ -48,9 +51,9 @@ stages:
 test_e2e_logging:
   extends: .test_e2e
   variables:
-    SERVICE: logging
     DATACENTRE: stfc-techops
-    TF_VAR_group_name: $DATACENTRE-$ENVIRONMENT-$SERVICE-ci-$CI_PIPELINE_ID
+    SERVICE: logging
+    CI_PIPELINE_ID: $CI_PIPELINE_ID
 
 include:
   - project: 'ska-telescope/templates-repository'

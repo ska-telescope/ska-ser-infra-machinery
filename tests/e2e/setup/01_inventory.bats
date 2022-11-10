@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_PATH PLAYBOOKS_ROOT_DIR DATACENTRE ENVIRONMENT"
+    REQUIRED_ENV_VARS="BASE_PATH PLAYBOOKS_ROOT_DIR DATACENTRE ENVIRONMENT SERVICE"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -28,7 +28,7 @@ setup() {
 
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
-    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_group_name}.json
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
 }
 
 @test 'INVENTORY: Generate inventory' {
@@ -59,6 +59,5 @@ setup() {
 }
 
 teardown() {
-
     finalizeTest
 }

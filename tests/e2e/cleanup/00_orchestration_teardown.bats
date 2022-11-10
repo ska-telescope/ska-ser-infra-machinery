@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR"
+    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR DATACENTRE ENVIRONMENT SERVICE"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -13,6 +13,9 @@ setup_file() {
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     mkdir -p ${TEST_TMP_DIR}
+
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
+    cp ${TEST_STATE_JSON} ${TF_ROOT_DIR}/terraform.tfstate
 }
 
 setup() {
@@ -29,13 +32,7 @@ setup() {
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 
-    TEST_STATE_JSON=${BASE_PATH}/build/states/${TF_VAR_group_name}.json
-}
-
-@test 'ORCHESTRATION_TEARDOWN: Generate tfstate from BUILD json' {
-    cd ${BASE_PATH}
-    cat ${TEST_STATE_JSON} > "${TF_ROOT_DIR}/terraform.tfstate"
-    assert_success
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
 }
 
 @test 'ORCHESTRATION_TEARDOWN: Clean' {

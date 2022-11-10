@@ -1,1 +1,7 @@
 debug: false
+
+ca_host: ca
+ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
+
+elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
+logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"

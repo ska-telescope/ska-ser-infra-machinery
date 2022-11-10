@@ -43,6 +43,22 @@ TF_HTTP_PASSWORD="<user-token>"
 
 Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token) to create the Gitlab User token with the **API scope**. If this variable is empty, the Makefile targets will not run for security reasons.
 
+### Secrets management
+
+Currently we are refactoring the playbooks in *ska-ser-ansible-collections* to only use variables defined within the playbook's default variables and ansible group_vars/host_vars. Also, for increased security and easability of use, we've introduced new mechanisms to use secret variables in ansible. The particular provider to use, is set by the variable `ANSIBLE_SECRETS_PROVIDER`. This works independently of **environment variables**, that only get used if we use to the following variable-setting pattern:
+
+```
+some_variable: "{{ lookup('ansible.builtin.env', 'SOME_VARIABLE', default=secrets['some_variable']) | mandatory }}"
+```
+
+This way, we can guarantee that mandatory variables have a value, and we can set its value both with an environment variable (suits better CI environments) and PrivateRules.mak (or in the future, secrets.yml files) variables. Whether we define `SOME_VARIABLE` as an environment variable, or `SOME_VARIABLE=value` in PrivateRules.mak (using the legacy provider), we can pass secrets without declaring them in any Makefile, which is scalable. Using the **mandatory** filter, also makes Ansible throw an error if it is not defined. Below are the supported secrets providers:
+
+* **legacy** (default) - Converts variables in PrivateRules.mak to an yaml file (in `ANSIBLE_SECRETS_PATH`) and adds it as extra vars to ansible-playbook calls. The variables will be under the "umbrella" value of "**secrets**".
+* plain-text - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`. The variables are **expected** to be under the "umbrella" value of "secrets".
+* ansible-vault - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`, protected by the password specified by `ANSIBLE_SECRETS_PASSWORD`. Ansible will decrypt the secrets file at the time of usage, so that it is not exposed. The variables are **expected** to be under the "umbrella" value of "secrets".
+
+Any of these providers will inject variables under the **secrets** umbrella value, that can be used in a pattern as show above.
+
 ### Other important variables
 
 For Terraform the following specifics variables for the Gitlab's backend are already set in the Makefile:
@@ -65,7 +81,19 @@ ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 
 Change them carefully if you really need it.
 
-The PLAYBOOKS_ROOT_DIR indicated where is the inventory file and the respective  group variables.
+The PLAYBOOKS_ROOT_DIR/INVENTORY indicates where is the inventory file and the respective group variables. Also, with the introduction of datacentre, environment and service notions, as well as secrets, the following variables are also critical:
+
+```
+ANSIBLE_SECRETS_PROVIDER?=legacy
+ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
+ANSIBLE_SECRETS_PASSWORD?=
+ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE) ska_ci_pipeline_id=$(CI_PIPELINE_ID)'
+```
+
+If using secrets with datacentre or environment as keys, we can generically describe them and use the values injected here. With the introduction of these
+variables (datacentre, environment and service), we've also added them to Terraform, and they are injected as environment variables. That way we can
+standardize a bit more our Terraform code and require less changes, and be less error prone, as the values are those of the **environment variables**.
+Note that `ska_ci_pipeline_id` is only used for testing. It is also available as a Terraform variable, as we are going to see below.
 
 # How to use
 
@@ -92,13 +120,16 @@ configurations and variables separated by datacentre (cluster), environment and 
 
 | Cluster           | Environment   | Service    | Folder Path                                      |
 | ----------------- | ------------- | ---------- | ------------------------------------------------ |
-| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/monitoring   |
-| STFC TechOps      | production    | logging    | datacentres/stfc-techops/production/logging      |
-| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/gitlab-runner|
-| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging          |
-| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/ceph                |
+| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/orchestration/monitoring       |
+| STFC TechOps      | production    | nexus-cache | datacentres/stfc-techops/production/orchestration/nexus-cache     |
+| STFC TechOps      | production    | logging     | datacentres/stfc-techops/production/orchestration/logging         |
+| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/orchestration/gitlab-runner |
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/orchestration/logging |
+| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/orchestration/ceph    |
+| STFC TechOps      | dev           | nexus      | datacentres/stfc-techops/dev/orchestration/nexus   |
+| STFC DP           | production    | -          | datacentres/stfc-dp/ |
+| PSI Mid           | production    | -          | datacentres/psi-mid/ |
 | EngageSKA         | dev           | -          | datacentres/engage/  |
-| PSI Mid           | production    | -          | datacentres/psi-mid/  |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -117,21 +148,25 @@ and Ansible (installation). Like the example bellow:
 │   │   │   │   │   ├── playbooks
 │   │   │   │   │   │   └── *.yml
 │   │   │   │   │   └── ssh.config
-|   |   |   ├── <service>    
-│   │   │   │   ├── orchestration
+│   │   │   ├── orchestration
+|   |   |   |   ├── <service>
 │   │   │   │   │   ├── *.tf
 │   │   │   │   │   ├── clouds.yaml
 │   │   │   │   │   └── terraform.tfvars
-│   │   │   ├── tests
-│   │   │   │   ├── e2e # End-to-end tests
-│   │   │   │   │   └── *.bats
-│   │   │   │   ├── src # Custom functions to use in bats
-│   │   │   │   │   └── *.bash
-│   │   │   │   └── unit # Unit tests of functions in src/
-│   │   │   │       └── *.bats
-│   │   │   └── ...
 |   |   └── ...
 |   └── ... 
+├── tests
+│   └── e2e
+|   |   ├── unit
+|   |   |   ├── *.bats
+|   |   ├── cleanup
+|   |   |   ├── *.bats
+|   |   ├── setup
+|   |   |   ├── *.bats
+|   |   ├── logging
+|   |   |   ├── *.bats
+|   |   ├── resources
+|   |   |   ├── *.sh
 ├── resources
 │   └── keys
 |   |   ├── *.pem
@@ -150,7 +185,7 @@ Currently, the following test environments are available:
 
 | Cluster           | Environment   | Service    | Folder PATH                           | Goal                                                                   |
 | ----------------- | ------------- | ---------- |---------------------------------------|------------------------------------------------------------------------|
-| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
+| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/orchestration/logging | Deploy an elasticsearch cluster and test the API and cluster integrity |
 
 To trigger tests, do:
 
@@ -158,7 +193,14 @@ To trigger tests, do:
 make im-test
 ```
 
-By default, this will run the tests in - relative to *tests/* - the environment's **unit/** and **e2e/** directories.
+As we mean to run tests in CI pipelines in parallel, we need our infrastructure to be named after the CI pipeline creating it.
+For that we've created `CI_PIPELINE_ID` Makefile variable. This variable is used as `TF_VAR_ci_pipeline_id` to pass it as a
+Terraform variable (see https://developer.hashicorp.com/terraform/language/values/variables#environment-variables) and is also
+passed to Ansible as `ska_ci_pipeline_id`. That way, we can use the same variable to name our infrastructure and to refer to it
+when running Ansible code.
+
+By default, this will run the tests in - relative to *tests/* - the **unit/**, **setup/** and **cleanup/** directories. Before the
+*cleanup* (of the infrastructure), the tests named after the **SERVICE** will also be executed.
 We can trigger tests targeting individual targets, both relative to **tests/** or by specifying absolute paths in
 *BATS_TEST_TARGETS*, using a comma separated list:
 
@@ -230,7 +272,7 @@ teardown_file() {
 ## Ad hoc
 
 The instances are meant to be worked with using the provided make targets. In the event that you need (e.g, development
-purposes) to do manual ansible work, you can set up your shell and issue ansible commands from any working directory
+purposes) to do manual Ansible work, you can set up your shell and issue Ansible commands from any working directory
 against the environment's inventory. Please, use with caution:
 
 ```
@@ -271,6 +313,20 @@ The **ssh.config** and **inventory.yml** files automatically generated using:
 make orch generate-inventory
 ```
 
+Currently, we are generating the inventory assuming that the source machine is either within the network (ie, runner or dev machine)
+or using the environment's VPN. If that is the case, we can also bypass the jumphost usage by using:
+
+```
+GENERATE_INVENTORY_ARGS="--no-jumphost" make orch generate-inventory
+```
+
+Note that for some VPNs, the property `vpn_cidr_blocks` has to be updated with the proper CIDR block for the VPN (eg, EngageSKA) to allow
+SSH access. If we are outside of the VPN/network we must use a jumphost, and for that, the inventory should be generated using:
+
+```
+GENERATE_INVENTORY_ARGS="--prefer-floating-ip" make orch generate-inventory
+```
+
 This target call a script to retrieve the TF state from Gitlab and compiles the
 data to generate those two files and automatically moves them to the
 **$PLAYBOOKS_ROOT_DIR**.
@@ -292,29 +348,20 @@ Finally, run the installation make targets of your choosing.
 ### Elasticsearch API Key creation and query
 
 A set of make targets were created to help with the creation and query of Elasticsearch API keys.
-These targets are defined on a makefile named `elastic.mk` in the `ska-cicd-makefile` repo, `.make` submodule.
-
-The available `make` targets can be called with the command `make playbooks elastic` and are as follows:
-
-- `check`: Check the status of the Elasticsearch cluster.
-- `key-list`: List all the existing API keys.
-- `key-new KEY_NAME=somename [KEY_expiration=10d]`: Create a new API key with the given name and optional expiration time.
-- `key-info KEY_ID=keyid`: Display the information of the given API key using the key id.
-- `key-invalidate KEY_ID=keyid`: Invalidate the given API key using the key id.
-- `key-query KEY=encodedkey`: Query test for the Elasticsearch cluster health status using the encoded API key.
-
-These make targets need the following environment variables to be set:
-- `ELASTICSEARCH_PASSWORD`: Password for the `elastic` user.
-
-Under `.ska-ser-ansible-collections/resources/jobs/elastic.mk` there is a section with the default values for the environment variables as well. These are all set to the default values and will work for the STFC cluster inside STFC VPN.
-If you are using a different cluster, you will need to change the values of the environment variables.
+To create API keys, simply define them in an appropriate ansible variable file:
 
 ```
-ELASTIC_USER ?= elastic
-LOGGING_URL ?= https://logging.stfc.skao.int:9200
-LOADBALANCER_IP ?= logging.stfc.skao.int
-CA_CERT ?= /etc/pki/tls/private/ca-certificate.crt
-CERT ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.crt
-CERT_KEY ?= /etc/pki/tls/private/ska-techops-logging-central-prod-loadbalancer.key
-PEM_FILE ?= ~/.ssh/ska-techops.pem
+elasticsearch_api_keys:
+    some_key:
+        duration: <optional duration, defaults to infinity>
+        description: <some appropriate description of the api key>
+        role_descriptiors: <set of roles to restrict the permissions of the api key>
 ```
+
+This is a declarative approach, therefore keys present will be created, keys removed will be deleted (invalidated). Also, keys genereated outside of this target (without the appropriate metadata) are not considered. To do that, run:
+
+`make playbooks logging update-api-keys PLAYBOOKS_HOSTS=<elasticsearch cluster group>`
+
+When running this target, make sure you note down the api-key, as it is only visible once. To list the managed keys, do:
+
+`make playbooks logging list-api-keys PLAYBOOKS_HOSTS=<elasticsearch cluster group>`

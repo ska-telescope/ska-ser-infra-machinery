@@ -1,6 +1,6 @@
 # OpenStack Cloud Configurations
 openstack = {
-  cloud      = "stfc-techops"
+  cloud      = "openstack"
   project_id = "b5069610560e42bb837183ad5cd58ec0"
 }
 
@@ -10,7 +10,7 @@ defaults = {
   image               = "ubuntu-focal-20.04-nogui"
   availability_zone   = "ceph"
   network             = "SKA-TechOps-Private"
-  keypair             = "ska-techops"
+  keypair             = "ska-e2e-test"
   jump_host           = "01a68010-cc61-4396-9690-cb7263d2412d"
   floating_ip_network = "External"
 }

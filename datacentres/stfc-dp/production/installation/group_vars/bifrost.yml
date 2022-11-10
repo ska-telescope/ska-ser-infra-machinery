@@ -81,3 +81,12 @@ add_ssh_keys_admin:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdJfbfUErFjWYeZ9KG3Lycf6ncws9sYs2LXL9WOmPcKbMUevu+cRzpa+K/WqWHelcfvl5tyFMqjz/Ac8e6Y/wBR5O0/0HTdm5pWFzlklY4IxKaM/biqurJIvWOYXnu9ZnZ4rSXfHSLVDf27mIQh+IdVDdv+EGznA+OYchuyxvispZxNzdV6n2kfRFuaNw+t5vw8zRFf5pnjYnT4KUyPvVIs9t31I+0ISITInLqJNuf8KPIk7SRckTnOmiuUAFRzXKzUitW2UlKOadEXY/rw2HuAbuKME+6IuxO/l89lJB5tVxKxF85LgUeF5zbbJIvmAVOm8gjfv5fWHcwxM5PNqMz sawdyj@UK-L28GHQQ2 sawdyj
 # Pete Prior
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMcjZXn2KE4J2XhCA83DJRKqac15znAvgBtb76QU54eP peter.prior@IT001192.local pprior
+
+reverseproxy_dns_name: sdhp.stfc.skao.int
+reverseproxy_oauth2proxy_tenant_id: 78887040-bad7-494b-8760-88dcacfb3805
+reverseproxy_oauth2proxy_client_id: f70ff1e5-92d3-4e1c-9bc7-114f6a90bff4
+reverseproxy_oauth2proxy_cookie_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_COOKIE_SECRET', default=secrets['azuread_cookie_secret']) | mandatory }}"
+reverseproxy_oauth2proxy_client_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_CLIENT_SECRET', default=secrets['azuread_client_secret']) | mandatory }}"
+reverseproxy_kubernetes_api_server: "{{ groups['loadbalancers'][0] }}"
+reverseproxy_thanos_sidecar_server: prometheus
+reverseproxy_grafana_server: prometheus

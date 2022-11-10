@@ -6,7 +6,7 @@ module "elasticsearch" {
   }
 
   elasticsearch = {
-    name = var.group_name
+    name = join("-", [var.datacentre, var.environment, var.service, var.ci_pipeline_id])
     master = {
       size               = 1
       data_volume_size   = 10
