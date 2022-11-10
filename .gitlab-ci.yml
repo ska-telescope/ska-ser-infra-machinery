@@ -26,6 +26,7 @@ stages:
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
     - cp .secure_files/${DATACENTRE}.clouds.yaml datacentres/${DATACENTRE}/e2e/orchestration/${SERVICE}/clouds.yaml
     - cp .secure_files/ska-e2e-test.pem resources/keys/ska-e2e-test.pem
+    - cp .secure_files/ska-techops.pem resources/keys/ska-techops.pem
 
 .test_e2e:
   variables:
