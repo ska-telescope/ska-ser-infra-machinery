@@ -45,17 +45,19 @@ Follow this [link](https://docs.gitlab.com/ee/user/profile/personal_access_token
 
 ### Secrets management
 
-Currently we are refactoring the playbooks in ska-ser-ansible-collections to only use variables defined within the playbook's default variables and ansible group_vars/host_vars. Also, for increased security and easability of use, we've introduced new mechanisms to use secret variables in ansible. The particular provider to use, is set by the variable `ANSIBLE_SECRETS_PROVIDER`.
+Currently we are refactoring the playbooks in *ska-ser-ansible-collections* to only use variables defined within the playbook's default variables and ansible group_vars/host_vars. Also, for increased security and easability of use, we've introduced new mechanisms to use secret variables in ansible. The particular provider to use, is set by the variable `ANSIBLE_SECRETS_PROVIDER`. This works independently of **environment variables**, that only get used if we use to the following variable-setting pattern:
 
-* **legacy** (default) - Converts variables in PrivateRules.mak to an yaml file (in `ANSIBLE_SECRETS_PATH`) and adds it as extra vars to ansible-playbook calls. The variables will be under the "umbrella" value of "secrets".
-* plain-text - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`. The variables are expected to be under the "umbrella" value of "secrets".
-* ansible-vault - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`, protected by the password specified by `ANSIBLE_SECRETS_PASSWORD`. Ansible will decrypt the secrets file at the time of usage, so that it is not exposed. The variables are expected to be under the "umbrella" value of "secrets".
+```
+some_variable: "{{ lookup('ansible.builtin.env', 'SOME_VARIABLE', default=secrets['some_variable']) | mandatory }}"
+```
 
-This also allows us to define variables based on the **secrets** variable and **environment variables**. For that, on any ansible variables file, do:
+This way, we can guarantee that mandatory variables have a value, and we can set its value both with an environment variable (suits better CI environments) and PrivateRules.mak (or in the future, secrets.yml files) variables. Whether we define `SOME_VARIABLE` as an environment variable, or `SOME_VARIABLE=value` in PrivateRules.mak (using the legacy provider), we can pass secrets without declaring them in any Makefile, which is scalable. Using the **mandatory** filter, also makes Ansible throw an error if it is not defined. Below are the supported secrets providers:
 
-`some_variable: "{{ lookup('ansible.builtin.env', 'SOME_VARIABLE', default=secrets['some_variable']) | mandatory }}"`
+* **legacy** (default) - Converts variables in PrivateRules.mak to an yaml file (in `ANSIBLE_SECRETS_PATH`) and adds it as extra vars to ansible-playbook calls. The variables will be under the "umbrella" value of "**secrets**".
+* plain-text - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`. The variables are **expected** to be under the "umbrella" value of "secrets".
+* ansible-vault - Adds as extra vars to ansible-playbook calls the file specified by `ANSIBLE_SECRETS_PATH`, protected by the password specified by `ANSIBLE_SECRETS_PASSWORD`. Ansible will decrypt the secrets file at the time of usage, so that it is not exposed. The variables are **expected** to be under the "umbrella" value of "secrets".
 
-Wether we define `SOME_VARIABLE` as an environment variable, or `SOME_VARIABLE=value` in PrivateRules.mak, we can pass secrets without declare them in any Makefile. Using the **mandatory** filter, also makes Ansible throw an error if it is not defined.
+Any of these providers will inject variables under the **secrets** umbrella value, that can be used in a pattern as show above.
 
 ### Other important variables
 
@@ -320,7 +322,7 @@ Finally, run the installation make targets of your choosing.
 ### Elasticsearch API Key creation and query
 
 A set of make targets were created to help with the creation and query of Elasticsearch API keys.
-To create api-keys, simply define them in an appropriate ansible variable file:
+To create API keys, simply define them in an appropriate ansible variable file:
 
 ```
 elasticsearch_api_keys:

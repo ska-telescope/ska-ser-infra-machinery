@@ -51,7 +51,7 @@ test_e2e_logging:
   variables:
     DATACENTRE: stfc-techops
     SERVICE: logging
-    CI_PIPELINE_ID: ci-$CI_PIPELINE_ID
+    CI_PIPELINE_ID: $CI_PIPELINE_ID
 
 include:
   - project: 'ska-telescope/templates-repository'
