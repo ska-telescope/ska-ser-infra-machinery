@@ -87,10 +87,13 @@ The PLAYBOOKS_ROOT_DIR/INVENTORY indicates where is the inventory file and the r
 ANSIBLE_SECRETS_PROVIDER?=legacy
 ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
 ANSIBLE_SECRETS_PASSWORD?=
-ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE)'
+ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE) ska_ci_pipeline_id=$(CI_PIPELINE_ID)'
 ```
 
-If using secrets with datacentre or environment as keys, we can generically describe them and use the values injected here.
+If using secrets with datacentre or environment as keys, we can generically describe them and use the values injected here. With the introduction of these
+variables (datacentre, environment and service), we've also added them to Terraform, and they are injected as environment variables. That way we can
+standardize a bit more our Terraform code and require less changes, and be less error prone, as the values are those of the **environment variables**.
+Note that `ska_ci_pipeline_id` is only used for testing. It is also available as a Terraform variable, as we are going to see below.
 
 # How to use
 
@@ -158,6 +161,8 @@ and Ansible (installation). Like the example bellow:
 |   |   |   ├── *.bats
 |   |   ├── cleanup
 |   |   |   ├── *.bats
+|   |   ├── setup
+|   |   |   ├── *.bats
 |   |   ├── logging
 |   |   |   ├── *.bats
 |   |   ├── resources
@@ -188,7 +193,14 @@ To trigger tests, do:
 make im-test
 ```
 
-By default, this will run the tests in - relative to *tests/* - the environment's **unit/** and **e2e/** directories.
+As we mean to run tests in CI pipelines in parallel, we need our infrastructure to be named after the CI pipeline creating it.
+For that we've created `CI_PIPELINE_ID` Makefile variable. This variable is used as `TF_VAR_ci_pipeline_id` to pass it as a
+Terraform variable (see https://developer.hashicorp.com/terraform/language/values/variables#environment-variables) and is also
+passed to Ansible as `ska_ci_pipeline_id`. That way, we can use the same variable to name our infrastructure and to refer to it
+when running Ansible code.
+
+By default, this will run the tests in - relative to *tests/* - the **unit/**, **setup/** and **cleanup/** directories. Before the
+*cleanup* (of the infrastructure), the tests named after the **SERVICE** will also be executed.
 We can trigger tests targeting individual targets, both relative to **tests/** or by specifying absolute paths in
 *BATS_TEST_TARGETS*, using a comma separated list:
 
@@ -299,6 +311,20 @@ The **ssh.config** and **inventory.yml** files automatically generated using:
 
 ```
 make orch generate-inventory
+```
+
+Currently, we are generating the inventory assuming that the source machine is either within the network (ie, runner or dev machine)
+or using the environment's VPN. If that is the case, we can also bypass the jumphost usage by using:
+
+```
+GENERATE_INVENTORY_ARGS="--no-jumphost" make orch generate-inventory
+```
+
+Note that for some VPNs, the property `vpn_cidr_blocks` has to be updated with the proper CIDR block for the VPN (eg, EngageSKA) to allow
+SSH access. If we are outside of the VPN/network we must use a jumphost, and for that, the inventory should be generated using:
+
+```
+GENERATE_INVENTORY_ARGS="--prefer-floating-ip" make orch generate-inventory
 ```
 
 This target call a script to retrieve the TF state from Gitlab and compiles the

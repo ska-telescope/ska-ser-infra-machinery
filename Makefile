@@ -165,7 +165,10 @@ ENV_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
 	ANSIBLE_SSH_ARGS="$(ANSIBLE_SSH_ARGS)" \
 	ANSIBLE_COLLECTIONS_PATHS="$(ANSIBLE_COLLECTIONS_PATHS)" \
-	ANSIBLE_EXTRA_VARS="$(ANSIBLE_EXTRA_VARS)"
+	ANSIBLE_EXTRA_VARS="$(ANSIBLE_EXTRA_VARS)" \
+	TF_VAR_datacentre="$(DATACENTRE)" \
+	TF_VAR_environment="$(ENVIRONMENT)" \
+	TF_VAR_service="$(SERVICE)"
 
 im-vars:  ### Current variables
 	@echo "";
@@ -219,12 +222,11 @@ orch: im-check-env ## Access Orchestration submodule targets
 	@cd ska-ser-orchestration && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
 
 ## Testing
+# TF_VAR_ci_pipeline_id automatically populates ci_pipeline_id Terraform variable
+# that is used as a suffix in the Terraform resource names
 TEST_ENV_VARS ?= $(ENV_VARS) \
 	TF_HTTP_USERNAME="username" \
 	TF_HTTP_PASSWORD="password" \
-	TF_VAR_datacentre="$(DATACENTRE)" \
-	TF_VAR_environment="$(ENVIRONMENT)" \
-	TF_VAR_service="$(SERVICE)" \
 	TF_VAR_ci_pipeline_id="$(CI_PIPELINE_ID)"
 	
 # End-to-end variables
