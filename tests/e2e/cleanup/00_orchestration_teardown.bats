@@ -13,6 +13,9 @@ setup_file() {
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     mkdir -p ${TEST_TMP_DIR}
+
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
+    cp ${TEST_STATE_JSON} ${TF_ROOT_DIR}/terraform.tfstate
 }
 
 setup() {
@@ -30,12 +33,6 @@ setup() {
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
 
     TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
-}
-
-@test 'ORCHESTRATION_TEARDOWN: Get tfstate from BUILD json' {
-    cd ${BASE_PATH}
-    cat ${TEST_STATE_JSON} > "${TF_ROOT_DIR}/terraform.tfstate"
-    assert_success
 }
 
 @test 'ORCHESTRATION_TEARDOWN: Clean' {

@@ -40,6 +40,7 @@ stages:
   artifacts:
     paths:
       - build/
+      - tests/e2e/build/
     when: always
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

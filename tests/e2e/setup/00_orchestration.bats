@@ -13,6 +13,7 @@ setup_file() {
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     mkdir -p ${TEST_TMP_DIR}
+    mkdir -p ${BASE_PATH}/build/states
 }
 
 setup() {
@@ -63,6 +64,7 @@ setup() {
     export TF_ARGUMENTS="-input=false -no-color"
     export TF_AUTO_APPROVE=true
     run make orch apply
+    cp ${TF_ROOT_DIR}/terraform.tfstate ${TEST_STATE_JSON}
     assert_success
 }
 
@@ -77,13 +79,6 @@ setup() {
     assert_equal ${PLAN_TO_ADD} 0
     assert_equal ${PLAN_TO_UPDATE} 0
     assert_equal ${PLAN_TO_DESTROY} 0
-}
-
-@test 'ORCHESTRATION: Generate JSON tfstate' {
-    cd ${BASE_PATH}
-    mkdir -p build/states
-    cat "${TF_ROOT_DIR}/terraform.tfstate" > ${TEST_STATE_JSON}
-    assert_success
 }
 
 teardown() {
