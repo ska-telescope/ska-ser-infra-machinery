@@ -1,0 +1,5 @@
+debug: false
+
+ca_host: ca
+ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
+nexus: 192.168.99.204

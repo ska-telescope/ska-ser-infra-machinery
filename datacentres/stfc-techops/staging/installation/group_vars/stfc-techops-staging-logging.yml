@@ -1,0 +1,11 @@
+elasticsearch_dns_name: logging.stfc.skao.int
+elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
+elastic_haproxy_stats_password: "{{ lookup('ansible.builtin.env', 'ELASTIC_HAPROXY_STATS_PASSWORD', default=secrets['elastic_haproxy_stats_password']) | mandatory }}"
+kibana_viewer_password: "{{ lookup('ansible.builtin.env', 'KIBANA_VIEWER_PASSWORD', default=secrets['kibana_viewer_password']) | mandatory }}"
+
+elasticsearch_cluster_name: "{{ ska_datacentre }}-{{ ska_environment }}-{{ ska_service }}"
+elasticsearch_dns_name: "{{ elasticsearch_cluster_name }}-loadbalancer"
+
+elasticsearch_memory: 8G
+elasticsearch_java_mem: 4g
+elasticsearch_reinstall: true
