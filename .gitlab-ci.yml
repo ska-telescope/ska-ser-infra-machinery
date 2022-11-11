@@ -1,13 +1,62 @@
-image: $SKA_K8S_TOOLS_BUILD_DEPLOY_ALPINE
+image: $SKA_K8S_TOOLS_BUILD_DEPLOY
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  TERRAFORM_VERSION: "1.2.8"
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 stages:
   - lint
+  - test
+
+.base_job:
+  tags:
+    - ska-techops-iac-gitlab-runner
+  before_script:
+    - '[ -f .make/terraform.mk ] || (echo "File terraform.mk not included in Makefile"; exit 1;)'
+    - apt update
+    - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
+    - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
+    - poetry config virtualenvs.create false
+    - poetry install --no-root
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
+    - cp .secure_files/${DATACENTRE}.clouds.yaml datacentres/${DATACENTRE}/e2e/orchestration/${SERVICE}/clouds.yaml
+    - cp .secure_files/ska-e2e-test.pem resources/keys/ska-e2e-test.pem
+    - cp .secure_files/ska-techops.pem resources/keys/ska-techops.pem
+
+.test_e2e:
+  variables:
+    ENVIRONMENT: e2e
+  extends: .base_job
+  stage: test
+  script:
+    - make im-test
+  after_script:
+    - make im-test-cleanup
+  allow_failure: false
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build/
+    when: always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
+    - when: manual
+
+test_e2e_logging:
+  extends: .test_e2e
+  variables:
+    DATACENTRE: stfc-techops
+    SERVICE: logging
+    CI_PIPELINE_ID: $CI_PIPELINE_ID
 
 include:
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'

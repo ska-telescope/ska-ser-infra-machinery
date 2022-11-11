@@ -23,6 +23,11 @@ finalizeTest() {
     if grep -Eo "^${BATS_TEST_NAME}.*" ${BATS_TEST_SOURCE} | grep -q "bats-ignore-failure"; then
         touch ${BATS_TEST_TMPDIR}.ignore_failure
     fi
+
+    # move test results to the root build folder
+    if test -f "${BASE_DIR}/build/report.xml"; then
+        mkdir -p ${BASE_PATH}/build/reports/ && cat ${BASE_DIR}/build/report.xml > ${BASE_PATH}/build/reports/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.xml
+    fi
 }
 
 shouldAbortTest() {

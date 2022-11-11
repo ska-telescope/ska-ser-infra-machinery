@@ -2,7 +2,7 @@ load "../resources/core"
 shouldAbortTest ${BATS_TEST_TMPDIR} ${BATS_SUITE_TEST_NUMBER}
 
 setup_file() {
-    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR"
+    REQUIRED_ENV_VARS="BASE_DIR BASE_PATH GITLAB_PROJECT_ID TF_ROOT_DIR TF_INVENTORY_DIR DATACENTRE ENVIRONMENT SERVICE"
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
@@ -13,6 +13,7 @@ setup_file() {
     TEST_FILE=$(basename ${BATS_TEST_FILENAME})
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     mkdir -p ${TEST_TMP_DIR}
+    mkdir -p ${BASE_PATH}/build/states
 }
 
 setup() {
@@ -28,47 +29,53 @@ setup() {
     TEST_TMP_DIR=${BASE_DIR}/build/tmp/$(echo ${TEST_FILE} | md5sum | head -c 8)
     PLAN_OUTPUT=${TEST_TMP_DIR}/plan
     PLAN_OUTPUT_TXT=${TEST_TMP_DIR}/plan.out
+
+    TEST_STATE_JSON=${BASE_PATH}/build/states/${DATACENTRE}-${ENVIRONMENT}-${SERVICE}.json
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Clean' {
+@test 'ORCHESTRATION: Clean' {
     cd ${BASE_PATH}
     run make orch clean
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Init' {
+@test 'ORCHESTRATION: Init' {
     cd ${BASE_PATH}
+    export TF_ARGUMENTS="-input=false"
     run make orch init
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy Plan' {
+@test 'ORCHESTRATION: Plan' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
-    run make orch plan-destroy
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
+    run make orch plan
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
-    assert_equal ${PLAN_TO_ADD} 0
+    # Allow nothing to be added if infrastructure is up to date
+    # or only to be added, if it is non existing.
     assert_equal ${PLAN_TO_UPDATE} 0
-    assert [ ${PLAN_TO_DESTROY} -gt 0 ]
+    assert_equal ${PLAN_TO_DESTROY} 0
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy' {
+@test 'ORCHESTRATION: Apply' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -var-file=$DATACENTRE.tfvars"
+    export TF_ARGUMENTS="-input=false -no-color"
     export TF_AUTO_APPROVE=true
-    run make orch destroy
+    run make orch apply
+    cp ${TF_ROOT_DIR}/terraform.tfstate ${TEST_STATE_JSON}
     assert_success
 }
 
-@test 'ORCHESTRATION_TEARDOWN: Destroy is idempotent' {
+@test 'ORCHESTRATION: Plan is idempotent' {
     cd ${BASE_PATH}
-    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT} -var-file=$DATACENTRE.tfvars"
-    run make orch plan-destroy
+    export TF_ARGUMENTS="-input=false -no-color -out=${PLAN_OUTPUT}"
+    run make orch plan
     echo "$output" > ${PLAN_OUTPUT_TXT}
     eval $(parsePlan ${PLAN_OUTPUT_TXT})
 
+    # Allow nothing to be added, changed or destroyed
     assert_equal ${PLAN_TO_ADD} 0
     assert_equal ${PLAN_TO_UPDATE} 0
     assert_equal ${PLAN_TO_DESTROY} 0
