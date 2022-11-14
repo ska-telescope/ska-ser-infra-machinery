@@ -1,0 +1,147 @@
+.stfc_techops:
+  tags:
+    - ska-techops-iac-gitlab-runner
+  variables:
+    DATACENTRE: stfc-techops
+
+# ------------- Environments --------------
+.stfc_techops:e2e:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: e2e
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+
+.stfc_techops:staging:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: staging
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
+
+.stfc_techops:production:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
+# -----------------------------------------
+
+# --------------- Services ----------------
+.stfc_techops:e2e:logging:
+  extends: .stfc_techops:e2e
+  variables:
+    SERVICE: logging
+  environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    auto_stop_in: 2 hours
+
+.stfc_techops:staging:logging:
+  extends: .stfc_techops:staging
+  variables:
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-logging"
+  environment:
+    name: stfc-techops-staging-logging
+    deployment_tier: staging
+
+.stfc_techops:production:logging:
+  extends: .stfc_techops:production
+  variables:
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
+  environment:
+    name: stfc-techops-production-logging
+    deployment_tier: production
+# -----------------------------------------
+
+# ---------- Orchestration Jobs -----------
+stfc_techops:staging:logging:plan:
+  extends:
+    - .stfc_techops:staging:logging
+    - .orchestration_plan
+
+stfc_techops:staging:logging:apply:
+  extends:
+    - .stfc_techops:staging:logging
+    - .orchestration_apply
+  needs:
+    - stfc_techops:staging:logging:plan
+
+stfc_techops:production:logging:plan:
+  extends:
+    - .stfc_techops:production:logging
+    - .orchestration_plan
+
+stfc_techops:production:logging:apply:
+  extends:
+    - .stfc_techops:production:logging
+    - .orchestration_apply
+  needs:
+    - stfc_techops:production:logging:plan
+# -----------------------------------------
+
+# ----------------- Tests -----------------
+logging:e2e_tests:
+  extends:
+    - .stfc_techops:e2e:logging
+    - .start_e2e_tests
+  environment:
+    on_stop: logging:e2e_tests:cleanup
+
+logging:e2e_tests:cleanup:
+  extends:
+    - .stfc_techops:e2e:logging
+    - .stop_e2e_tests
+  needs:
+    - logging:e2e_tests
+# -----------------------------------------
+
+# ---------- Installation Jobs -------------
+# --- staging
+stfc_techops:staging:logging:install:
+  stage: staging:installation
+  extends:
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+    - .logging_install_task
+
+stfc_techops:staging:logging:destroy:
+  stage: staging:installation
+  extends:
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+    - .logging_destroy_task
+
+stfc_techops:staging:logging:test:
+  stage: staging:installation
+  extends:
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+    - .logging_test_task
+  needs:
+    - stfc_techops:staging:logging:install
+# ---
+# --- production
+stfc_techops:production:logging:install:
+  extends:
+    - .stfc_techops:production:logging
+    - .installation_base_job
+    - .logging_install_task
+  needs:
+    - stfc_techops:staging:logging:install
+    - stfc_techops:staging:logging:test
+
+stfc_techops:production:logging:destroy:
+  extends:
+    - .stfc_techops:production:logging
+    - .installation_base_job
+    - .logging_destroy_task
+
+stfc_techops:production:logging:test:
+  extends:
+    - .stfc_techops:production:logging
+    - .installation_base_job
+    - .logging_test_task
+  needs:
+    - stfc_techops:production:logging:install
+# ---
+# -----------------------------------------

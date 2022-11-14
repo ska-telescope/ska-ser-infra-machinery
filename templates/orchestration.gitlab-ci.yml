@@ -1,0 +1,45 @@
+.orchestration_base_job:
+  variables:
+    ENVIRONMENT_DIR: datacentres/$DATACENTRE/$ENVIRONMENT
+    JOB: orchestration
+    TF_HTTP_USERNAME: gitlab-ci-token
+    TF_HTTP_PASSWORD: $CI_JOB_TOKEN
+    CI_PIPELINE_ID: $CI_PIPELINE_ID
+  before_script:
+    - '[ -f .make/terraform.mk ] || (echo "File terraform.mk not included in Makefile"; exit 1;)'
+    - !reference [.install_terraform]
+    - !reference [.install_python_dependencies]
+    - !reference [.install_secrets]
+  script: |
+    ORCHESTRATION_DIRS=$(find $(pwd)/$ENVIRONMENT_DIR -name 'terraform.tf' | grep -v ".make" | grep -v "ska-ser-orchestration" | sed 's/.terraform.tf//' | sort | uniq)
+    for DIR in $(echo $ORCHESTRATION_DIRS); do
+      cp .secure_files/$DATACENTRE.clouds.yaml $DIR/clouds.yaml
+    done
+  rules:
+    - !reference [.automatic_rules]
+
+.orchestration_plan:  
+  stage: plan
+  extends:
+    - .orchestration_base_job
+  variables:
+    TF_ARGUMENTS: "-input=false"
+  script:
+    - !reference [.orchestration_base_job, script]
+    - echo 'make orch clean'
+    - echo 'make orch init'
+    - echo 'make orch plan'
+
+.orchestration_apply:
+  stage: apply
+  extends:
+    - .orchestration_base_job
+  variables:
+    TF_ARGUMENTS: "-input=false"
+  script:
+    - !reference [.orchestration_base_job, script]
+    - echo 'make orch clean'
+    - echo 'make orch init'
+    - echo 'make orch apply TF_AUTO_APPROVE="true"'
+  rules:
+    - !reference [.manual_rules]

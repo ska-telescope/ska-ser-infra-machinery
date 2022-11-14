@@ -231,6 +231,7 @@ TEST_ENV_VARS ?= $(ENV_VARS) \
 	
 # End-to-end variables
 BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
+BATS_TEST_SUITES ?= unit setup $(SERVICE) cleanup
 SKIP_BATS_TESTS = $(shell [ ! -d $(BATS_TESTS_DIR) ] && echo "true" || echo "false")
 BATS_CORE_VERSION = v1.8.0
 
@@ -250,7 +251,7 @@ endif
 
 im-test: im-check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
-	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="unit setup $(SERVICE) cleanup" $(MAKE) --no-print-directory bats-test
+	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="$(BATS_TEST_SUITES)" $(MAKE) --no-print-directory bats-test
 	
 im-test-cleanup: im-check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
