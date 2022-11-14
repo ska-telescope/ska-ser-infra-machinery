@@ -9,3 +9,4 @@ elasticsearch_dns_name: "{{ elasticsearch_cluster_name }}-loadbalancer"
 elasticsearch_memory: 8G
 elasticsearch_java_mem: 4g
 elasticsearch_reinstall: true
+elasticsearch_default_master_roles: "{{ elasticsearch_default_node_roles }}"  # Make master node a data node as well

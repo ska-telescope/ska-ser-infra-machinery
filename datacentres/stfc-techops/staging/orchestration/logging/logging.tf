@@ -9,11 +9,11 @@ module "elasticsearch" {
     name = join("-", [var.datacentre, var.environment, var.service])
     master = {
       size               = 1
-      data_volume_size   = 10
+      data_volume_size   = 100
       docker_volume_size = 20
     }
     data = {
-      size               = 2
+      size               = 1
       data_volume_size   = 100
       docker_volume_size = 20
     }
