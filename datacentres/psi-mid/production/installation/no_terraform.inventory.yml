@@ -100,3 +100,11 @@ all:
             psi-mid-node-1: {}
             psi-mid-node-2: {}
             psi-mid-node-3: {}
+    prometheus:
+      children:
+        nodes:
+          hosts:
+            psi-mid-head: {}
+            psi-mid-node-1: {}
+            psi-mid-node-2: {}
+            psi-mid-node-3: {}

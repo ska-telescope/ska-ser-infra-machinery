@@ -2,27 +2,27 @@
 debug: true
 production: true
 # can only do one cluster - v1
-k8s_api_server_addr: "10.200.0.63"
+k8s_api_server_addr: "142.73.34.170"
 k8s_api_server_port: "6443"
 k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
 k8s_client_certificate: "/etc/prometheus/ca.crt"
 k8s_bearer_token: "/etc/prometheus/bearer.token"
-localuser: ubuntu
-localgroup: ubuntu
-gateway_host: terminus
+localuser: svc_skadev_ansible
+localgroup: admin
+ca_host: terminus
 
-prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
-prometheus_url: https://monitoring.skao.stfc:9090
-slack_channel: techops-alerts
-slack_channel_user: techops-user-alerts
+prometheus_alertmanager_url: http://142.73.34.170:9093
+prometheus_url: https://142.73.34.170:9090
+slack_channel: psi-mid-alerts
+slack_channel_user: psi-mid-user-alerts
 
-k8s_external_dns_entry: k8s.stfc.skao.int
+k8s_external_dns_entry: 
 
 grafana_disable_admin_account_creation: "false"
 
-project_name: "SKA-TechOps"
+project_name: "PSI-Mid"
 
-prometheus_datacentre: stfc-ska-monitor
+prometheus_datacentre: psi-mid-monitor
 
 prometheus_global:
   scrape_interval: 15s
@@ -31,22 +31,11 @@ prometheus_global:
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
-    regex: 192\.168\.99\.194 :9100
+    regex: 130\.246\.214\.45:9100
     replacement: terminus:9100
     source_labels:
     - instance
     target_label: instance
-
-elasticsearch_instance_add_cluster_label:
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
-    source_labels: [instance]
-    target_label: cluster
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
-    source_labels: [instance]
-    target_label: cluster
-
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -63,40 +52,42 @@ prometheus_scrape_configs:
           - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:8080"
 
   - job_name: "node"
-    file_sd_configs:
-    - files:
-      - 'node_exporter.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+    static_configs:
+    - targets:
+      - "142.73.34.170:9100"
+      - "142.73.34.171:9100"
+      - "142.73.34.172:9100"
+      - "142.73.34.173:9100"
 
   - job_name: "gitlab-runner"
     static_configs:
     - targets:
-      - "10.200.0.63:9252"
-
-  - job_name: "elasticsearch"
-    file_sd_configs:
-    - files:
-      - 'elasticsearch_exporter.json'
+      - "142.73.34.170:9252"
 
   - job_name: "docker"
-    file_sd_configs:
-    - files:
-      - 'docker_exporter.json'
+    static_configs:
+    - targets:
+      - "142.73.34.170:9323"
+      - "142.73.34.171:9323"
+      - "142.73.34.172:9323"
+      - "142.73.34.172:9323"
 
   - job_name: "kube-proxy"
-    file_sd_configs:
-    - files:
-      - 'kube-proxy.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
-
+    static_configs:
+    - targets:
+      - "142.73.34.170:10249"
+      - "142.73.34.171:10249"
+      - "142.73.34.172:10249"
+      - "142.73.34.172:10249"
+  
   - job_name: "kube-state-metrics"
     static_configs:
     - targets:
-      - "10.200.0.63:32080"  # load balancer
+      - "142.73.34.170:32080" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.99\.222:32080
-      replacement: systems-k8s1-loadbalancer:32080
+      regex: 142\.73\.34\.170:32080
+      replacement: rmdskadevdu011:32080
       source_labels:
         - instance
       target_label: instance
@@ -104,25 +95,25 @@ prometheus_scrape_configs:
   - job_name: "k8stelemetry"
     static_configs:
     - targets:
-      - "10.200.0.63:32081"  # load balancer
+      - "142.73.34.170:32081" # load balancer
     metric_relabel_configs:
     - action: replace
-      regex: 192\.168\.99\.222:32081
-      replacement: systems-k8s1-loadbalancer:32081
+      regex: 142\.73\.34\.170:32081
+      replacement: rmdskadevdu011:32081
       source_labels:
         - instance
       target_label: instance
 
   - job_name: "ceph_cluster"
-    file_sd_configs:
-    - files:
-      - 'ceph-mgr.json'
+    static_configs:
+    - targets:
+      - "142.73.34.170:9283"
+      - "142.73.34.171:9283"
+      - "142.73.34.172:9283"
+      - "142.73.34.172:9283"
 
 # node exporter versions
 node_exporter_version: 0.18.1-1.el7
 node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prometheus-node-exporter/prometheus-node-exporter_0.18.1+ds-2_amd64.deb
 
 thanos_query_endpoints:
-- 192.168.99.153:10901
-- 192.168.99.31:19090 # store gateway
-- dns+sdhp.stfc.skao.int:10901 # jupiter sidecar exposed
