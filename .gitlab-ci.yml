@@ -58,5 +58,6 @@ test_e2e_logging:
 include:
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
+    ref: st-1432-fix-tflint
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
