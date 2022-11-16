@@ -1,8 +1,5 @@
 .installation_base_job:
   stage: installation
-  variables:
-    JOB: installation
-    CI_PIPELINE_ID: $CI_PIPELINE_ID
   before_script:
     - !reference [.install_python_dependencies]
     - !reference [.install_secrets]
