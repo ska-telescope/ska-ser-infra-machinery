@@ -18,11 +18,6 @@ variables:
   - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
   - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
 
-
-
-.on_success_rules: &on_success_rules
-  - when: on_success
-
 .manual_rules: &manual_rules
   - when: manual
 

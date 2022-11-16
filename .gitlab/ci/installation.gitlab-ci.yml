@@ -35,5 +35,3 @@
     TASK: test
   script:
     - echo 'make playbooks logging test'
-  rules:
-    - !reference [.on_success_rules]
