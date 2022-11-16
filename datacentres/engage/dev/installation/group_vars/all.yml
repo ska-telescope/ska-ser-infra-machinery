@@ -1,0 +1,16 @@
+debug: false
+
+# Mandatory variables -> Add to ALL environments with their respective value
+nexus: 192.168.93.109
+ca_host: mpaulo-test-instance
+ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
+
+# Use this to generate an api key to use for filebeat
+#elasticsearch_password: "{{ (secrets['elasticsearch_password'] is defined | ternary(secrets['elasticsearch_password'], lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=cenas))) | mandatory }}"
+elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
+elasticsearch_api_keys:
+  filebeat2:
+
+logging_filebeat_elasticsearch_address: mpaulo-test-es-loadbalancer
+logging_filebeat_elasticsearch_user: "elastic"
+logging_filebeat_elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
