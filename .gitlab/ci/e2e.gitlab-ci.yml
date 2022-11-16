@@ -29,5 +29,4 @@
       - tests/e2e/build
   script:
     - echo 'make im-test-cleanup'
-  rules:
-    - !reference [.manual_rules]
+  when: manual

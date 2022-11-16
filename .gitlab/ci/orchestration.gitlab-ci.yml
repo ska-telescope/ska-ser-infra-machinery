@@ -39,5 +39,4 @@
     - echo 'make orch clean'
     - echo 'make orch init'
     - echo 'make orch apply TF_AUTO_APPROVE="true"'
-  rules:
-    - !reference [.manual_rules]
+  when: manual
