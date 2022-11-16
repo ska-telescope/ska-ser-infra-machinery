@@ -7,9 +7,9 @@ module "instance" {
 
   configuration = {
     name         = "mpaulo-test-instance"
-    applications = [ "reverseproxy" ]
+    applications = ["reverseproxy"]
     floating_ip = {
-      create = true
+      create  = true
       network = "external"
     }
   }
