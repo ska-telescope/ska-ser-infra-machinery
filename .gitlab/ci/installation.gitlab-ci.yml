@@ -6,8 +6,6 @@
   before_script:
     - !reference [.install_python_dependencies]
     - !reference [.install_secrets]
-  rules:
-    - !reference [.automatic_rules]
 
 .logging_install_task:
   variables:

@@ -15,8 +15,6 @@
     for DIR in $(echo $ORCHESTRATION_DIRS); do
       cp .secure_files/$DATACENTRE.clouds.yaml $DIR/clouds.yaml
     done
-  rules:
-    - !reference [.automatic_rules]
 
 .orchestration_plan:  
   stage: plan

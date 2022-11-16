@@ -19,11 +19,6 @@ variables:
   - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
 
 
-.automatic_rules: &automatic_rules
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: on_success
-  - when: manual
-    allow_failure: true
 
 .on_success_rules: &on_success_rules
   - when: on_success

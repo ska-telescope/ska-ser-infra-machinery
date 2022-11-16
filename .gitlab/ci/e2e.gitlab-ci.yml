@@ -14,8 +14,6 @@
       - tests/e2e/build
   script:
     - echo 'make im-test'
-  rules:
-    - !reference [.automatic_rules]
 
 .stop_e2e_tests:
   extends:
