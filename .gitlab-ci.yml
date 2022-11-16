@@ -3,72 +3,23 @@ image: $SKA_K8S_TOOLS_BUILD_DEPLOY
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   TERRAFORM_VERSION: "1.2.8"
-  REQUIRED_SSH_KEYS: ska-techops.pem
-  TARGET_DATACENTRE: "datacentre"
-  TARGET_ENVIRONMENT: "environment"
-  TARGET_SERVICE: "service"
-  TARGET_JOB: "job"
-  TARGET_TASK: "task"
-
-.install_terraform: &install_terraform
-  - apt update
-  - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
-  - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
-
-.install_python_dependencies: &install_python_dependencies
-  - poetry config virtualenvs.create false
-  - poetry install --no-root
-
-.install_secrets: &install_secrets
-  - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
-  - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
-
-.base_rules: &base_rules
-  - if: $TARGET_DATACENTRE != "datacentre" && $DATACENTRE != $TARGET_DATACENTRE
-    when: never
-  - if: $TARGET_ENVIRONMENT != "environment" && $ENVIRONMENT != $TARGET_ENVIRONMENT
-    when: never
-  - if: $TARGET_SERVICE != "service" && $SERVICE != $TARGET_SERVICE
-    when: never
-  - if: $TARGET_JOB != "job" && $JOB != $TARGET_JOB
-    when: never
-  - if: $TARGET_TASK != "task" && $TASK != $TARGET_TASK
-    when: never
-
-.automatic_rules: &automatic_rules
-  - *base_rules
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: on_success
-  - when: manual
-    allow_failure: true
-
-.on_success_rules: &on_success_rules
-  - *base_rules
-  - when: on_success
-
-.manual_rules: &manual_rules
-  - *base_rules
-  - when: manual
-
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 stages:
   - lint
   - plan
   - apply
-  - staging:installation
-  - staging:test
-  - installation
   - test
-  - e2e-tests
+  - staging_install
+  - test_staging
+  - production_install
+  - test_production
 
 include:
-  - local: 'templates/*.gitlab-ci.yml'
-  - local: 'datacentres/**/*.gitlab-ci.yml'
+  - local: '.gitlab/ci/templates.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.e2e.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.staging.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.production.gitlab-ci.yml'
+    
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
   - project: 'ska-telescope/templates-repository'

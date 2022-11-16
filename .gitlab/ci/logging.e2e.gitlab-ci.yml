@@ -1,0 +1,42 @@
+.logging_e2e:
+  stage: test
+  extends:
+    - .stfc_techops
+    - .orchestration_dependencies
+  variables:
+    ENVIRONMENT: e2e
+    REQUIRED_SSH_KEYS: "ska-e2e-test.pem"
+    SERVICE: logging
+    BATS_TEST_SUITES: "unit setup $SERVICE"
+
+logging_e2e_tests:
+  extends: 
+    - .logging_e2e
+  environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    auto_stop_in: 2 hours
+    action: start
+    on_stop: logging_e2e_tests_cleanup
+  allow_failure: true
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - echo 'make im-test'
+
+logging_e2e_tests_cleanup:
+  extends: 
+    - .logging_e2e
+  environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    action: stop
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - echo 'make im-test-cleanup'
+  when: manual
