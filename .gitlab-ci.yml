@@ -17,7 +17,7 @@ variables:
 
 .install_python_dependencies: &install_python_dependencies
   - poetry config virtualenvs.create false
-  - poetry install --no-root
+  - poetry install
 
 .install_secrets: &install_secrets
   - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
@@ -67,8 +67,10 @@ stages:
   - e2e-tests
 
 include:
-  - local: 'templates/*.gitlab-ci.yml'
-  - local: 'datacentres/**/*.gitlab-ci.yml'
+  - local: '.gitlab/ci/e2e.gitlab-ci.yml'
+  - local: '.gitlab/ci/installation.gitlab-ci.yml'
+  - local: '.gitlab/ci/orchestration.gitlab-ci.yml'
+  - local: '.gitlab/ci/stfc-techops.gitlab-ci.yml'
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
   - project: 'ska-telescope/templates-repository'

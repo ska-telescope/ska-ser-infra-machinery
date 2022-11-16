@@ -9,7 +9,6 @@
   rules:
     - !reference [.automatic_rules]
 
-# ---------------- Logging ----------------
 .logging_install_task:
   variables:
     TASK: install
@@ -40,4 +39,3 @@
     - echo 'make playbooks logging test'
   rules:
     - !reference [.on_success_rules]
-# -----------------------------------------
