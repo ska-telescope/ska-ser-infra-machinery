@@ -6,20 +6,20 @@ module "escluster" {
   }
 
   elasticsearch = {
-    name         = "mpaulo-test-es"
+    name = "mpaulo-test-es"
     master = {
-      size = 1
+      size               = 1
       data_volume_size   = 10
       docker_volume_size = 10
-      roles = ["master", "kibana"]
+      roles              = ["master", "kibana"]
     }
-    data   = {
-      size = 1
+    data = {
+      size               = 1
       data_volume_size   = 10
       docker_volume_size = 10
     }
     kibana = {
-      size = 0
+      size               = 0
       docker_volume_size = 10
     }
     loadbalancer = {
