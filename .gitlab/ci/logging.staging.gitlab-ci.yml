@@ -1,0 +1,50 @@
+.logging_staging:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: staging
+    REQUIRED_SSH_KEYS: "ska-staging.pem"
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-logging"
+  environment:
+    name: stfc-techops-staging-logging
+    deployment_tier: staging
+
+logging_staging_plan:
+  extends:
+    - .logging_staging
+    - .orchestration_plan
+
+logging_staging_apply:
+  extends:
+    - .logging_staging
+    - .orchestration_apply
+  needs:
+    - logging_staging_plan
+
+logging_staging_install:
+  stage: staging_install
+  extends:
+    - .logging_staging
+    - .installation_dependencies
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+
+logging_staging_destroy:
+  stage: staging_install
+  extends:
+    - .logging_staging
+    - .installation_dependencies
+  script:
+    - echo 'make playbooks logging destroy'
+
+logging_staging_test:
+  stage: test_staging
+  extends:
+    - .logging_staging
+    - .installation_dependencies
+  script:
+    - echo 'make playbooks logging test'
+  needs:
+    - logging_staging_install
