@@ -10,11 +10,12 @@ stages:
   - apply
   - test
   - staging_install
-  - test_staging
+  - staging_test
   - production_install
-  - test_production
+  - production_test
 
 include:
+  - local: '.gitlab/ci/datacentres.gitlab-ci.yml'
   - local: '.gitlab/ci/templates.gitlab-ci.yml'
   - local: '.gitlab/ci/logging.e2e.gitlab-ci.yml'
   - local: '.gitlab/ci/logging.staging.gitlab-ci.yml'

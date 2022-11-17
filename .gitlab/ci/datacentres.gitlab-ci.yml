@@ -1,0 +1,5 @@
+.stfc_techops:
+  tags:
+    - ska-techops-iac-gitlab-runner
+  variables:
+    DATACENTRE: stfc-techops
