@@ -9,24 +9,24 @@
     name: stfc-techops-production-logging
     deployment_tier: production
 
-production_logging_plan:
-  extends:
-    - .production_logging
-    - .orchestration_plan
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
-    - !reference [.dettached_trigger]
-
-production_logging_apply:
-  extends:
-    - .production_logging
-    - .orchestration_apply
-  needs:
-    - production_logging_plan
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
-      when: manual
-    - !reference [.manual_trigger]
+#production_logging_plan:
+#  extends:
+#    - .production_logging
+#    - .orchestration_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+#    - !reference [.dettached_trigger]
+#
+#production_logging_apply:
+#  extends:
+#    - .production_logging
+#    - .orchestration_apply
+#  needs:
+#    - production_logging_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+#      when: manual
+#    - !reference [.manual_trigger]
 
 production_logging_install:
   stage: production_install

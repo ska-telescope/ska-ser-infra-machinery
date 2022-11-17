@@ -25,7 +25,7 @@ logging_e2e_tests:
       - build/
       - tests/e2e/build
   script:
-    - echo 'make im-test'
+    - make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
     - !reference [.dettached_trigger]
@@ -42,7 +42,7 @@ logging_e2e_tests_cleanup:
       - build/
       - tests/e2e/build
   script:
-    - echo 'make im-test-cleanup'
+    - make im-test-cleanup
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
       when: manual
