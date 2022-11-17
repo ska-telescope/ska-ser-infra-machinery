@@ -16,6 +16,19 @@
     - !reference [.install_python_dependencies]
     - !reference [.install_secrets]
 
+.automatic_trigger:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: on_success
+  - when: manual
+    allow_failure: true
+
+.dettached_trigger:
+  - when: manual
+    allow_failure: true
+
+.manual_trigger:
+  - when: manual
+
 .orchestration_dependencies:
   variables:
     TF_HTTP_USERNAME: gitlab-ci-token
@@ -42,7 +55,11 @@
     - echo 'make orch clean'
     - echo 'make orch init'
     - echo 'make orch plan'
+  rules:
+    - !reference [.automatic_trigger]
 
+# For safety, we will keep apply manual, until we come up with a solution
+# that avoids nefarious operations
 .orchestration_apply:
   stage: apply
   extends:
@@ -54,4 +71,5 @@
     - echo 'make orch clean'
     - echo 'make orch init'
     - echo 'make orch apply TF_AUTO_APPROVE="true"'
-  when: manual
+  rules:
+    - !reference [.manual_trigger]

@@ -26,16 +26,21 @@ logging_e2e_tests:
       - tests/e2e/build
   script:
     - echo 'make im-test'
+  rules:
+    - !reference [.automatic_trigger]
 
 logging_e2e_tests_cleanup:
   extends: 
     - .logging_e2e
   environment:
     action: stop
+  needs:
+    - logging_e2e_tests
   artifacts:
     paths:
       - build/
       - tests/e2e/build
   script:
     - echo 'make im-test-cleanup'
-  when: manual
+  rules:
+    - !reference [.manual_trigger]
