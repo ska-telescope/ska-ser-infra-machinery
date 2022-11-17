@@ -13,10 +13,10 @@ stages:
   - test
 
 include:
-  - local: '.gitlab/ci/e2e.gitlab-ci.yml'
-  - local: '.gitlab/ci/installation.gitlab-ci.yml'
-  - local: '.gitlab/ci/orchestration.gitlab-ci.yml'
-  - local: '.gitlab/ci/stfc-techops.gitlab-ci.yml'
+  - local: '.gitlab/ci/templates.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.e2e.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.staging.gitlab-ci.yml'
+  - local: '.gitlab/ci/logging.production.gitlab-ci.yml'
     
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
