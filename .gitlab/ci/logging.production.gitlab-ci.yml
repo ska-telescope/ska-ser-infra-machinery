@@ -1,4 +1,4 @@
-logging_production:
+.logging_production:
   extends: .stfc_techops
   variables:
     ENVIRONMENT: production
@@ -11,18 +11,19 @@ logging_production:
 
 logging_production_plan:
   extends:
-    - logging_production
+    - .logging_production
     - .orchestration_plan
 
 logging_production_apply:
   extends:
-    - logging_production
+    - .logging_production
     - .orchestration_apply
   needs:
     - logging_production_plan
 logging_production_install:
+  stage: production_install
   extends:
-    - logging_production
+    - .logging_production
     - .installation_dependencies
   variables:
     REINSTALL: "false"
@@ -33,15 +34,16 @@ logging_production_install:
     - logging_staging_test
 
 logging_production_destroy:
+  stage: production_install
   extends:
-    - logging_production
+    - .logging_production
     - .installation_dependencies
     - echo 'make playbooks logging destroy'
 
 logging_production_test:
   stage: test
   extends:
-    - logging_production
+    - .logging_production
     - .installation_dependencies
     - echo 'make playbooks logging test'
   needs:

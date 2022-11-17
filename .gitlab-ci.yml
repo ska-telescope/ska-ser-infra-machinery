@@ -3,17 +3,14 @@ image: $SKA_K8S_TOOLS_BUILD_DEPLOY
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   TERRAFORM_VERSION: "1.2.8"
-  REQUIRED_SSH_KEYS: ska-techops.pem
 
 stages:
   - lint
   - plan
   - apply
-  - staging:installation
-  - staging:test
-  - installation
+  - staging_install
+  - production_install
   - test
-  - e2e-tests
 
 include:
   - local: '.gitlab/ci/e2e.gitlab-ci.yml'
