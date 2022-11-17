@@ -6,7 +6,7 @@ module "ceph_cluster" {
   }
 
   ceph = {
-    name = "ceph"
+    name = join("-", [var.datacentre, var.environment, var.service])
     master = {
       size             = 3
       data_volume_size = 10,

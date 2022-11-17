@@ -6,10 +6,8 @@ module "nexus" {
   }
 
   configuration = {
-    applications = ["nexus"]
-    name         = "nexus-bang-22"
-    flavor       = "c3.medium"
-    image        = "ubuntu-jammy-22.04"
+    name  = join("-", [var.datacentre, var.environment, var.service])
+    image = "ubuntu-jammy-22.04"
     volumes = [
       {
         mount_point = "/var/lib/docker"
@@ -22,5 +20,6 @@ module "nexus" {
         size        = 500
       }
     ]
+    applications = ["nexus"]
   }
 }
