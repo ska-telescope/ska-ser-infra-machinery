@@ -4,39 +4,13 @@
   variables:
     DATACENTRE: stfc-techops
 
-# ------------- Environments --------------
-.stfc_techops:e2e:
-  extends: .stfc_techops
-  variables:
-    ENVIRONMENT: e2e
-    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+# --------------- Services ----------------
 
-.stfc_techops:staging:
+.stfc_techops:staging:logging:
   extends: .stfc_techops
   variables:
     ENVIRONMENT: staging
     REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
-
-.stfc_techops:production:
-  extends: .stfc_techops
-  variables:
-    ENVIRONMENT: production
-    REQUIRED_SSH_KEYS: "ska-techops.pem"
-# -----------------------------------------
-
-# --------------- Services ----------------
-.stfc_techops:e2e:logging:
-  extends: .stfc_techops:e2e
-  variables:
-    SERVICE: logging
-  environment:
-    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
-    deployment_tier: testing
-    auto_stop_in: 2 hours
-
-.stfc_techops:staging:logging:
-  extends: .stfc_techops:staging
-  variables:
     SERVICE: logging
     PLAYBOOKS_HOSTS: "stfc-techops-staging-logging"
   environment:
@@ -44,8 +18,10 @@
     deployment_tier: staging
 
 .stfc_techops:production:logging:
-  extends: .stfc_techops:production
+  extends: .stfc_techops
   variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
     SERVICE: logging
     PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
   environment:
@@ -80,17 +56,51 @@ stfc_techops:production:logging:apply:
 # -----------------------------------------
 
 # ----------------- Tests -----------------
+
 logging:e2e_tests:
   extends:
-    - .stfc_techops:e2e:logging
-    - .start_e2e_tests
+    - .stfc_techops
+    - .orchestration_base_job
+  variables:
+    ENVIRONMENT: e2e
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+    SERVICE: logging
+    BATS_TEST_SUITES: "unit setup $SERVICE"
   environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    auto_stop_in: 2 hours
+    action: start
     on_stop: logging:e2e_tests:cleanup
+  stage: e2e-tests
+  allow_failure: true
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - echo 'make im-test'
 
 logging:e2e_tests:cleanup:
-  extends:
-    - .stfc_techops:e2e:logging
-    - .stop_e2e_tests
+  extends: 
+    - .stfc_techops
+    - .orchestration_base_job
+  variables:
+    ENVIRONMENT: e2e
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+    SERVICE: logging
+  environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    action: stop
+  stage: e2e-tests
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - echo 'make im-test-cleanup'
+  when: manual
   needs:
     - logging:e2e_tests
 # -----------------------------------------
