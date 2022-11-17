@@ -38,6 +38,7 @@ logging_production_destroy:
   extends:
     - .logging_production
     - .installation_dependencies
+  script:
     - echo 'make playbooks logging destroy'
 
 logging_production_test:
@@ -45,6 +46,7 @@ logging_production_test:
   extends:
     - .logging_production
     - .installation_dependencies
+  script:
     - echo 'make playbooks logging test'
   needs:
     - logging_production_install
