@@ -7,7 +7,6 @@ module "nexus" {
 
   configuration = {
     name         = join("-", [var.datacentre, var.environment, var.service])
-    flavor       = "c3.medium"
     image        = "ubuntu-jammy-22.04"
     applications = ["nexus"]
     volumes = [
