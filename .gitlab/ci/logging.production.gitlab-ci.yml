@@ -1,0 +1,48 @@
+logging_production:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
+  environment:
+    name: stfc-techops-production-logging
+    deployment_tier: production
+
+logging_production_plan:
+  extends:
+    - logging_production
+    - .orchestration_plan
+
+logging_production_apply:
+  extends:
+    - logging_production
+    - .orchestration_apply
+  needs:
+    - logging_production_plan
+logging_production_install:
+  extends:
+    - logging_production
+    - .installation_dependencies
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+  needs:
+    - logging_staging_install
+    - logging_staging_test
+
+logging_production_destroy:
+  extends:
+    - logging_production
+    - .installation_dependencies
+    - echo 'make playbooks logging destroy'
+
+logging_production_test:
+  stage: test
+  extends:
+    - logging_production
+    - .installation_dependencies
+    - echo 'make playbooks logging test'
+  needs:
+    - logging_production_install

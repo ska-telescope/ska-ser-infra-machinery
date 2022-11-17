@@ -1,5 +1,0 @@
-.installation_base_job:
-  stage: installation
-  before_script:
-    - !reference [.install_python_dependencies]
-    - !reference [.install_secrets]

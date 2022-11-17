@@ -5,20 +5,6 @@ variables:
   TERRAFORM_VERSION: "1.2.8"
   REQUIRED_SSH_KEYS: ska-techops.pem
 
-.install_terraform: &install_terraform
-  - apt update
-  - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
-  - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
-
-.install_python_dependencies: &install_python_dependencies
-  - poetry config virtualenvs.create false
-  - poetry install
-
-.install_secrets: &install_secrets
-  - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
-  - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
-
-
 stages:
   - lint
   - plan
