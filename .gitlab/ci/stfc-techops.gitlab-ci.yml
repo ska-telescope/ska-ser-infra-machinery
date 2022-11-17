@@ -4,8 +4,6 @@
   variables:
     DATACENTRE: stfc-techops
 
-# --------------- Services ----------------
-
 .stfc_techops:staging:logging:
   extends: .stfc_techops
   variables:
@@ -17,19 +15,6 @@
     name: stfc-techops-staging-logging
     deployment_tier: staging
 
-.stfc_techops:production:logging:
-  extends: .stfc_techops
-  variables:
-    ENVIRONMENT: production
-    REQUIRED_SSH_KEYS: "ska-techops.pem"
-    SERVICE: logging
-    PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
-  environment:
-    name: stfc-techops-production-logging
-    deployment_tier: production
-# -----------------------------------------
-
-# ---------- Orchestration Jobs -----------
 stfc_techops:staging:logging:plan:
   extends:
     - .stfc_techops:staging:logging
@@ -42,20 +27,31 @@ stfc_techops:staging:logging:apply:
   needs:
     - stfc_techops:staging:logging:plan
 
-stfc_techops:production:logging:plan:
+stfc_techops:staging:logging:install:
+  stage: staging:installation
   extends:
-    - .stfc_techops:production:logging
-    - .orchestration_plan
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
 
-stfc_techops:production:logging:apply:
+stfc_techops:staging:logging:destroy:
+  stage: staging:installation
   extends:
-    - .stfc_techops:production:logging
-    - .orchestration_apply
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+    - echo 'make playbooks logging destroy'
+
+stfc_techops:staging:logging:test:
+  stage: staging:installation
+  extends:
+    - .stfc_techops:staging:logging
+    - .installation_base_job
+    - echo 'make playbooks logging test'
   needs:
-    - stfc_techops:production:logging:plan
-# -----------------------------------------
-
-# ----------------- Tests -----------------
+    - stfc_techops:staging:logging:install
 
 logging:e2e_tests:
   extends:
@@ -103,39 +99,37 @@ logging:e2e_tests:cleanup:
   when: manual
   needs:
     - logging:e2e_tests
-# -----------------------------------------
 
-# ---------- Installation Jobs -------------
-# --- staging
-stfc_techops:staging:logging:install:
-  stage: staging:installation
-  extends:
-    - .stfc_techops:staging:logging
-    - .installation_base_job
-    - .logging_install_task
+.stfc_techops:production:logging:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
+  environment:
+    name: stfc-techops-production-logging
+    deployment_tier: production
 
-stfc_techops:staging:logging:destroy:
-  stage: staging:installation
+stfc_techops:production:logging:plan:
   extends:
-    - .stfc_techops:staging:logging
-    - .installation_base_job
-    - .logging_destroy_task
+    - .stfc_techops:production:logging
+    - .orchestration_plan
 
-stfc_techops:staging:logging:test:
-  stage: staging:installation
+stfc_techops:production:logging:apply:
   extends:
-    - .stfc_techops:staging:logging
-    - .installation_base_job
-    - .logging_test_task
+    - .stfc_techops:production:logging
+    - .orchestration_apply
   needs:
-    - stfc_techops:staging:logging:install
-# ---
-# --- production
+    - stfc_techops:production:logging:plan
 stfc_techops:production:logging:install:
   extends:
     - .stfc_techops:production:logging
     - .installation_base_job
-    - .logging_install_task
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
   needs:
     - stfc_techops:staging:logging:install
     - stfc_techops:staging:logging:test
@@ -144,13 +138,14 @@ stfc_techops:production:logging:destroy:
   extends:
     - .stfc_techops:production:logging
     - .installation_base_job
-    - .logging_destroy_task
+    - echo 'make playbooks logging destroy'
 
 stfc_techops:production:logging:test:
+  stage: test
   extends:
     - .stfc_techops:production:logging
     - .installation_base_job
-    - .logging_test_task
+    - echo 'make playbooks logging test'
   needs:
     - stfc_techops:production:logging:install
 # ---
