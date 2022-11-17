@@ -6,7 +6,6 @@
 
 .logging_install_task:
   variables:
-    TASK: install
     REINSTALL: "false"
   script: |
     if [ "$REINSTALL" = "true" ]; then
@@ -21,14 +20,10 @@
     fi
 
 .logging_destroy_task:
-  variables:
-    TASK: destroy
   script:
     - echo 'make playbooks logging destroy'
 
 .logging_test_task:
   stage: test
-  variables:
-    TASK: test
   script:
     - echo 'make playbooks logging test'
