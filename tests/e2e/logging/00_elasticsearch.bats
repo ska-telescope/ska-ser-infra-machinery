@@ -41,7 +41,7 @@ setup() {
 
 @test 'ELASTICSEARCH: Elasticsearch e2e tests' {
     cd ${BASE_PATH}
-    run make playbooks logging test-e2e PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
+    run make playbooks logging test PLAYBOOKS_HOSTS="${ELASTICSEARCH_CLUSTER_NAME}"
     assert_success
 }
 

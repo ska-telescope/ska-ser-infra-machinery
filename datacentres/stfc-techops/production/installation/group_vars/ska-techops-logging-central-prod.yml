@@ -1,5 +1,7 @@
-elasticsearch_reinstall: true
+certificates_dir: "/etc/pki/tls/private"
 
+elasticsearch_reinstall: true
 elasticsearch_dns_name: logging.stfc.skao.int
+elasticsearch_cluster_name: elasticsearch
 elastic_haproxy_stats_password: "{{ lookup('ansible.builtin.env', 'ELASTIC_HAPROXY_STATS_PASSWORD', default=secrets['elastic_haproxy_stats_password']) | mandatory }}"
 kibana_viewer_password: "{{ lookup('ansible.builtin.env', 'KIBANA_VIEWER_PASSWORD', default=secrets['kibana_viewer_password']) | mandatory }}"
