@@ -13,6 +13,9 @@ production_logging_plan:
   extends:
     - .production_logging
     - .orchestration_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+    - !reference [.dettached_trigger]
 
 production_logging_apply:
   extends:
@@ -20,21 +23,26 @@ production_logging_apply:
     - .orchestration_apply
   needs:
     - production_logging_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+      when: manual
+    - !reference [.manual_trigger]
 
 production_logging_install:
   stage: production_install
   extends:
     - .production_logging
     - .installation_dependencies
+  needs:
+    - staging_logging_install
+    - staging_logging_test
   variables:
     REINSTALL: "false"
   script:
     - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
-  needs:
-    - staging_logging_install
-    - staging_logging_test
   rules:
-    - !reference [.automatic_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - !reference [.dettached_trigger]
 
 production_logging_destroy:
   stage: production_install
@@ -51,7 +59,10 @@ production_logging_test:
   extends:
     - .production_logging
     - .installation_dependencies
-  script:
-    - echo 'make playbooks logging test'
   needs:
     - production_logging_install
+  script:
+    - echo 'make playbooks logging test'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - !reference [.default_trigger]
