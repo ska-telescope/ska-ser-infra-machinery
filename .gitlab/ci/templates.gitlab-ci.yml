@@ -16,18 +16,21 @@
     - !reference [.install_python_dependencies]
     - !reference [.install_secrets]
 
-.automatic_trigger:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: on_success
-  - when: manual
-    allow_failure: true
-
 .dettached_trigger:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
   - when: manual
     allow_failure: true
 
 .manual_trigger:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
   - when: manual
+
+.default_trigger:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+  - when: on_success
 
 .orchestration_dependencies:
   variables:
@@ -55,8 +58,6 @@
     - echo 'make orch clean'
     - echo 'make orch init'
     - echo 'make orch plan'
-  rules:
-    - !reference [.automatic_trigger]
 
 # For safety, we will keep apply manual, until we come up with a solution
 # that avoids nefarious operations
@@ -71,5 +72,3 @@
     - echo 'make orch clean'
     - echo 'make orch init'
     - echo 'make orch apply TF_AUTO_APPROVE="true"'
-  rules:
-    - !reference [.manual_trigger]
