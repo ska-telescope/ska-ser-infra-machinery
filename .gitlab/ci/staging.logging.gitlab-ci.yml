@@ -2,7 +2,7 @@
   extends: .stfc_techops
   variables:
     ENVIRONMENT: staging
-    REQUIRED_SSH_KEYS: "ska-staging.pem"
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
     SERVICE: logging
     PLAYBOOKS_HOSTS: "stfc-techops-staging-logging"
   environment:
@@ -36,7 +36,8 @@ staging_logging_install:
   variables:
     REINSTALL: "false"
   script:
-    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+    - make orch generate-inventory
+    - make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
@@ -48,7 +49,8 @@ staging_logging_destroy:
     - .staging_logging
     - .installation_dependencies
   script:
-    - echo 'make playbooks logging destroy'
+    - make orch generate-inventory
+    - make playbooks logging destroy
   rules:
     - !reference [.dettached_trigger]
 
@@ -60,7 +62,8 @@ staging_logging_test:
   needs:
     - staging_logging_install
   script:
-    - echo 'make playbooks logging test'
+    - make orch generate-inventory
+    - make playbooks logging test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
