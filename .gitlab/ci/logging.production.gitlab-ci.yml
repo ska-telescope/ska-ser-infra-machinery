@@ -20,6 +20,7 @@ logging_production_apply:
     - .orchestration_apply
   needs:
     - logging_production_plan
+
 logging_production_install:
   stage: production_install
   extends:
@@ -42,7 +43,7 @@ logging_production_destroy:
     - echo 'make playbooks logging destroy'
 
 logging_production_test:
-  stage: test
+  stage: test_production
   extends:
     - .logging_production
     - .installation_dependencies

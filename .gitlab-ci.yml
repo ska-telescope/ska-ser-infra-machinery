@@ -11,6 +11,8 @@ stages:
   - staging_install
   - production_install
   - test
+  - test_staging
+  - test_production
 
 include:
   - local: '.gitlab/ci/templates.gitlab-ci.yml'

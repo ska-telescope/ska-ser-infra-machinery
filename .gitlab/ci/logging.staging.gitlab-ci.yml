@@ -40,7 +40,7 @@ logging_staging_destroy:
     - echo 'make playbooks logging destroy'
 
 logging_staging_test:
-  stage: test
+  stage: test_staging
   extends:
     - .logging_staging
     - .installation_dependencies

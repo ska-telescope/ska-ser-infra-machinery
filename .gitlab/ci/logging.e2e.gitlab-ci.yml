@@ -40,5 +40,3 @@ logging_e2e_tests_cleanup:
   script:
     - echo 'make im-test-cleanup'
   when: manual
-  needs:
-    - logging_e2e_tests
