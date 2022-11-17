@@ -1,4 +1,4 @@
-.logging_staging:
+.staging_logging:
   extends: .stfc_techops
   variables:
     ENVIRONMENT: staging
@@ -9,42 +9,46 @@
     name: stfc-techops-staging-logging
     deployment_tier: staging
 
-logging_staging_plan:
+staging_logging_plan:
   extends:
-    - .logging_staging
+    - .staging_logging
     - .orchestration_plan
 
-logging_staging_apply:
+staging_logging_apply:
   extends:
-    - .logging_staging
+    - .staging_logging
     - .orchestration_apply
   needs:
-    - logging_staging_plan
+    - staging_logging_plan
 
-logging_staging_install:
+staging_logging_install:
   stage: staging_install
   extends:
-    - .logging_staging
+    - .staging_logging
     - .installation_dependencies
   variables:
     REINSTALL: "false"
   script:
     - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+  rules:
+    - !reference [.automatic_trigger]
 
-logging_staging_destroy:
+staging_logging_destroy:
   stage: staging_install
   extends:
-    - .logging_staging
+    - .staging_logging
     - .installation_dependencies
   script:
     - echo 'make playbooks logging destroy'
+  rules:
+    - !reference [.dettached_trigger]
 
-logging_staging_test:
+staging_logging_test:
   stage: staging_test
   extends:
-    - .logging_staging
+    - .staging_logging
     - .installation_dependencies
   script:
     - echo 'make playbooks logging test'
   needs:
-    - logging_staging_install
+    - staging_logging_install

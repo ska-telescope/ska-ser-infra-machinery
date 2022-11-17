@@ -1,4 +1,4 @@
-.logging_production:
+.production_logging:
   extends: .stfc_techops
   variables:
     ENVIRONMENT: production
@@ -9,45 +9,49 @@
     name: stfc-techops-production-logging
     deployment_tier: production
 
-logging_production_plan:
+production_logging_plan:
   extends:
-    - .logging_production
+    - .production_logging
     - .orchestration_plan
 
-logging_production_apply:
+production_logging_apply:
   extends:
-    - .logging_production
+    - .production_logging
     - .orchestration_apply
   needs:
-    - logging_production_plan
+    - production_logging_plan
 
-logging_production_install:
+production_logging_install:
   stage: production_install
   extends:
-    - .logging_production
+    - .production_logging
     - .installation_dependencies
   variables:
     REINSTALL: "false"
   script:
     - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
   needs:
-    - logging_staging_install
-    - logging_staging_test
+    - staging_logging_install
+    - staging_logging_test
+  rules:
+    - !reference [.automatic_trigger]
 
-logging_production_destroy:
+production_logging_destroy:
   stage: production_install
   extends:
-    - .logging_production
+    - .production_logging
     - .installation_dependencies
   script:
     - echo 'make playbooks logging destroy'
+  rules:
+    - !reference [.dettached_trigger]
 
-logging_production_test:
+production_logging_test:
   stage: production_test
   extends:
-    - .logging_production
+    - .production_logging
     - .installation_dependencies
   script:
     - echo 'make playbooks logging test'
   needs:
-    - logging_production_install
+    - production_logging_install
