@@ -8,10 +8,10 @@ stages:
   - lint
   - plan
   - apply
-  - staging_install
-  - production_install
   - test
+  - staging_install
   - test_staging
+  - production_install
   - test_production
 
 include:
