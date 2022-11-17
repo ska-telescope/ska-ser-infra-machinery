@@ -26,7 +26,7 @@
     - !reference [.install_python_dependencies]
     - !reference [.install_secrets]
   script: |
-    ORCHESTRATION_DIRS=$(find $(pwd)/atacentres/$DATACENTRE/$ENVIRONMENT -name 'terraform.tf' | grep -v ".make" | grep -v "ska-ser-orchestration" | sed 's/.terraform.tf//' | sort | uniq)
+    ORCHESTRATION_DIRS=$(find $(pwd)/datacentres/$DATACENTRE/$ENVIRONMENT -name 'terraform.tf' | grep -v ".make" | grep -v "ska-ser-orchestration" | sed 's/.terraform.tf//' | sort | uniq)
     for DIR in $(echo $ORCHESTRATION_DIRS); do
       cp .secure_files/$DATACENTRE.clouds.yaml $DIR/clouds.yaml
     done
@@ -55,9 +55,3 @@
     - echo 'make orch init'
     - echo 'make orch apply TF_AUTO_APPROVE="true"'
   when: manual
-
-.stfc_techops:
-  tags:
-    - ska-techops-iac-gitlab-runner
-  variables:
-    DATACENTRE: stfc-techops

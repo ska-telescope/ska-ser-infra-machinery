@@ -43,7 +43,7 @@ logging_production_destroy:
     - echo 'make playbooks logging destroy'
 
 logging_production_test:
-  stage: test_production
+  stage: production_test
   extends:
     - .logging_production
     - .installation_dependencies
