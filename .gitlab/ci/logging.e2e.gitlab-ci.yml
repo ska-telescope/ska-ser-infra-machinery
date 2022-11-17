@@ -9,7 +9,7 @@
     SERVICE: logging
     BATS_TEST_SUITES: "unit setup $SERVICE"
   environment:
-    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_SLUG
     deployment_tier: testing
     auto_stop_in: 2 hours
     on_stop: logging_e2e_tests_cleanup
@@ -25,7 +25,7 @@ logging_e2e_tests:
       - build/
       - tests/e2e/build
   script:
-    - echo 'make im-test'
+    - make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
     - !reference [.dettached_trigger]
@@ -42,7 +42,7 @@ logging_e2e_tests_cleanup:
       - build/
       - tests/e2e/build
   script:
-    - echo 'make im-test-cleanup'
+    - make im-test-cleanup
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
       when: manual
