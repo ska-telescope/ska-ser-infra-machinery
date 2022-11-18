@@ -9,7 +9,7 @@
     SERVICE: monitoring
     BATS_TEST_SUITES: "unit setup $SERVICE"
   environment:
-    name: stfc-techops-e2e-monitoring/$CI_COMMIT_REF_NAME
+    name: stfc-techops-e2e-monitoring/$CI_COMMIT_REF_SLUG
     deployment_tier: testing
     auto_stop_in: 2 hours
     on_stop: monitoring_e2e_tests_cleanup
