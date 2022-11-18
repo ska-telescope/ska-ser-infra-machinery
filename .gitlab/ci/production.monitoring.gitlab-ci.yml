@@ -1,0 +1,68 @@
+.production_monitoring:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
+    SERVICE: monitoring
+    PLAYBOOKS_HOSTS: "ska-techops-monitoring-central-prod"
+  environment:
+    name: stfc-techops-production-monitoring
+    deployment_tier: production
+
+#production_monitoring_plan:
+#  extends:
+#    - .production_monitoring
+#    - .orchestration_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
+#    - !reference [.dettached_trigger]
+#
+#production_monitoring_apply:
+#  extends:
+#    - .production_monitoring
+#    - .orchestration_apply
+#  needs:
+#    - production_monitoring_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
+#      when: manual
+#    - !reference [.manual_trigger]
+
+production_monitoring_install:
+  stage: production_install
+  extends:
+    - .production_monitoring
+    - .installation_dependencies
+  needs:
+    - staging_monitoring_install
+    - staging_monitoring_test
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks monitoring install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
+    - !reference [.dettached_trigger]
+
+production_monitoring_destroy:
+  stage: production_install
+  extends:
+    - .production_monitoring
+    - .installation_dependencies
+  script:
+    - echo 'make playbooks monitoring destroy'
+  rules:
+    - !reference [.dettached_trigger]
+
+production_monitoring_test:
+  stage: production_test
+  extends:
+    - .production_monitoring
+    - .installation_dependencies
+  needs:
+    - production_monitoring_install
+  script:
+    - echo 'make playbooks monitoring test'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
+    - !reference [.default_trigger]
