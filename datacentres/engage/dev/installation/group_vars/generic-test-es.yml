@@ -1,0 +1,9 @@
+elasticsearch_cluster_name: generic-test-es
+elasticsearch_memory: 8G
+elasticsearch_java_mem: 4g
+elasticsearch_dns_name: generic-test-es-loadbalancer
+elasticsearch_reinstall: true
+
+# Set playbook variables to variables coming from the vault
+kibana_viewer_password: "{{ lookup('ansible.builtin.env', 'KIBANA_VIEWER_PASSWORD', default=secrets['kibana_viewer_password']) | mandatory }}"
+elastic_haproxy_stats_password: "{{ lookup('ansible.builtin.env', 'ELASTIC_HAPROXY_STATS_PASSWORD', default=secrets['elastic_haproxy_stats_password']) | mandatory }}"
