@@ -1,0 +1,49 @@
+.logging_e2e:
+  stage: test
+  extends:
+    - .stfc_techops
+    - .orchestration_dependencies
+  variables:
+    ENVIRONMENT: e2e
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+    SERVICE: logging
+    BATS_TEST_SUITES: "unit setup $SERVICE"
+  environment:
+    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_NAME
+    deployment_tier: testing
+    auto_stop_in: 2 hours
+    on_stop: logging_e2e_tests_cleanup
+
+logging_e2e_tests:
+  extends: 
+    - .logging_e2e
+  environment:
+    action: start
+  allow_failure: true
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - make im-test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
+    - !reference [.dettached_trigger]
+
+logging_e2e_tests_cleanup:
+  extends: 
+    - .logging_e2e
+  environment:
+    action: stop
+  needs:
+    - logging_e2e_tests
+  artifacts:
+    paths:
+      - build/
+      - tests/e2e/build
+  script:
+    - make im-test-cleanup
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
+      when: manual
+    - !reference [.manual_trigger]

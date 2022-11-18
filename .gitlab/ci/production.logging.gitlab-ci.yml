@@ -1,0 +1,68 @@
+.production_logging:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: production
+    REQUIRED_SSH_KEYS: "ska-techops.pem"
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "ska-techops-logging-central-prod"
+  environment:
+    name: stfc-techops-production-logging
+    deployment_tier: production
+
+#production_logging_plan:
+#  extends:
+#    - .production_logging
+#    - .orchestration_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+#    - !reference [.dettached_trigger]
+#
+#production_logging_apply:
+#  extends:
+#    - .production_logging
+#    - .orchestration_apply
+#  needs:
+#    - production_logging_plan
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+#      when: manual
+#    - !reference [.manual_trigger]
+
+production_logging_install:
+  stage: production_install
+  extends:
+    - .production_logging
+    - .installation_dependencies
+  needs:
+    - staging_logging_install
+    - staging_logging_test
+  variables:
+    REINSTALL: "false"
+  script:
+    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - !reference [.dettached_trigger]
+
+production_logging_destroy:
+  stage: production_install
+  extends:
+    - .production_logging
+    - .installation_dependencies
+  script:
+    - echo 'make playbooks logging destroy'
+  rules:
+    - !reference [.dettached_trigger]
+
+production_logging_test:
+  stage: production_test
+  extends:
+    - .production_logging
+    - .installation_dependencies
+  needs:
+    - production_logging_install
+  script:
+    - echo 'make playbooks logging test'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - !reference [.default_trigger]

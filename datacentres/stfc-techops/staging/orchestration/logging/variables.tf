@@ -13,11 +13,6 @@ variable "service" {
   description = "The orchestration service name"
 }
 
-variable "ci_pipeline_id" {
-  type        = string
-  description = "The id of the ci pipeline"
-}
-
 variable "openstack" {
   type = object({
     cloud      = string
