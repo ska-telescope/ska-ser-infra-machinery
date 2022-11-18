@@ -6,7 +6,7 @@ module "escluster" {
   }
 
   elasticsearch = {
-    name = "mpaulo-test-es"
+    name = "generic-test-es"
     master = {
       size               = 1
       data_volume_size   = 10

@@ -4,11 +4,11 @@ gitlab_runner_base_image: artefact.skao.int/ska-cicd-k8s-tools-build-deploy:0.8.
 gitlab_runner_registration_token: "{{ lookup('ansible.builtin.env', 'GITLAB_RUNNER_REGISTRATION_TOKEN', default=secrets['gitlab_runner_registration_token']) | mandatory }}"
 
 # reverseproxy playbooks -> Add to environments that have a reverseproxy
-elasticsearch_cluster_name: mpaulo-test-es
+elasticsearch_cluster_name: generic-test-es
 reverseproxy_use_self_signed_cert: true
-reverseproxy_dns_name: mpaulo-test-instance
+reverseproxy_dns_name: generic-test-instance
 reverseproxy_oauth2proxy_enabled: false
-reverseproxy_kibana_server: "{{ groups['mpaulo-test-es-master'][0] }}"
+reverseproxy_kibana_server: "{{ groups['generic-test-es-master'][0] }}"
 reverseproxy_oauth2proxy_tenant_id: 78887040-bad7-494b-8760-88dcacfb3805
 reverseproxy_oauth2proxy_client_id: 45aef1d7-9fcc-4e52-a572-b158d2a8b856
 reverseproxy_oauth2proxy_cookie_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_COOKIE_SECRET', default=secrets['azuread_cookie_secret']) | mandatory }}"
