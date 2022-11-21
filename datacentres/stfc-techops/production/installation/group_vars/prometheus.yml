@@ -2,11 +2,11 @@
 debug: true
 production: true
 # can only do one cluster - v1
-k8s_api_server_addr: "10.200.0.63"
-k8s_api_server_port: "6443"
-k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
-k8s_client_certificate: "/etc/prometheus/ca.crt"
-k8s_bearer_token: "/etc/prometheus/bearer.token"
+prometheus_k8s_api_server_addr: "10.200.0.63"
+prometheus_k8s_api_server_port: "6443"
+prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
+prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
+prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 localuser: ubuntu
 localgroup: ubuntu
 gateway_host: terminus
@@ -18,7 +18,7 @@ slack_channel_user: techops-user-alerts
 
 k8s_external_dns_entry: k8s.stfc.skao.int
 
-grafana_disable_admin_account_creation: "false"
+prometheus_grafana_disable_admin_account_creation: "false"
 
 project_name: "SKA-TechOps"
 
@@ -37,7 +37,7 @@ prometheus_static_node_metric_relabel_configs:
     - instance
     target_label: instance
 
-elasticsearch_instance_add_cluster_label:
+prometheus_elasticsearch_instance_add_cluster_label:
   - regex: '^192\.168\.99\.(131|22|183):(\d+)'
     replacement: systems-monitoring1
     source_labels: [instance]
@@ -66,7 +66,7 @@ prometheus_scrape_configs:
     file_sd_configs:
     - files:
       - 'node_exporter.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
 
   - job_name: "gitlab-runner"
     static_configs:
@@ -87,7 +87,7 @@ prometheus_scrape_configs:
     file_sd_configs:
     - files:
       - 'kube-proxy.json'
-    metric_relabel_configs: "{{ elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
 
   - job_name: "kube-state-metrics"
     static_configs:
@@ -122,7 +122,7 @@ prometheus_scrape_configs:
 node_exporter_version: 0.18.1-1.el7
 node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prometheus-node-exporter/prometheus-node-exporter_0.18.1+ds-2_amd64.deb
 
-thanos_query_endpoints:
+prometheus_thanos_query_endpoints:
 - 192.168.99.153:10901
 - 192.168.99.31:19090 # store gateway
 - dns+sdhp.stfc.skao.int:10901 # jupiter sidecar exposed

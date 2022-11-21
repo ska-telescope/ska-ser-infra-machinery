@@ -309,7 +309,7 @@ all:
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
+              prometheus_grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -336,7 +336,7 @@ all:
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
+              prometheus_grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -363,7 +363,7 @@ all:
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
+              prometheus_grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -390,7 +390,7 @@ all:
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
+              prometheus_grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -417,7 +417,7 @@ all:
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
+              prometheus_grafana_admin_password: ''
               log_docker: 'true'
               log_kubernetes: 'true'
               monitor_interface: ens3
@@ -748,7 +748,7 @@ all:
           ceph_no_volumes: 1
           common_single_host_mode: 'false'
           dashboard_admin_password: ''
-          grafana_admin_password: ''
+          prometheus_grafana_admin_password: ''
           monitor_interface: ens3
           radosgw_interface: ens3
     osds:
