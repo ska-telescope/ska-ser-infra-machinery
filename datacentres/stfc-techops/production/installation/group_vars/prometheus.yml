@@ -9,7 +9,6 @@ prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
 prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
-gateway_host: terminus
 
 prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
 prometheus_url: https://monitoring.skao.stfc:9090
