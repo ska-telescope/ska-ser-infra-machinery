@@ -1,0 +1,11 @@
+debug: true
+production: false
+
+prometheus_url: https://alerts.engageska-portugal.pt
+prometheus_alertmanager_url: http://192.168.93.26:9093
+prometheus_datacentre: engage-ska-monitor
+prometheus_k8s_api_server_addr: "192.168.93.102"
+prometheus_k8s_api_server_port: "6443"
+prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
+prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
+prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
