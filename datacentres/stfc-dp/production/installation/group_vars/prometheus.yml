@@ -10,7 +10,6 @@ prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_k8s_username: ""
 prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
-gateway_host: terminus
 
 prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int
 
