@@ -50,7 +50,7 @@
       cp .secure_files/$DATACENTRE.clouds.yaml $DIR/clouds.yaml
     done
 
-.orchestration_plan:  
+.orchestration_plan:
   stage: plan
   extends:
     - .orchestration_dependencies

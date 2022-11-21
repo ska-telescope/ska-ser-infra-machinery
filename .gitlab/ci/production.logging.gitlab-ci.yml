@@ -39,19 +39,9 @@ production_logging_install:
   variables:
     REINSTALL: "false"
   script:
-    - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
+    - make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
-    - !reference [.dettached_trigger]
-
-production_logging_destroy:
-  stage: production_install
-  extends:
-    - .production_logging
-    - .installation_dependencies
-  script:
-    - echo 'make playbooks logging destroy'
-  rules:
     - !reference [.dettached_trigger]
 
 production_logging_test:
@@ -62,7 +52,7 @@ production_logging_test:
   needs:
     - production_logging_install
   script:
-    - echo 'make playbooks logging test'
+    - make playbooks logging test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
     - !reference [.default_trigger]

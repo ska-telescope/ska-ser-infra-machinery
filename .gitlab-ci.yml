@@ -21,7 +21,7 @@ include:
   - local: '.gitlab/ci/logging.e2e.gitlab-ci.yml'
   - local: '.gitlab/ci/staging.logging.gitlab-ci.yml'
   - local: '.gitlab/ci/production.logging.gitlab-ci.yml'
-    
+
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/terraform.gitlab-ci.yml'
   - project: 'ska-telescope/templates-repository'

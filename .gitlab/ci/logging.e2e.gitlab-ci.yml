@@ -15,7 +15,7 @@
     on_stop: logging_e2e_tests_cleanup
 
 logging_e2e_tests:
-  extends: 
+  extends:
     - .logging_e2e
   environment:
     action: start
@@ -32,7 +32,7 @@ logging_e2e_tests:
     - !reference [.dettached_trigger]
 
 logging_e2e_tests_cleanup:
-  extends: 
+  extends:
     - .logging_e2e
   environment:
     action: stop
