@@ -8,18 +8,24 @@ for orchestration and [Ansible](https://www.ansible.com/) for installation/confi
 
 It does not have any direct dependencies but check the READMEs of
 each submodule for an updated list of requirements:
-* [SKA Orchestration](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/README.md#prerequisites)
-* [SKA Ansible Collections](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/README.mdska-ser-ansible-collections/README.md#requirements)
-* [SKA Makefile](https://gitlab.com/ska-telescope/sdi/ska-cicd-makefile/-/blob/master/README.md)
+* [SKA Orchestration](./ska-ser-orchestration/README.md#prerequisites)
+* [SKA Ansible Collections](./ska-ser-ansible-collections/README.md#requirements)
+* [SKA Makefile](./ska-ser-ansible-collections/README.md)
 
 # Setup
 
 ## TLDR
 
-The Makefile has a help target to print these variables and all available targets:
+The Makefile has a help target to show all available targets:
 
 ```
 make im-help
+```
+
+And all available variables:
+
+```
+make im-vars
 ```
 
 ## Environment Variables
@@ -59,29 +65,7 @@ This way, we can guarantee that mandatory variables have a value, and we can set
 
 Any of these providers will inject variables under the **secrets** umbrella value, that can be used in a pattern as show above.
 
-### Other important variables
-
-For Terraform the following specifics variables for the Gitlab's backend are already set in the Makefile:
-
-```
-BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
-GITLAB_PROJECT_ID?=39377838
-ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
-TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/$(SERVICE)/orchestration
-TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
-TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
-TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
-PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
-TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
-INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
-ANSIBLE_CONFIG?=$(PLAYBOOKS_ROOT_DIR)/ansible.cfg
-ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
-ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
-```
-
-Change them carefully if you really need it.
-
-The PLAYBOOKS_ROOT_DIR/INVENTORY indicates where is the inventory file and the respective group variables. Also, with the introduction of datacentre, environment and service notions, as well as secrets, the following variables are also critical:
+The PLAYBOOKS_ROOT_DIR/INVENTORY indicates where is the inventory file and the respective group variables. Also, with the introduction of datacentre, environment and service notions, as well as secrets, the following variables are also critical: 
 
 ```
 ANSIBLE_SECRETS_PROVIDER?=legacy
@@ -116,20 +100,6 @@ for up-to-date setup and how to use recommendations.
 This a single repository that can manage multiple datacentres, environments and services, so the first step is
 to select which one we want. Inside the **./datacentres/** folder, we have all the 
 configurations and variables separated by datacentre (cluster), environment and service.
-
-
-| Cluster           | Environment   | Service    | Folder Path                                      |
-| ----------------- | ------------- | ---------- | ------------------------------------------------ |
-| STFC TechOps      | production    | monitoring | datacentres/stfc-techops/production/orchestration/monitoring       |
-| STFC TechOps      | production    | nexus-cache | datacentres/stfc-techops/production/orchestration/nexus-cache     |
-| STFC TechOps      | production    | logging     | datacentres/stfc-techops/production/orchestration/logging         |
-| STFC TechOps      | production    | gitlab-runner | datacentres/stfc-techops/production/orchestration/gitlab-runner |
-| STFC TechOps      | e2e           | logging    | datacentres/stfc-techops/e2e/orchestration/logging |
-| STFC TechOps      | dev           | ceph       | datacentres/stfc-techops/dev/orchestration/ceph    |
-| STFC TechOps      | dev           | nexus      | datacentres/stfc-techops/dev/orchestration/nexus   |
-| STFC DP           | production    | -          | datacentres/stfc-dp/ |
-| PSI Mid           | production    | -          | datacentres/psi-mid/ |
-| EngageSKA         | dev           | -          | datacentres/engage/  |
 
 Inside each cluster subdirectory, we divide the config files for Terraform (orchestration)
 and Ansible (installation). Like the example bellow:
@@ -173,6 +143,7 @@ and Ansible (installation). Like the example bellow:
 ├── ska-ser-ansible-collections
 └── ska-ser-orchestration
 ```
+
 
 ## Environment tests
 
@@ -365,3 +336,21 @@ This is a declarative approach, therefore keys present will be created, keys rem
 When running this target, make sure you note down the api-key, as it is only visible once. To list the managed keys, do:
 
 `make playbooks logging list-api-keys PLAYBOOKS_HOSTS=<elasticsearch cluster group>`
+
+## How to Contribute
+
+### Add/Update an Datacentre/Environment/Service
+Any changes to the repository should follow the structured defined on the section "Project Structured". Go to the *./collections* folder to find multiple examples of
+deployments for the various combinations of deployments.
+
+Developers can have a development (**datacentres/\**/dev) environment to develop and/or test their changes but **should not** be merge to the main branch.
+
+### Add/Update new variables
+
+Ansible variables that are datacentre specific should be added to the `group_vars` folder of the inventory directory (*PLAYBOOKS_ROOT_DIR*).
+
+For the secret variables, follow the detailed topic "Secrets management". To assign proper values to these variables, please use a `PrivateRules.mak` file.
+
+## License
+
+BSD-3.
