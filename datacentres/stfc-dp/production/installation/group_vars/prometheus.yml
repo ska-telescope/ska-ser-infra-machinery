@@ -20,7 +20,11 @@ slack_channel_user: dp-platform-user-alerts
 
 
 prometheus_thanos_alt_name: "sdhp.stfc.skao.int"
+<<<<<<< HEAD
 prometheus_grafana_disable_admin_account_creation: true
+=======
+prometheus_grafana_disable_admin_account_creation: "false"
+>>>>>>> ST-1416: Refactoring monitoring variables
 
 project_name: "SKA-TechSDH&P"
 

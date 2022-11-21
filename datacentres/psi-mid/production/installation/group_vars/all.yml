@@ -6,8 +6,11 @@ ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=
 elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
 logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> ST-1416: Refactoring monitoring variables
 =======
 >>>>>>> ST-1416: Refactoring monitoring variables
 
@@ -30,6 +33,9 @@ prometheus_grafana_influxdb: 192.168.100.5
 prometheus_grafana_influxdb_db: gitlab_metrics
 prometheus_thanos_docker_tags: 'v0.28.0'
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ST-1416: Refactoring monitoring variables
+>>>>>>> ST-1416: Refactoring monitoring variables
+=======
 >>>>>>> ST-1416: Refactoring monitoring variables
