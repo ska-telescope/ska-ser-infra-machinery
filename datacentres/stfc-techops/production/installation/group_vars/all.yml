@@ -26,3 +26,4 @@ prometheus_docker_exporter_cadvisor_docker_tags: 'v0.44.0'
 prometheus_grafana_docker_tags: '9.0.0'
 prometheus_grafana_influxdb: 192.168.100.5
 prometheus_grafana_influxdb_db: gitlab_metrics
+prometheus_thanos_docker_tags: 'v0.28.0'
