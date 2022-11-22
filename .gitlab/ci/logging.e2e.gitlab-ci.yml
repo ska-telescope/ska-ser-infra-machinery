@@ -29,7 +29,10 @@ logging_e2e_tests:
     - make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 logging_e2e_tests_cleanup:
   extends:
@@ -48,4 +51,6 @@ logging_e2e_tests_cleanup:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
       when: manual
-    - !reference [.manual_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual

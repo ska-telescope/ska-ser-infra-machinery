@@ -11,22 +11,6 @@
   - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
   - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
 
-.dettached_trigger:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: never
-  - when: manual
-    allow_failure: true
-
-.manual_trigger:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: never
-  - when: manual
-
-.default_trigger:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: never
-  - when: on_success
-
 .installation_dependencies:
   variables:
     TF_HTTP_USERNAME: $TF_HTTP_USERNAME
