@@ -8,8 +8,8 @@ prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prom
 prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
 prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_k8s_username: ""
-localuser: ubuntu
-localgroup: ubuntu
+prometheus_localuser: ubuntu
+prometheus_localgroup: ubuntu
 gateway_host: terminus
 
 prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int
