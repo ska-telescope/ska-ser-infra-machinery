@@ -37,7 +37,7 @@ stages:
     - make im-test
   after_script:
     - make im-test-cleanup
-  allow_failure: false
+  allow_failure: true
   artifacts:
     paths:
       - build/

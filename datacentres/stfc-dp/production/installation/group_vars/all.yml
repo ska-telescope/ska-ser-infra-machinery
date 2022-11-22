@@ -2,7 +2,7 @@ debug: false
 
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
-nexus: 192.168.113.36
+nexus: 192.168.113.36  # stfc-dp nexus instance (4aa3ce15-990a-4676-8416-2a7897876bcb)
 
 elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
 

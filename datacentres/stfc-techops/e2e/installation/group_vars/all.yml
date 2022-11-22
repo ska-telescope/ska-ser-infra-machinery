@@ -1,9 +1,9 @@
 debug: false
 ansible_ssh_timeout: 60
 
-nexus: 192.168.99.204
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
+nexus: 192.168.99.204  # stfc-techops nexus instance (d627d1db-a8c8-4524-b643-9c3c9c8bf967)
 
 elasticsearch_cluster_name: "{{ ska_datacentre }}-{{ ska_environment }}-{{ ska_service }}-{{ ska_ci_pipeline_id }}"
 elasticsearch_dns_name: "{{ elasticsearch_cluster_name }}-loadbalancer"
