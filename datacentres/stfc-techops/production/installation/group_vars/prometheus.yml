@@ -16,7 +16,7 @@ prometheus_url: https://monitoring.skao.stfc:9090
 slack_channel: techops-alerts
 slack_channel_user: techops-user-alerts
 
-k8s_external_dns_entry: k8s.stfc.skao.int
+prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
 prometheus_grafana_disable_admin_account_creation: "false"
 
