@@ -12,7 +12,7 @@ localuser: ubuntu
 localgroup: ubuntu
 gateway_host: terminus
 
-k8s_external_dns_entry: sdhp.stfc.skao.int
+prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int
 
 prometheus_alertmanager_url: http://monitoring.sdhp.skao:9093
 prometheus_url: https://monitoring.sdhp.skao:9090

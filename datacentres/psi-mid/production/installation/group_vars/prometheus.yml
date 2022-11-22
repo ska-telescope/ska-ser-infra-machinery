@@ -17,7 +17,7 @@ slack_channel: psi-mid-alerts
 slack_channel_user: psi-mid-user-alerts
 prometheus_retention_time: "1d"
 
-k8s_external_dns_entry: 
+prometheus_k8s_external_dns_entry: 
 
 prometheus_grafana_disable_admin_account_creation: "false"
 
