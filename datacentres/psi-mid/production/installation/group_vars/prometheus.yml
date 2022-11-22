@@ -19,7 +19,7 @@ prometheus_retention_time: "1d"
 
 prometheus_k8s_external_dns_entry: 
 
-prometheus_grafana_disable_admin_account_creation: "false"
+prometheus_grafana_disable_admin_account_creation: false
 
 project_name: "PSI-Mid"
 

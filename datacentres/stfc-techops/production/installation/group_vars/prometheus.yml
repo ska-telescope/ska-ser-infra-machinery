@@ -18,7 +18,7 @@ slack_channel_user: techops-user-alerts
 
 prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
-prometheus_grafana_disable_admin_account_creation: "false"
+prometheus_grafana_disable_admin_account_creation: false
 
 project_name: "SKA-TechOps"
 
