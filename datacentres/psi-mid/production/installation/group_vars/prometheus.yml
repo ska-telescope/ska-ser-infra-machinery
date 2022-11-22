@@ -7,21 +7,10 @@ prometheus_k8s_api_server_port: "6443"
 prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
 prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
 prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 prometheus_localuser: svc_skadev_ansible
 prometheus_localgroup: admin
-=======
-=======
->>>>>>> ST-1416: Refactoring monitoring variables
-localuser: svc_skadev_ansible
-localgroup: admin
->>>>>>> ST-1416: Refactoring monitoring variables
-=======
-prometheus_localuser: svc_skadev_ansible
-prometheus_localgroup: admin
->>>>>>> ST-1416: Adding fixes after deployment testing
+
 ca_host: terminus
 
 prometheus_alertmanager_url: http://142.73.34.170:9093
