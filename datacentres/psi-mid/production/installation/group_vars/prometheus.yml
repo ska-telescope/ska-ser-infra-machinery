@@ -21,15 +21,7 @@ prometheus_retention_time: "1d"
 
 prometheus_k8s_external_dns_entry: 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 prometheus_grafana_disable_admin_account_creation: true
-=======
-prometheus_grafana_disable_admin_account_creation: "false"
->>>>>>> ST-1416: Refactoring monitoring variables
-=======
-prometheus_grafana_disable_admin_account_creation: "false"
->>>>>>> ST-1416: Refactoring monitoring variables
 
 project_name: "PSI-Mid"
 
