@@ -9,3 +9,7 @@ prometheus_k8s_api_server_port: "6443"
 prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
 prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
 prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
+prometheus_localuser: ubuntu
+prometheus_localgroup: ubuntu
+slack_channel: engage-alerts
+slack_channel_user: engage-user-alerts
