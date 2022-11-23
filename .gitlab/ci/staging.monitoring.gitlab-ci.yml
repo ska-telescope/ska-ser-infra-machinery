@@ -37,7 +37,8 @@ staging_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
-    - make playbooks monitoring install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
+    - make playbooks monitoring prometheus
+    - make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
