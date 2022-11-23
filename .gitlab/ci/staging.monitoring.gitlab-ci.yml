@@ -37,7 +37,8 @@ staging_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
-    - make playbooks monitoring prometheus
+    - echo "prometheus_node_metric_relabel_configs: []" > ./ska-ser-ansible-collections/prometheus_node_metric_relabel_configs.yaml
+    - make playbooks monitoring prometheus 
     - make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
