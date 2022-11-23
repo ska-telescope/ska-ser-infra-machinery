@@ -11,6 +11,7 @@ module "elasticsearch" {
       size               = 1
       data_volume_size   = 100
       docker_volume_size = 20
+      roles              = ["master", "data", "kibana"]
     }
     data = {
       size               = 1

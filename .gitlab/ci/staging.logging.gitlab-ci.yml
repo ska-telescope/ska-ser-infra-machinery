@@ -1,0 +1,83 @@
+.staging_logging:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: staging
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
+    SERVICE: logging
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-logging"
+  environment:
+    name: stfc-techops-staging-logging
+    deployment_tier: staging
+
+staging_logging_plan:
+  extends:
+    - .staging_logging
+    - .orchestration_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_orchestration"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_logging_apply:
+  extends:
+    - .staging_logging
+    - .orchestration_apply
+  needs:
+    - staging_logging_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_orchestration"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+
+staging_logging_install:
+  stage: staging_install
+  extends:
+    - .staging_logging
+    - .installation_dependencies
+  variables:
+    REINSTALL: "false"
+  script:
+    - make orch generate-inventory
+    - make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_logging_destroy:
+  stage: staging_install
+  extends:
+    - .staging_logging
+    - .installation_dependencies
+  script:
+    - make orch generate-inventory
+    - make playbooks logging destroy
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_logging_test:
+  stage: staging_test
+  extends:
+    - .staging_logging
+    - .installation_dependencies
+  needs:
+    - staging_logging_install
+  script:
+    - make orch generate-inventory
+    - make playbooks logging test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success
