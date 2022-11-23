@@ -15,14 +15,10 @@ staging_logging_plan:
     - .orchestration_plan
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_orchestration"
-<<<<<<< HEAD
-    - !reference [.dettached_trigger]
-=======
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: manual
       allow_failure: true
->>>>>>> origin/main
 
 staging_logging_apply:
   extends:
@@ -33,13 +29,9 @@ staging_logging_apply:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_orchestration"
       when: manual
-<<<<<<< HEAD
-    - !reference [.manual_trigger]
-=======
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: manual
->>>>>>> origin/main
 
 staging_logging_install:
   stage: staging_install
@@ -54,14 +46,10 @@ staging_logging_install:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
-<<<<<<< HEAD
-    - !reference [.dettached_trigger]
-=======
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: manual
       allow_failure: true
->>>>>>> origin/main
 
 staging_logging_destroy:
   stage: staging_install
@@ -72,14 +60,10 @@ staging_logging_destroy:
     - make orch generate-inventory
     - make playbooks logging destroy
   rules:
-<<<<<<< HEAD
-    - !reference [.dettached_trigger]
-=======
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: manual
       allow_failure: true
->>>>>>> origin/main
 
 staging_logging_test:
   stage: staging_test
@@ -94,10 +78,6 @@ staging_logging_test:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
-<<<<<<< HEAD
-    - !reference [.default_trigger]
-=======
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: on_success
->>>>>>> origin/main
