@@ -6,7 +6,7 @@ module "escluster" {
   }
 
   elasticsearch = {
-    name = "generic-test-es"
+    name = join("-", [var.datacentre, var.environment, var.service, "es"])
     master = {
       size               = 1
       data_volume_size   = 10

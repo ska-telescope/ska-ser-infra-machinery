@@ -6,7 +6,7 @@ module "instance" {
   }
 
   configuration = {
-    name         = "generic-test-instance"
+    name         = join("-", [var.datacentre, var.environment, var.service, "instance"])
     applications = ["reverseproxy", "nexus"]
     floating_ip = {
       create  = true
