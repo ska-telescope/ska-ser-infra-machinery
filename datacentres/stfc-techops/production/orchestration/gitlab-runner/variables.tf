@@ -1,4 +1,4 @@
-# Leaving this commented variables becasue we should be using them
+# Leaving this commented variables because we should be using them
 # per ST-1414
 
 #variable "datacentre" {
