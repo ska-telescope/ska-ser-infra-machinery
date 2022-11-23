@@ -15,8 +15,4 @@ elasticsearch_memory: 8G
 elasticsearch_java_mem: 4g
 elasticsearch_reinstall: true
 elasticsearch_clean_data_volume: true
-<<<<<<< HEAD
 certificates_recreate: false
-=======
-certificates_recreate: false
->>>>>>> origin/main
