@@ -15,7 +15,11 @@
     on_stop: logging_e2e_tests_cleanup
 
 logging_e2e_tests:
+<<<<<<< HEAD
   extends: 
+=======
+  extends:
+>>>>>>> origin/main
     - .logging_e2e
   environment:
     action: start
@@ -25,6 +29,7 @@ logging_e2e_tests:
       - build/
       - tests/e2e/build
   script:
+<<<<<<< HEAD
     - make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
@@ -32,6 +37,19 @@ logging_e2e_tests:
 
 logging_e2e_tests_cleanup:
   extends: 
+=======
+    - !reference [.orchestration_dependencies, script]
+    - make im-test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+logging_e2e_tests_cleanup:
+  extends:
+>>>>>>> origin/main
     - .logging_e2e
   environment:
     action: stop
@@ -42,8 +60,18 @@ logging_e2e_tests_cleanup:
       - build/
       - tests/e2e/build
   script:
+<<<<<<< HEAD
+=======
+    - !reference [.orchestration_dependencies, script]
+>>>>>>> origin/main
     - make im-test-cleanup
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
       when: manual
+<<<<<<< HEAD
     - !reference [.manual_trigger]
+=======
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+>>>>>>> origin/main

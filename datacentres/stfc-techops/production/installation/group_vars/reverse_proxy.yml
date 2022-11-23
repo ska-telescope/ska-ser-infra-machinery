@@ -1,0 +1,9 @@
+reverseproxy_dns_name: k8s.stfc.skao.int
+reverseproxy_oauth2proxy_tenant_id: 78887040-bad7-494b-8760-88dcacfb3805
+reverseproxy_oauth2proxy_client_id: 45aef1d7-9fcc-4e52-a572-b158d2a8b856
+reverseproxy_oauth2proxy_cookie_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_COOKIE_SECRET', default=secrets['azuread_cookie_secret']) | mandatory }}"
+reverseproxy_oauth2proxy_client_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_CLIENT_SECRET', default=secrets['azuread_client_secret']) | mandatory }}"
+reverseproxy_kubernetes_haproxy_server: "{{ groups['loadbalancers'][0] }}"
+reverseproxy_thanos_sidecar_server: prometheus
+reverseproxy_grafana_server: prometheus
+reverseproxy_kibana_server: ska-techops-logging-central-prod-kibana-i00

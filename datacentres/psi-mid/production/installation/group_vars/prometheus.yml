@@ -2,23 +2,24 @@
 debug: true
 production: true
 # can only do one cluster - v1
-k8s_api_server_addr: "142.73.34.170"
-k8s_api_server_port: "6443"
-k8s_api_server: "https://{{ k8s_api_server_addr }}:{{ k8s_api_server_port }}"
-k8s_client_certificate: "/etc/prometheus/ca.crt"
-k8s_bearer_token: "/etc/prometheus/bearer.token"
-localuser: svc_skadev_ansible
-localgroup: admin
+prometheus_k8s_api_server_addr: "142.73.34.170"
+prometheus_k8s_api_server_port: "6443"
+prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
+prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
+prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
+prometheus_localuser: svc_skadev_ansible
+prometheus_localgroup: admin
 ca_host: terminus
 
 prometheus_alertmanager_url: http://142.73.34.170:9093
 prometheus_url: https://142.73.34.170:9090
 slack_channel: psi-mid-alerts
 slack_channel_user: psi-mid-user-alerts
+prometheus_retention_time: "1d"
 
-k8s_external_dns_entry: 
+prometheus_k8s_external_dns_entry: 
 
-grafana_disable_admin_account_creation: "false"
+prometheus_grafana_disable_admin_account_creation: true
 
 project_name: "PSI-Mid"
 
@@ -133,4 +134,4 @@ prometheus_scrape_configs:
 node_exporter_version: 0.18.1-1.el7
 node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prometheus-node-exporter/prometheus-node-exporter_0.18.1+ds-2_amd64.deb
 
-thanos_query_endpoints: []
+prometheus_thanos_query_endpoints: []

@@ -9,6 +9,7 @@
     name: stfc-techops-production-logging
     deployment_tier: production
 
+<<<<<<< HEAD
 #production_logging_plan:
 #  extends:
 #    - .production_logging
@@ -27,6 +28,31 @@
 #    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
 #      when: manual
 #    - !reference [.manual_trigger]
+=======
+production_logging_plan:
+  extends:
+    - .production_logging
+    - .orchestration_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+production_logging_apply:
+  extends:
+    - .production_logging
+    - .orchestration_apply
+  needs:
+    - production_logging_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_orchestration"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+>>>>>>> origin/main
 
 production_logging_install:
   stage: production_install
@@ -39,6 +65,7 @@ production_logging_install:
   variables:
     REINSTALL: "false"
   script:
+<<<<<<< HEAD
     - echo "make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'"
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
@@ -53,6 +80,15 @@ production_logging_destroy:
     - echo 'make playbooks logging destroy'
   rules:
     - !reference [.dettached_trigger]
+=======
+    - make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+>>>>>>> origin/main
 
 production_logging_test:
   stage: production_test
@@ -62,7 +98,16 @@ production_logging_test:
   needs:
     - production_logging_install
   script:
+<<<<<<< HEAD
     - echo 'make playbooks logging test'
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
     - !reference [.default_trigger]
+=======
+    - make playbooks logging test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_logging_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success
+>>>>>>> origin/main

@@ -6,8 +6,14 @@ module "nexus" {
   }
 
   configuration = {
+<<<<<<< HEAD
     name  = join("-", [var.datacentre, var.environment, var.service])
     image = "ubuntu-jammy-22.04"
+=======
+    name         = join("-", [var.datacentre, var.environment, var.service])
+    image        = "ubuntu-jammy-22.04"
+    applications = ["nexus"]
+>>>>>>> origin/main
     volumes = [
       {
         mount_point = "/var/lib/docker"
