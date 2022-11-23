@@ -1,20 +1,17 @@
-# Leaving this commented variables becasue we should be using them
-# per ST-1414
+variable "datacentre" {
+  type        = string
+  description = "The datacentre name"
+}
 
-#variable "datacentre" {
-#  type        = string
-#  description = "The datacentre name"
-#}
-#
-#variable "environment" {
-#  type        = string
-#  description = "The environment name"
-#}
-#
-#variable "service" {
-#  type        = string
-#  description = "The orchestration service name"
-#}
+variable "environment" {
+  type        = string
+  description = "The environment name"
+}
+
+variable "service" {
+  type        = string
+  description = "The orchestration service name"
+}
 
 variable "openstack" {
   type = object({
