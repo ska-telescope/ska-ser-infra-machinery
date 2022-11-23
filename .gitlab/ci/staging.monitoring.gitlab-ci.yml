@@ -37,7 +37,6 @@ staging_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
-    - make playbooks monitoring update_scrapers
     - make playbooks monitoring prometheus
     - make playbooks monitoring thanos
   rules:
