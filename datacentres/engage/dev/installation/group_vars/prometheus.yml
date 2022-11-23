@@ -13,3 +13,4 @@ prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
 slack_channel: engage-alerts
 slack_channel_user: engage-user-alerts
+prometheus_grafana_disable_admin_account_creation: true
