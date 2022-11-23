@@ -20,7 +20,7 @@ slack_channel_user: dp-platform-user-alerts
 
 
 prometheus_thanos_alt_name: "sdhp.stfc.skao.int"
-prometheus_grafana_disable_admin_account_creation: false
+prometheus_grafana_disable_admin_account_creation: true
 
 project_name: "SKA-TechSDH&P"
 
