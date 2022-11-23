@@ -9,7 +9,6 @@ prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
 prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
-gateway_host: terminus
 
 prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
 prometheus_url: https://monitoring.skao.stfc:9090
@@ -18,7 +17,7 @@ slack_channel_user: techops-user-alerts
 
 prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
-prometheus_grafana_disable_admin_account_creation: false
+prometheus_grafana_disable_admin_account_creation: true
 
 project_name: "SKA-TechOps"
 

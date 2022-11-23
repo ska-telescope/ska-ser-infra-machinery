@@ -10,7 +10,6 @@ prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_k8s_username: ""
 prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
-gateway_host: terminus
 
 prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int
 
@@ -21,7 +20,7 @@ slack_channel_user: dp-platform-user-alerts
 
 
 prometheus_thanos_alt_name: "sdhp.stfc.skao.int"
-prometheus_grafana_disable_admin_account_creation: false
+prometheus_grafana_disable_admin_account_creation: true
 
 project_name: "SKA-TechSDH&P"
 
