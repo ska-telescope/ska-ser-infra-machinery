@@ -6,7 +6,7 @@ module "thanos" {
   }
 
   configuration = {
-    name = join("-", [var.datacentre, var.environment, var.service, "thanos"])
+    name         = join("-", [var.datacentre, var.environment, var.service, "thanos"])
     flavor       = "l3.micro"
     image        = "ubuntu-2004-lts"
     applications = ["thanos", "node_exporter"]
