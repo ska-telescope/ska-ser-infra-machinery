@@ -4,7 +4,7 @@
     ENVIRONMENT: staging
     REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
     SERVICE: monitoring
-    PLAYBOOKS_HOSTS: "stfc-techops-staging-prometheus,stfc-techops-staging-monitoring-thanos"
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-monitoring-prometheus,stfc-techops-staging-monitoring-thanos"
   environment:
     name: stfc-techops-staging-monitoring
     deployment_tier: staging
