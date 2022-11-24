@@ -8,9 +8,9 @@ for orchestration and [Ansible](https://www.ansible.com/) for installation/confi
 
 It does not have any direct dependencies but check the READMEs of
 each submodule for an updated list of requirements:
-* [SKA Orchestration](./ska-ser-orchestration/README.md#prerequisites)
-* [SKA Ansible Collections](./ska-ser-ansible-collections/README.md#requirements)
-* [SKA Makefile](./ska-ser-ansible-collections/README.md)
+* [SKA Orchestration](https://gitlab.com/ska-telescope/sdi/ska-ser-orchestration/-/blob/main/README.md#prerequisites)
+* [SKA Ansible Collections](https://gitlab.com/ska-telescope/sdi/ska-ser-ansible-collections/-/blob/main/README.md#requirements)
+* [SKA Makefile](https://gitlab.com/ska-telescope/sdi/ska-cicd-makefile/-/blob/main/README.md)
 
 # Setup
 
@@ -350,7 +350,3 @@ Developers can have a development (**datacentres/\**/dev) environment to develop
 Ansible variables that are datacentre specific should be added to the `group_vars` folder of the inventory directory (*PLAYBOOKS_ROOT_DIR*).
 
 For the secret variables, follow the detailed topic "Secrets management". To assign proper values to these variables, please use a `PrivateRules.mak` file.
-
-## License
-
-BSD-3.
