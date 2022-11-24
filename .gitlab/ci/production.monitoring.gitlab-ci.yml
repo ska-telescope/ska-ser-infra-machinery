@@ -9,24 +9,29 @@
     name: stfc-techops-production-monitoring
     deployment_tier: production
 
-#production_monitoring_plan:
-#  extends:
-#    - .production_monitoring
-#    - .orchestration_plan
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
-#    - !reference [.dettached_trigger]
-#
-#production_monitoring_apply:
-#  extends:
-#    - .production_monitoring
-#    - .orchestration_apply
-#  needs:
-#    - production_monitoring_plan
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
-#      when: manual
-#    - !reference [.manual_trigger]
+production_monitoring_plan:
+  extends:
+    - .production_monitoring
+    - .orchestration_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+production_monitoring_apply:
+  extends:
+    - .production_monitoring
+    - .orchestration_apply
+  needs:
+    - production_monitoring_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_orchestration"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
 
 production_monitoring_install:
   stage: production_install
@@ -39,21 +44,14 @@ production_monitoring_install:
   variables:
     REINSTALL: "false"
   script:
-    - echo "make playbooks monitoring prometheus"
-    - echo "make playbooks monitoring thanos"
+    - make playbooks monitoring prometheus
+    - make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
-    - !reference [.dettached_trigger]
-
-production_monitoring_destroy:
-  stage: production_install
-  extends:
-    - .production_monitoring
-    - .installation_dependencies
-  script:
-    - echo 'make playbooks monitoring destroy'
-  rules:
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 production_monitoring_test:
   stage: production_test
@@ -63,7 +61,9 @@ production_monitoring_test:
   needs:
     - production_monitoring_install
   script:
-    - echo 'make playbooks monitoring test'
+    - make playbooks monitoring test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
-    - !reference [.default_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success

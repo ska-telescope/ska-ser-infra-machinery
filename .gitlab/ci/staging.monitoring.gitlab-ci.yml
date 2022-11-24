@@ -4,7 +4,7 @@
     ENVIRONMENT: staging
     REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
     SERVICE: monitoring
-    PLAYBOOKS_HOSTS: "stfc-techops-staging-prometheus"
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-monitoring"
   environment:
     name: stfc-techops-staging-monitoring
     deployment_tier: staging
@@ -15,7 +15,10 @@ staging_monitoring_plan:
     - .orchestration_plan
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_orchestration"
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 staging_monitoring_apply:
   extends:
@@ -26,7 +29,9 @@ staging_monitoring_apply:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_orchestration"
       when: manual
-    - !reference [.manual_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
 
 staging_monitoring_install:
   stage: staging_install
@@ -37,13 +42,15 @@ staging_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
-    - 'echo "prometheus_node_metric_relabel_configs: []" > ./ska-ser-ansible-collections/prometheus_node_metric_relabel_configs.yaml'
-    - make playbooks monitoring prometheus
-    - make playbooks monitoring thanos
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 staging_monitoring_destroy:
   stage: staging_install
@@ -54,7 +61,10 @@ staging_monitoring_destroy:
     - make orch generate-inventory
     - make playbooks monitoring destroy
   rules:
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 staging_monitoring_test:
   stage: staging_test
@@ -69,4 +79,6 @@ staging_monitoring_test:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
-    - !reference [.default_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success

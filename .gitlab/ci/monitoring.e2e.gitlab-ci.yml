@@ -15,7 +15,7 @@
     on_stop: monitoring_e2e_tests_cleanup
 
 monitoring_e2e_tests:
-  extends: 
+  extends:
     - .monitoring_e2e
   environment:
     action: start
@@ -25,13 +25,17 @@ monitoring_e2e_tests:
       - build/
       - tests/e2e/build
   script:
+    - !reference [.orchestration_dependencies, script]
     - make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "monitoring_e2e_tests"
-    - !reference [.dettached_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
 
 monitoring_e2e_tests_cleanup:
-  extends: 
+  extends:
     - .monitoring_e2e
   environment:
     action: stop
@@ -42,8 +46,11 @@ monitoring_e2e_tests_cleanup:
       - build/
       - tests/e2e/build
   script:
+    - !reference [.orchestration_dependencies, script]
     - make im-test-cleanup
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "monitoring_e2e_tests"
       when: manual
-    - !reference [.manual_trigger]
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
