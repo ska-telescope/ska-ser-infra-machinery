@@ -38,9 +38,9 @@ prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
 prometheus_grafana_disable_admin_account_creation: true
 
-project_name: "SKA-TechOps"
+project_name: "SKA-TechOps-staging"
 
-prometheus_datacentre: stfc-ska-monitor
+prometheus_datacentre: stfc-staging-ska-monitor
 
 prometheus_global:
   scrape_interval: 15s
