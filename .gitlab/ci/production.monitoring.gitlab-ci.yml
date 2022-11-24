@@ -64,6 +64,7 @@ production_monitoring_test:
   needs:
     - production_monitoring_install
   script:
+    - make orch generate-inventory
     - make playbooks monitoring test-prometheus
     - make playbooks monitoring test-thanos 
   rules:
