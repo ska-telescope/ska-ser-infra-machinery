@@ -15,7 +15,6 @@ prometheus_url: https://monitoring.skao.stfc:9090
 slack_channel: techops-alerts
 slack_channel_user: techops-user-alerts
 
-prometheus_localuser: "{{ lookup('env', 'USER') }}"
 prometheus_server_docker_tags: 'v2.37.1'
 prometheus_server_title: SKA DevOps Prometheus Server
 prometheus_server_memory: 16384M
