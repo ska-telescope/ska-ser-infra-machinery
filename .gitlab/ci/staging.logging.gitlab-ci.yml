@@ -42,6 +42,8 @@ staging_logging_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
+    - make playbooks common init
+    - make playbooks oci docker
     - make playbooks logging install ANSIBLE_PLAYBOOK_ARGUMENTS='-e elasticsearch_reinstall=${REINSTALL} -e elasticsearch_exporter_reinstall=${REINSTALL} -e kibana_reinstall=${REINSTALL}'
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_logging_install"
