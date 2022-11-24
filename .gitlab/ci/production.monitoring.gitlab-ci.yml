@@ -4,7 +4,7 @@
     ENVIRONMENT: production
     REQUIRED_SSH_KEYS: "ska-techops.pem"
     SERVICE: monitoring
-    PLAYBOOKS_HOSTS: "ska-techops-monitoring-central-prod"
+    PLAYBOOKS_HOSTS: "stfc-techops-production-monitoring-prometheus,stfc-techops-production-monitoring-thanos"
   environment:
     name: stfc-techops-production-monitoring
     deployment_tier: production
@@ -47,8 +47,8 @@ production_monitoring_install:
     - make orch generate-inventory
     - make playbooks common init
     - make playbooks oci docker
-    - make playbooks monitoring prometheus
-    - make playbooks monitoring thanos
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-thanos make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
     - if: $CI_PIPELINE_SOURCE == "schedule"
