@@ -44,6 +44,9 @@ production_monitoring_install:
   variables:
     REINSTALL: "false"
   script:
+    - make orch generate-inventory
+    - make playbooks common init
+    - make playbooks oci docker
     - make playbooks monitoring prometheus
     - make playbooks monitoring thanos
   rules:

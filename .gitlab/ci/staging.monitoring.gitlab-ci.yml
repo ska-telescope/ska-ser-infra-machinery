@@ -42,6 +42,8 @@ staging_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
+    - make playbooks common init
+    - make playbooks oci docker
     - 'echo "prometheus_node_metric_relabel_configs: []" > ./ska-ser-ansible-collections/prometheus_node_metric_relabel_configs.yaml'
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring thanos
