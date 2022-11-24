@@ -144,6 +144,35 @@ and Ansible (installation). Like the example bellow:
 └── ska-ser-orchestration
 ```
 
+## Active deployments
+
+<table>
+    <thead>
+        <tr>
+            <th>DataCentre</th>
+            <th>Environment </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=2>stfc-techops</td>
+            <td>
+
+[production](./datacentres/stfc-techops/production)
+</td>
+        </tr>
+        <tr>
+            <td>staging</td>
+        </tr>
+    </tbody>
+</table>
+
+| Datacentre | Environment |
+| ------ | ------ |
+| stfc-techops | [production](./datacentres/stfc-techops/production)|
+| ^^ | [staging](./datacentres/stfc-techops/staging)|
+
+
 
 ## Environment tests
 
@@ -340,7 +369,7 @@ When running this target, make sure you note down the api-key, as it is only vis
 ## How to Contribute
 
 ### Add/Update an Datacentre/Environment/Service
-Any changes to the repository should follow the structured defined on the section "Project Structured". Go to the *./collections* folder to find multiple examples of
+Any changes to the repository should follow the structured defined on the section "Project Structure". Go to the *./collections* folder to find multiple examples of
 deployments for the various combinations of deployments.
 
 Developers can have a development (**datacentres/\**/dev) environment to develop and/or test their changes but **should not** be merge to the main branch.
@@ -349,4 +378,4 @@ Developers can have a development (**datacentres/\**/dev) environment to develop
 
 Ansible variables that are datacentre specific should be added to the `group_vars` folder of the inventory directory (*PLAYBOOKS_ROOT_DIR*).
 
-For the secret variables, follow the detailed topic "Secrets management". To assign proper values to these variables, please use a `PrivateRules.mak` file.
+For the secret variables, follow the detailed topic "Secrets management". To assign proper values to these variables, please use a `PrivateRules.mak` file. Note that, you can also use environment variables to set them as it's done as part of CI managed deployments
