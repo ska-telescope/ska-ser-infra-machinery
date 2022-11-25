@@ -10,18 +10,21 @@ all:
               ansible_python_interpreter: python3
               ansible_user: svc_skadev_ansible
               ansible_ssh_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
             psi-mid-node-2:
               ansible_host: 142.73.34.172
               ip: 142.73.34.172
               ansible_python_interpreter: python3
               ansible_user: svc_skadev_ansible
               ansible_ssh_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
             psi-mid-node-3:
               ansible_host: 142.73.34.174
               ip: 142.73.34.174
               ansible_python_interpreter: python3
               ansible_user: svc_skadev_ansible
               ansible_ssh_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
     es_cluster:
       children:
         core-nodes:
@@ -41,6 +44,7 @@ all:
                   ansible_user: svc_skadev_ansible
                   ansible_python_interpreter: python3
                   ansible_ssh_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/psi-mid/production/installation/no_terraform.ssh.config
             nodes:
               hosts:
                 psi-mid-node-1: {}

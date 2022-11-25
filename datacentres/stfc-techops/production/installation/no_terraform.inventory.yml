@@ -10,6 +10,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -36,6 +37,7 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
           calc_create_data2_vol: false
           calc_create_data_vol: true
           calc_mount_data2_vol: false
@@ -62,6 +64,7 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
           calc_create_data2_vol: false
           calc_create_data_vol: true
           calc_mount_data2_vol: false
@@ -88,6 +91,7 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
           calc_create_data2_vol: false
           calc_create_data_vol: true
           calc_mount_data2_vol: false
@@ -118,6 +122,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: true
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -144,6 +149,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: true
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -170,6 +176,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: true
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -201,6 +208,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -229,6 +237,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -257,6 +266,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -285,6 +295,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -309,6 +320,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -335,6 +347,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -361,6 +374,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -389,6 +403,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -416,6 +431,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: false
               calc_mount_data2_vol: false
@@ -449,6 +465,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -477,6 +494,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -505,6 +523,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -533,6 +552,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -561,6 +581,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -589,6 +610,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -617,6 +639,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -645,6 +668,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -673,6 +697,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -701,6 +726,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -729,6 +755,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -757,6 +784,7 @@ all:
                   ansible_python_interpreter: python3
                   ansible_user: ubuntu
                   ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+                  ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
                   calc_create_data2_vol: false
                   calc_create_data_vol: false
                   calc_mount_data2_vol: false
@@ -821,6 +849,7 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
               calc_create_data2_vol: false
               calc_create_data_vol: true
               calc_mount_data2_vol: false
@@ -1610,6 +1639,7 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
           common_single_host_mode: false
           dashboard_admin_password: ''
