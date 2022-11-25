@@ -10,10 +10,10 @@ prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
 prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
 
-prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
+prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
 prometheus_url: https://monitoring.skao.stfc:9090
-slack_channel: techops-alerts
-slack_channel_user: techops-user-alerts
+slack_channel: techops-staging-alerts
+slack_channel_user: techops-staging-user-alerts
 
 prometheus_server_docker_tags: 'v2.37.1'
 prometheus_server_title: SKA DevOps Prometheus Server
