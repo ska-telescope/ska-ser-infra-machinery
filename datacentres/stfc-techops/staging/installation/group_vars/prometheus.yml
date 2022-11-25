@@ -1,8 +1,8 @@
 ---
 debug: true
-production: true
+production: false
 # can only do one cluster - v1
-prometheus_k8s_api_server_addr: "10.200.0.63"
+prometheus_k8s_api_server_addr: 
 prometheus_k8s_api_server_port: "6443"
 prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
 prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
@@ -11,12 +11,12 @@ prometheus_localuser: ubuntu
 prometheus_localgroup: ubuntu
 
 prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
-prometheus_url: https://monitoring.skao.stfc:9090
+prometheus_url: https://monitoring.staging.skao.stfc:9090
 slack_channel: techops-staging-alerts
 slack_channel_user: techops-staging-user-alerts
 
 prometheus_server_docker_tags: 'v2.37.1'
-prometheus_server_title: SKA DevOps Prometheus Server
+prometheus_server_title: SKA DevOps Staging Prometheus Server
 prometheus_server_memory: 16384M
 prometheus_server_swapfile_path: /swapfile
 prometheus_server_swapfile_size: 1000
@@ -55,15 +55,10 @@ prometheus_static_node_metric_relabel_configs:
     target_label: instance
 
 prometheus_elasticsearch_instance_add_cluster_label:
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
+  - regex: '^192\.168\.99\.(112|136):(\d+)'
+    replacement: systems-staging-monitoring1
     source_labels: [instance]
     target_label: cluster
-  - regex: '^192\.168\.99\.(131|22|183):(\d+)'
-    replacement: systems-monitoring1
-    source_labels: [instance]
-    target_label: cluster
-
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -106,30 +101,6 @@ prometheus_scrape_configs:
       - 'kube-proxy.json'
     metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
 
-  - job_name: "kube-state-metrics"
-    static_configs:
-    - targets:
-      - "10.200.0.63:32080"  # load balancer
-    metric_relabel_configs:
-    - action: replace
-      regex: 192\.168\.99\.222:32080
-      replacement: systems-k8s1-loadbalancer:32080
-      source_labels:
-        - instance
-      target_label: instance
-
-  - job_name: "k8stelemetry"
-    static_configs:
-    - targets:
-      - "10.200.0.63:32081"  # load balancer
-    metric_relabel_configs:
-    - action: replace
-      regex: 192\.168\.99\.222:32081
-      replacement: systems-k8s1-loadbalancer:32081
-      source_labels:
-        - instance
-      target_label: instance
-
   - job_name: "ceph_cluster"
     file_sd_configs:
     - files:
@@ -140,6 +111,5 @@ node_exporter_version: 0.18.1-1.el7
 node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prometheus-node-exporter/prometheus-node-exporter_0.18.1+ds-2_amd64.deb
 
 prometheus_thanos_query_endpoints:
-- 192.168.99.153:10901
-- 192.168.99.31:19090 # store gateway
-- dns+sdhp.stfc.skao.int:10901 # jupiter sidecar exposed
+- 192.168.99.133:10901 # Staging Prometheus 
+- 192.168.99.251:19090 # store gateway
