@@ -14,17 +14,17 @@ module "thanos" {
       {
         mount_point = "/var/lib/containers"
         name        = "containers"
-        size        = 20
+        size        = 10
       },
       {
         mount_point = "/etc/thanos/data/dir"
         name        = "thanos_data"
-        size        = 50
+        size        = 10
       },
       {
         mount_point = "/etc/thanos/thanos-compact"
         name        = "thanos_compact"
-        size        = 50
+        size        = 10
       }
     ]
   }

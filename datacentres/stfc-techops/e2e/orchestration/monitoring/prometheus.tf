@@ -14,12 +14,12 @@ module "prometheus" {
       {
         mount_point = "/var/lib/containers"
         name        = "containers"
-        size        = 20
+        size        = 10
       },
       {
         mount_point = "/var/lib/prometheus"
         name        = "prometheus_wal"
-        size        = 200
+        size        = 10
       }
     ]
   }
