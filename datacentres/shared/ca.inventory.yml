@@ -6,3 +6,4 @@ all:
       ansible_python_interpreter: python3
       ansible_user: ubuntu
       ansible_ssh_extra_args: -F ../datacentres/shared/ca.ssh.config
+      ansible_scp_extra_args: -F ../datacentres/shared/ca.ssh.config
