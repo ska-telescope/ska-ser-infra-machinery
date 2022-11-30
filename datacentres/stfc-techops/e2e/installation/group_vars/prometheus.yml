@@ -1,32 +1,17 @@
 ---
-prometheus_k8s_api_server_addr: "10.200.0.63"
 
-prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
+prometheus_k8s_api_server_addr: "10.200.0.63"
 
 prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
 prometheus_url: https://monitoring.skao.stfc:9090
-slack_channel: techops-alerts
-slack_channel_user: techops-user-alerts
+slack_channel: test-dev-prometheus
+slack_channel_user: test-dev-prometheus
 
-thanos_alt_name: "k8s.stfc.skao.int"
+prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
-project_name: "SKA-TechOps"
+project_name: "SKA-TechOps e2e test"
 
-prometheus_datacentre: stfc-ska-monitor
-
-prometheus_static_node_metric_relabel_configs:
-  - action: replace
-    regex: 130\.246\.214\.45:9100
-    replacement: terminus:9100
-    source_labels:
-    - instance
-    target_label: instance
-  - action: replace
-    regex: 192\.168\.99\.194 :9100
-    replacement: terminus:9100
-    source_labels:
-    - instance
-    target_label: instance
+prometheus_datacentre: stfc-e2e-monitor
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -98,7 +83,5 @@ prometheus_scrape_configs:
     - files:
       - 'ceph-mgr.json'
 
-thanos_query_endpoints:
-- 192.168.99.153:10901
-- 192.168.99.31:19090 # store gateway
-- dns+sdhp.stfc.skao.int:10901 # jupiter sidecar exposed
+thanos_query_endpoints: 
+- 192.168.99.19:10901

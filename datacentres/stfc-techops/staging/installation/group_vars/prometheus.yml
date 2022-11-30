@@ -1,50 +1,22 @@
 ---
-debug: true
-production: false
-# can only do one cluster - v1
-prometheus_k8s_api_server_addr: 
-prometheus_k8s_api_server_port: "6443"
-prometheus_k8s_api_server: "https://{{ prometheus_k8s_api_server_addr }}:{{ prometheus_k8s_api_server_port }}"
-prometheus_k8s_client_certificate: "/etc/prometheus/ca.crt"
-prometheus_k8s_bearer_token: "/etc/prometheus/bearer.token"
-prometheus_localuser: ubuntu
-prometheus_localgroup: ubuntu
-
-prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
-prometheus_url: https://monitoring.staging.skao.stfc:9090
-slack_channel: techops-staging-alerts
-slack_channel_user: techops-staging-user-alerts
-
-prometheus_server_docker_tags: 'v2.37.1'
-prometheus_server_title: SKA DevOps Staging Prometheus Server
-prometheus_server_memory: 16384M
-prometheus_server_swapfile_path: /swapfile
-prometheus_server_swapfile_size: 1000
-prometheus_server_swapfile_fallocate: true
-prometheus_server_kubectl_version: 'v1.22.5'
-prometheus_server_kubectl_name: kubectl
-prometheus_server_kubectl_install_dir: /usr/local/bin
-prometheus_server_kubectl_url: 'https://storage.googleapis.com/kubernetes-release/release/{{ prometheus_server_kubectl_version }}/bin/linux/amd64/{{ prometheus_server_kubectl_name }}'
-prometheus_alertmanager_docker_tags: 'v0.24.0'
-prometheus_blackbox_exporter_docker_tags: 'v0.21.0'
-prometheus_docker_exporter_cadvisor_docker_tags: 'v0.44.0'
-prometheus_grafana_docker_tags: '9.0.0'
-prometheus_grafana_influxdb: 192.168.100.5
-prometheus_grafana_influxdb_db: gitlab_metrics
-prometheus_thanos_docker_tags: 'v0.28.0'
+prometheus_k8s_api_server_addr: "10.200.0.63"
 
 prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 
-prometheus_grafana_disable_admin_account_creation: true
 
-project_name: "SKA-TechOps-staging"
-
+prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
+prometheus_url: https://monitoring.staging.skao.stfc:9090
+slack_channel: test-dev-prometheus
+slack_channel_user: test-dev-prometheus
 prometheus_datacentre: stfc-staging-ska-monitor
 
-prometheus_global:
-  scrape_interval: 15s
-  scrape_timeout: 5s
-  evaluation_interval: 15s
+prometheus_server_title: SKA DevOps Staging Prometheus Server
+
+thanos_alt_name: "k8s.stfc.skao.int"
+
+project_name: "SKA-TechOps Staging"
+
+prometheus_datacentre: stfc-ska-staging-monitor
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
@@ -53,12 +25,6 @@ prometheus_static_node_metric_relabel_configs:
     source_labels:
     - instance
     target_label: instance
-
-prometheus_elasticsearch_instance_add_cluster_label:
-  - regex: '^192\.168\.99\.(112|136):(\d+)'
-    replacement: systems-staging-monitoring1
-    source_labels: [instance]
-    target_label: cluster
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -106,10 +72,6 @@ prometheus_scrape_configs:
     - files:
       - 'ceph-mgr.json'
 
-# node exporter versions
-node_exporter_version: 0.18.1-1.el7
-node_exporter_apt_package: http://archive.ubuntu.com/ubuntu/pool/universe/p/prometheus-node-exporter/prometheus-node-exporter_0.18.1+ds-2_amd64.deb
-
-prometheus_thanos_query_endpoints:
+thanos_query_endpoints:
 - 192.168.99.133:10901 # Staging Prometheus 
 - 192.168.99.251:19090 # store gateway
