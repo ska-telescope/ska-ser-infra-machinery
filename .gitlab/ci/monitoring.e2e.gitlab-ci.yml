@@ -27,9 +27,7 @@ monitoring_e2e_tests:
       - tests/e2e/build
   script:
     - !reference [.orchestration_dependencies, script]
-    - echo $KUBECONFIG_STFC > $(pwd)/kube.config
-    - export KUBECONFIG=$(pwd)/kube.config 
-    - make im-test
+    - KUBECONFIG=$KUBECONFIG_STFC make im-test
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "monitoring_e2e_tests"
     - if: $CI_PIPELINE_SOURCE == "schedule"
