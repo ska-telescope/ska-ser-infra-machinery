@@ -44,7 +44,8 @@ staging_monitoring_install:
     - make orch generate-inventory
     - make playbooks common init
     - make playbooks oci docker
-    - 'echo "prometheus_node_metric_relabel_configs: []" > ./ska-ser-ansible-collections/prometheus_node_metric_relabel_configs.yaml'
+    - kubectl config view --raw > $(pwd)/kube.config
+    - export KUBECONFIG=$(pwd)/kube.config 
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring alertmanager

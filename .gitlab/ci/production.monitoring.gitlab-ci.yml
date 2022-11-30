@@ -46,6 +46,8 @@ production_monitoring_install:
   script:
     - make orch generate-inventory
     - make playbooks oci docker
+    - kubectl config view --raw > $(pwd)/kube.config
+    - export KUBECONFIG=$(pwd)/kube.config 
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring alertmanager
