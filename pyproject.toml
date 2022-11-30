@@ -8,6 +8,7 @@ authors = ["Domingos Nunes <domingos.nunes@atlar.pt>"]
 python = "^3.8"
 ansible = "^6.5.0"
 python-openstackclient = "^6.0.0"
+hvac = "^1.0.2"
 
 
 [tool.poetry.dev-dependencies]

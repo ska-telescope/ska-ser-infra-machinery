@@ -7,8 +7,11 @@ MAKEFLAGS += --no-print-directory
 DATACENTRE ?=
 ENVIRONMENT ?=
 SERVICE ?=
-TF_HTTP_USERNAME ?=
 TF_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".make" | sed 's/.terraform.tf//' | sort | uniq )
+GITLAB_USERNAME ?=
+GITLAB_TOKEN ?=
+PYTHON ?= python3
+PRIVATE_RULES ?= $(BASE_PATH)/PrivateRules.mak
 
 -include .make/base.mk
 -include .make/bats.mk
@@ -26,6 +29,8 @@ BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
 TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration/$(SERVICE)
+TF_HTTP_USERNAME?=$(GITLAB_USERNAME)
+TF_HTTP_PASSWORD?=$(GITLAB_TOKEN)
 TF_HTTP_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state
 TF_HTTP_LOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
 TF_HTTP_UNLOCK_ADDRESS?=https://gitlab.com/api/v4/projects/$(GITLAB_PROJECT_ID)/terraform/state/$(DATACENTRE)-$(ENVIRONMENT)-$(SERVICE)-terraform-state/lock
@@ -40,11 +45,19 @@ CI_PIPELINE_ID ?= $(shell echo "local-$$(whoami)" | head -c 16)
 DEFAULT_TEXT_EDITOR?=vi
 ANSIBLE_EXTRA_VARS?=--extra-vars 'ska_datacentre=$(DATACENTRE) ska_environment=$(ENVIRONMENT) ska_service=$(SERVICE) ska_ci_pipeline_id=$(CI_PIPELINE_ID)'
 
-## ANSIBLE_SECRETS_PROVIDER must be one of: legacy, plain-text, ansible-vault or hashicorp-vault
-# pass datacentre, env (environment is reserved in ansible) and service variables
-ANSIBLE_SECRETS_PROVIDER?=legacy
 ANSIBLE_SECRETS_PATH?=$(BASE_PATH)/secrets.yml
 ANSIBLE_SECRETS_PASSWORD?=
+
+ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+
+VAULT_ADDR?=
+CI_JOB_JWT?=
+VAULT_TOKEN?=
+ifneq ($(CI_JOB_JWT),)
+VAULT_AUTH?=auth_method=jwt token=$(CI_JOB_JWT)
+else
+VAULT_AUTH?=auth_method=token token=$(VAULT_TOKEN)
+endif
 
 # Include environment specific vars and secrets
 -include $(BASE_PATH)/PrivateRules.mak
@@ -64,75 +77,22 @@ ifndef TF_HTTP_PASSWORD
 endif
 
 im-setup-secrets: ## Loads secrets as ansible variables
-ifndef ANSIBLE_SECRETS_PROVIDER
-	$(error ANSIBLE_SECRETS_PROVIDER is undefined)
-endif
+	@$(PYTHON) -u $(BASE_PATH)/scripts/get-secrets.py \
+	--output $(ANSIBLE_SECRETS_PATH) \
+	--password-output $(BASE_PATH)/secrets.password \
+	--password $(ANSIBLE_SECRETS_PASSWORD) \
+	--source 'type=file path=$(PRIVATE_RULES)' \
+	--source 'type=vault address=$(VAULT_ADDR) $(VAULT_AUTH) paths=/ip-gitlab-test/shared/shared_value@banana.$$key' \
+	--source 'type=vault address=$(VAULT_ADDR) $(VAULT_AUTH) paths=/ip-gitlab-test/shared/shared_value@banana.$$key_copy'
 
-# legacy provider
-ifeq ($(ANSIBLE_SECRETS_PROVIDER),legacy)
-# It is used as a legacy approach, by injecting into a 'secrets' variable the values
-# present in PrivateRules.mak. The variable names are lower-case representations of what
-# is in PrivateRules.mak
-# Finally, we can set whatever variable in group_vars/host_vars as:
-# some_var: "{{ secrets['lower case of variable in PrivateRules.mak'] }}
-ifeq ($(ANSIBLE_SECRETS_PATH),)
-	$(error ANSIBLE_SECRETS_PATH is undefined)
-endif
-ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
-$(shell touch $(BASE_PATH)/PrivateRules.mak; \
-	rm $(ANSIBLE_SECRETS_PATH); echo "secrets:" > $(ANSIBLE_SECRETS_PATH); \
-	cat $(BASE_PATH)/PrivateRules.mak | \
-	grep -v "DATACENTRE=" | \
-	grep -v "ENVIRONMENT=" | \
-	grep -v "SERVICE=" | \
-	grep -v "^#" | \
-	grep "\S" | \
-	sed "s#^\([a-zA-Z0-9_-]\+\)[ ]*\(=\|\?=\|:=\)[ ]*\(.*\)#  \1: \3##" | \
-	sed "s#^\(  [a-zA-Z0-9_-]\+\):#\L\1:#" \
-	>> $(ANSIBLE_SECRETS_PATH) \
-)
-$(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
-im-get-secrets:
-	@cat $(ANSIBLE_SECRETS_PATH)
-im-edit-secrets:
-	@$(DEFAULT_TEXT_EDITOR) PrivateRules.mak
-endif
-
-# plain-text provider
-ifeq ($(ANSIBLE_SECRETS_PROVIDER),plain-text)
-# It should be used to inject an yaml structured set of variables, passed with '--extra-vars'
-# Finally, we can set whatever variable in group_vars/host_vars as:
-# some_var: "{{ some.yaml.path.in.secrets }}
-ifeq ($(ANSIBLE_SECRETS_PATH),)
-	$(error ANSIBLE_SECRETS_PATH is undefined)
-endif
-ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH)
-$(shell chmod 600 $(ANSIBLE_SECRETS_PATH))
-im-get-secrets:
-	@cat $(ANSIBLE_SECRETS_PATH)
-im-edit-secrets:
-	@$(DEFAULT_TEXT_EDITOR) $(ANSIBLE_SECRETS_PATH)
-endif
-
-# ansible-vault provider
-ifeq ($(ANSIBLE_SECRETS_PROVIDER),ansible-vault)
-# This provider uses the ansible vaulted file at $(ANSIBLE_SECRETS_PATH)
-# It is encrypted by the password $(ANSIBLE_SECRETS_PASSWORD) and it is decrypted on usage by ansible
-# It should be used to inject an yaml structured set of variables, passed with '--extra-vars'
-# Finally, we can set whatever variable in group_vars/host_vars as:
-# some_var: "{{ some.yaml.path.in.secrets }}
-ifeq ($(ANSIBLE_SECRETS_PATH),)
-	$(error ANSIBLE_SECRETS_PATH is undefined)
-endif
-ifeq ($(ANSIBLE_SECRETS_PASSWORD),)
-	$(error ANSIBLE_SECRETS_PASSWORD is undefined)
-endif
-ANSIBLE_EXTRA_VARS += --extra-vars @$(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
-$(shell echo "$(ANSIBLE_SECRETS_PASSWORD)" > $(BASE_PATH)/secrets.password && chmod 600 $(BASE_PATH)/secrets.password)
 im-get-secrets:
 	@ansible-vault view $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+
 im-edit-secrets:
+	@echo "*** Warning: This will only update secrets on your local environment ***"
+	@sleep 1
 	@ansible-vault edit $(ANSIBLE_SECRETS_PATH) --vault-password-file $(BASE_PATH)/secrets.password
+
 im-rotate-secrets-password:
 	@echo "Rekeying $(ANSIBLE_SECRETS_PATH)"
 	@echo "New secrets password: "; read -s SECRETS_PASSWORD; \
@@ -140,12 +100,6 @@ im-rotate-secrets-password:
 		echo "$$SECRETS_PASSWORD" > $(BASE_PATH)/new-secrets.password && chmod 600 $(BASE_PATH)/new-secrets.password; \
 		echo "Please update ANSIBLE_SECRETS_PASSWORD to the contents of $(BASE_PATH)/new-secrets.password";
 	@ansible-vault rekey --vault-password-file $(BASE_PATH)/secrets.password --new-vault-password-file $(BASE_PATH)/new-secrets.password
-endif
-
-# hashicorp-vault provider
-ifeq ($(ANSIBLE_SECRETS_PROVIDER),hashicorp-vault)
-	$(error Secrets provider 'hashicorp-vault' is undefined)
-endif
 
 ENV_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	ENVIRONMENT="$(ENVIRONMENT)" \
@@ -169,6 +123,10 @@ ENV_VARS ?= DATACENTRE="$(DATACENTRE)" \
 	TF_VAR_datacentre="$(DATACENTRE)" \
 	TF_VAR_environment="$(ENVIRONMENT)" \
 	TF_VAR_service="$(SERVICE)"
+
+test: im-check-env im-setup-secrets
+	@echo ""
+	
 
 im-vars:  ### Current variables
 	@echo "";

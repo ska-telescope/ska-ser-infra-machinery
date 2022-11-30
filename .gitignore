@@ -15,6 +15,5 @@ PrivateRules*.mak
 **/terraform.tfstate
 **/terraform.tfstate.backup
 **/.terraform.tfstate.lock.info
-*vault.*
-*secret.*
-*secrets.*
+*secrets.yml*
+*.password
