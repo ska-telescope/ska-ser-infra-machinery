@@ -21,6 +21,7 @@ logging_e2e_tests:
     action: start
   allow_failure: true
   artifacts:
+    when: always
     paths:
       - build/
       - tests/e2e/build
