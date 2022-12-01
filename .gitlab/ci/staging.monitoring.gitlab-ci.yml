@@ -65,7 +65,7 @@ staging_monitoring_destroy:
     - .installation_dependencies
   script:
     - make orch generate-inventory
-    - make playbooks monitoring destroy
+    - make orch destroy
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
