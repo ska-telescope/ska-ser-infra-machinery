@@ -45,6 +45,7 @@ staging_monitoring_install:
     - make playbooks common init
     - make playbooks oci docker
     - export KUBECONFIG=$KUBECONFIG_STFC
+    - ENVIRONMENT=production PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring update_targets
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring alertmanager
