@@ -72,5 +72,5 @@ prometheus_scrape_configs:
       - 'ceph-mgr.json'
 
 thanos_query_endpoints:
-- 192.168.99.133:10901 # Staging Prometheus 
-- 192.168.99.251:19090 # store gateway
+- 192.168.99.19:10901 # Staging Prometheus 
+- 192.168.99.201:19090 # store gateway
