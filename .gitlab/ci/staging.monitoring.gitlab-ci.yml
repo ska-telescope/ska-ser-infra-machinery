@@ -82,8 +82,8 @@ staging_monitoring_test:
     - staging_monitoring_install
   script:
     - make orch generate-inventory
-    - make playbooks monitoring test-prometheus
-    - make playbooks monitoring test-thanos
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring test-prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring test-thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
