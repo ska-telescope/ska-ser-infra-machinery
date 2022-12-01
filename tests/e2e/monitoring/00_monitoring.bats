@@ -50,7 +50,7 @@ setup() {
 
 @test 'MONITORING: deploy alertmanager' {
     cd ${BASE_PATH}
-    run make playbooks monitoring grafana PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
+    run make playbooks monitoring alertmanager PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
 }
 
