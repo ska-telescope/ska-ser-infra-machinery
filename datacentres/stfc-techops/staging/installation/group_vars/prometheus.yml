@@ -8,15 +8,14 @@ prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
 prometheus_url: https://monitoring.staging.skao.stfc:9090
 slack_channel: test-dev-prometheus
 slack_channel_user: test-dev-prometheus
-prometheus_datacentre: stfc-staging-ska-monitor
+
+prometheus_datacentre: stfc-ska-staging-monitor
 
 prometheus_server_title: SKA DevOps Staging Prometheus Server
 
 thanos_alt_name: "k8s.stfc.skao.int"
 
 project_name: "SKA-TechOps Staging"
-
-prometheus_datacentre: stfc-ska-staging-monitor
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace
