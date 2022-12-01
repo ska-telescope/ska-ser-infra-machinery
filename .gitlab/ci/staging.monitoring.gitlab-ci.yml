@@ -40,11 +40,11 @@ staging_monitoring_install:
     - .installation_dependencies
   variables:
     REINSTALL: "false"
-    KUBECONFIG: $KUBECONFIG_STFC
   script:
     - make orch generate-inventory
     - make playbooks common init
     - make playbooks oci docker
+    - export KUBECONFIG=$KUBECONFIG_STFC
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring alertmanager
