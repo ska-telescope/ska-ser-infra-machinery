@@ -30,34 +30,62 @@ setup() {
     assert_success
 }
 
-@test 'MONITORING: Prometheus node installs' {
+@test 'MONITORING: prometheus node common init' {
     cd ${BASE_PATH}
     run make playbooks common init PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
+}
+
+@test 'MONITORING: prometheus node oci docker' {
+    cd ${BASE_PATH}
     run make playbooks oci docker PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
+}
+
+@test 'MONITORING: deploy prometheus' {
+    cd ${BASE_PATH}
     run make playbooks monitoring prometheus PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
-    run make playbooks monitoring alertmanager PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
-    assert_success
+}
+
+@test 'MONITORING: deploy alertmanager' {
+    cd ${BASE_PATH}
     run make playbooks monitoring grafana PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
 }
 
-@test 'MONITORING: Thanos node installs' {
+@test 'MONITORING: deploy grafana' {
+    cd ${BASE_PATH}
+    run make playbooks monitoring grafana PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
+    assert_success
+}
+
+@test 'MONITORING: thanos node common init' {
     cd ${BASE_PATH}
     run make playbooks common init PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
+}
+
+@test 'MONITORING: thanos node oci docker' {
+    cd ${BASE_PATH}
     run make playbooks oci docker PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
+}
+
+@test 'MONITORING: deploy thanos' {
+    cd ${BASE_PATH}
     run make playbooks monitoring thanos PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
 }
 
-@test 'MONITORING: e2e tests' {
+@test 'MONITORING: e2e tests prometheus node' {
     cd ${BASE_PATH}
     run make playbooks monitoring test-prometheus PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
     assert_success
+}
+
+@test 'MONITORING: e2e tests thanos node' {
+    cd ${BASE_PATH}
     run make playbooks monitoring test-thanos PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
 }

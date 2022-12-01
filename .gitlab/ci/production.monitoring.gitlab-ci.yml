@@ -43,10 +43,10 @@ production_monitoring_install:
     - staging_monitoring_test
   variables:
     REINSTALL: "false"
+    KUBECONFIG: $KUBECONFIG_STFC
   script:
     - make orch generate-inventory
     - make playbooks oci docker
-    - export KUBECONFIG=$KUBECONFIG_STFC
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring alertmanager
