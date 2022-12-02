@@ -8,3 +8,89 @@ elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWOR
 
 logging_filebeat_oci_engine: podman
 logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"
+
+---
+prometheus_k8s_api_server_addr: "10.200.0.7"
+
+prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int
+
+prometheus_alertmanager_url: http://monitoring.sdhp.skao:9093
+prometheus_url: https://monitoring.sdhp.skao:9090
+slack_channel: dp-platform-alerts
+slack_channel_user: dp-platform-user-alerts
+
+thanos_alt_name: "sdhp.stfc.skao.int"
+
+project_name: "SKA-TechSDH&P"
+
+prometheus_datacentre: stfc-dp-ska-monitor
+
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
+  - job_name: "gitlab_ci_pipelines_exporter"
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:8080"
+
+  - job_name: "node"
+    file_sd_configs:
+    - files:
+      - 'node_exporter.json'
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+
+  - job_name: "gitlab-runner"
+    static_configs:
+    - targets:
+      - "10.200.0.7:9252"
+
+  - job_name: "elasticsearch"
+    file_sd_configs:
+    - files:
+      - 'elasticsearch_exporter.json'
+
+  - job_name: "docker"
+    file_sd_configs:
+    - files:
+      - 'docker_exporter.json'
+
+  - job_name: "kube-proxy"
+    file_sd_configs:
+    - files:
+      - 'kube-proxy.json'
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+
+  - job_name: "kube-state-metrics"
+    static_configs:
+    - targets:
+      - "10.200.0.7:32080"  # load balancer
+    metric_relabel_configs:
+    - action: replace
+      regex: 192\.168\.99\.222:32080
+      replacement: systems-k8s1-loadbalancer:32080
+      source_labels:
+        - instance
+      target_label: instance
+
+  - job_name: "k8stelemetry"
+    static_configs:
+    - targets:
+      - "10.200.0.7:32081"  # load balancer
+    metric_relabel_configs:
+    - action: replace
+      regex: 192\.168\.99\.222:32081
+      replacement: systems-k8s1-loadbalancer:32081
+      source_labels:
+        - instance
+      target_label: instance
+
+  - job_name: "ceph_cluster"
+    file_sd_configs:
+    - files:
+      - 'ceph-mgr.json'
