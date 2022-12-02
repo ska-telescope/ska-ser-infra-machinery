@@ -47,7 +47,7 @@ staging_monitoring_install:
     - export KUBECONFIG=$KUBECONFIG_STFC
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring node-exporter
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring node-exporter
-    - ENVIRONMENT=production PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring update_targets
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring update_targets
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring alertmanager
