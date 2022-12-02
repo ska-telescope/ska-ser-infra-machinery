@@ -1,16 +1,16 @@
 variable "datacentre" {
- type        = string
- description = "The datacentre name"
+  type        = string
+  description = "The datacentre name"
 }
 
 variable "environment" {
- type        = string
- description = "The environment name"
+  type        = string
+  description = "The environment name"
 }
 
 variable "service" {
- type        = string
- description = "The orchestration service name"
+  type        = string
+  description = "The orchestration service name"
 }
 
 variable "openstack" {
