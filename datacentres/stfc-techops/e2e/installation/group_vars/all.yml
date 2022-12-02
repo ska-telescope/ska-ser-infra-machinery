@@ -17,17 +17,14 @@ elasticsearch_clean_data_volume: true
 certificates_recreate: false
 
 prometheus_k8s_api_server_addr: "10.200.0.63"
-
 prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
 prometheus_url: https://monitoring.skao.stfc:9090
 slack_channel: test-dev-prometheus
 slack_channel_user: test-dev-prometheus
-
 prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
-
 project_name: "SKA-TechOps e2e test"
-
 prometheus_datacentre: stfc-e2e-monitor
+grafana_disable_admin_account_creation: false
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -100,4 +97,4 @@ prometheus_scrape_configs:
       - 'ceph-mgr.json'
 
 thanos_query_endpoints: 
-- 192.168.99.19:10901
+- 192.168.99.19:10901 # staging

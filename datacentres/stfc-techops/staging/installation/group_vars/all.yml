@@ -5,21 +5,16 @@ ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=
 nexus: 192.168.99.204  # stfc-techops nexus instance (d627d1db-a8c8-4524-b643-9c3c9c8bf967)
 
 prometheus_k8s_api_server_addr: "10.200.0.63"
-
 prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
-
 prometheus_alertmanager_url: http://monitoring.staging.skao.stfc:9093
 prometheus_url: https://monitoring.staging.skao.stfc:9090
 slack_channel: test-dev-prometheus
 slack_channel_user: test-dev-prometheus
-
 prometheus_datacentre: stfc-ska-staging-monitor
-
 prometheus_server_title: SKA DevOps Staging Prometheus Server
-
 thanos_alt_name: "k8s.stfc.skao.int"
-
 project_name: "SKA-TechOps Staging"
+grafana_disable_admin_account_creation: false
 
 prometheus_static_node_metric_relabel_configs:
   - action: replace

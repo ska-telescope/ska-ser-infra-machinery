@@ -36,9 +36,33 @@ setup() {
     assert_success
 }
 
+@test 'MONITORING: thanos node common init' {
+    cd ${BASE_PATH}
+    run make playbooks common init PLAYBOOKS_HOSTS="${THANOS_NODE}"
+    assert_success
+}
+
 @test 'MONITORING: prometheus node oci docker' {
     cd ${BASE_PATH}
     run make playbooks oci docker PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
+    assert_success
+}
+
+@test 'MONITORING: thanos node oci docker' {
+    cd ${BASE_PATH}
+    run make playbooks oci docker PLAYBOOKS_HOSTS="${THANOS_NODE}"
+    assert_success
+}
+
+@test 'MONITORING: deploy node-exporter on prometheus node' {
+    cd ${BASE_PATH}
+    run make playbooks monitoring node-exporter PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
+    assert_success
+}
+
+@test 'MONITORING: deploy node-exporter on thanos node' {
+    cd ${BASE_PATH}
+    run make playbooks monitoring node-exporter PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
 }
 
@@ -63,18 +87,6 @@ setup() {
 @test 'MONITORING: deploy grafana' {
     cd ${BASE_PATH}
     run make playbooks monitoring grafana PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
-    assert_success
-}
-
-@test 'MONITORING: thanos node common init' {
-    cd ${BASE_PATH}
-    run make playbooks common init PLAYBOOKS_HOSTS="${THANOS_NODE}"
-    assert_success
-}
-
-@test 'MONITORING: thanos node oci docker' {
-    cd ${BASE_PATH}
-    run make playbooks oci docker PLAYBOOKS_HOSTS="${THANOS_NODE}"
     assert_success
 }
 
