@@ -45,15 +45,15 @@ production_monitoring_install:
     REINSTALL: "false"
   script:
     - make orch generate-inventory
+    - make playbooks common init
     - make playbooks oci docker
     - export KUBECONFIG=$KUBECONFIG_STFC
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring node-exporter
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring node-exporter
     - PLAYBOOKS_HOSTS=thanos make playbooks monitoring node-exporter
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring update_targets
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring prometheus
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring grafana
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring alertmanager
-    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring grafana
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring update_targets
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring grafana
+    - PLAYBOOKS_HOSTS=stfc-techops-production-monitoring-prometheus make playbooks monitoring alertmanager
     - PLAYBOOKS_HOSTS=thanos make playbooks monitoring thanos
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
