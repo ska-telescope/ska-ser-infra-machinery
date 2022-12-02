@@ -42,6 +42,12 @@ setup() {
     assert_success
 }
 
+@test 'MONITORING: generate targets for prometheus' {
+    cd ${BASE_PATH}
+    run make playbooks monitoring update_targets PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
+    assert_success
+}
+
 @test 'MONITORING: deploy prometheus' {
     cd ${BASE_PATH}
     run make playbooks monitoring prometheus PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
