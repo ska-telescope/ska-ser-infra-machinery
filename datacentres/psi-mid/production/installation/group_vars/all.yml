@@ -6,7 +6,6 @@ ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=
 elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
 logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"
 
----
 # can only do one cluster - v1
 prometheus_k8s_api_server_addr: "142.73.34.170"
 

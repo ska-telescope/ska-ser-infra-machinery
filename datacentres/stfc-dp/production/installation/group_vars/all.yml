@@ -9,7 +9,6 @@ elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWOR
 logging_filebeat_oci_engine: podman
 logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"
 
----
 prometheus_k8s_api_server_addr: "10.200.0.7"
 
 prometheus_k8s_external_dns_entry: sdhp.stfc.skao.int

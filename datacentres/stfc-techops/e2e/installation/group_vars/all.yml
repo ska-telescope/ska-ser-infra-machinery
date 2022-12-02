@@ -16,8 +16,6 @@ elasticsearch_reinstall: true
 elasticsearch_clean_data_volume: true
 certificates_recreate: false
 
----
-
 prometheus_k8s_api_server_addr: "10.200.0.63"
 
 prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
