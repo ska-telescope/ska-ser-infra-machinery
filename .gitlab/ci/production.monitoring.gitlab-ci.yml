@@ -47,6 +47,9 @@ production_monitoring_install:
     - make orch generate-inventory
     - make playbooks oci docker
     - export KUBECONFIG=$KUBECONFIG_STFC
+    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring node-exporter
+    - PLAYBOOKS_HOSTS=thanos make playbooks monitoring node-exporter
+    - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring update_targets
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring prometheus
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring grafana
     - PLAYBOOKS_HOSTS=prometheus make playbooks monitoring alertmanager
