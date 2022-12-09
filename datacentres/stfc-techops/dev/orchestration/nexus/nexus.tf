@@ -21,5 +21,6 @@ module "nexus" {
         size        = 500
       }
     ]
+    applications = ["nexus"]
   }
 }

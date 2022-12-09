@@ -1,0 +1,94 @@
+.staging_monitoring:
+  extends: .stfc_techops
+  variables:
+    ENVIRONMENT: staging
+    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-staging.pem"
+    SERVICE: monitoring
+    PLAYBOOKS_HOSTS: "stfc-techops-staging-monitoring-prometheus,stfc-techops-staging-monitoring-thanos"
+  environment:
+    name: stfc-techops-staging-monitoring
+    deployment_tier: staging
+
+staging_monitoring_plan:
+  extends:
+    - .staging_monitoring
+    - .orchestration_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_orchestration"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_monitoring_apply:
+  extends:
+    - .staging_monitoring
+    - .orchestration_apply
+  needs:
+    - staging_monitoring_plan
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_orchestration"
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+
+staging_monitoring_install:
+  stage: staging_install
+  extends:
+    - .staging_monitoring
+    - .installation_dependencies
+  variables:
+    REINSTALL: "false"
+  script:
+    - make orch generate-inventory
+    - make playbooks common init
+    - make playbooks oci docker
+    - export KUBECONFIG=$KUBECONFIG_STFC
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring node-exporter
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring node-exporter
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring update_targets
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring alertmanager
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring grafana
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring thanos
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_monitoring_destroy:
+  stage: staging_install
+  extends:
+    - .staging_monitoring
+    - .installation_dependencies
+  script:
+    - make orch generate-inventory
+    - make orch destroy
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: manual
+      allow_failure: true
+
+staging_monitoring_test:
+  stage: staging_test
+  extends:
+    - .staging_monitoring
+    - .installation_dependencies
+  needs:
+    - staging_monitoring_install
+  script:
+    - make orch generate-inventory
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-prometheus make playbooks monitoring test-prometheus
+    - PLAYBOOKS_HOSTS=stfc-techops-staging-monitoring-thanos make playbooks monitoring test-thanos
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "staging_monitoring_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "production_monitoring_install"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success

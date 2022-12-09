@@ -6,7 +6,7 @@ module "prometheus" {
   }
 
   configuration = {
-    name         = join("-", [var.datacentre, var.environment, var.service, "prometheus"])
+    name         = join("-", [var.datacentre, var.environment, var.service, "prometheus", var.ci_pipeline_id])
     flavor       = "l3.micro"
     image        = "ubuntu-2004-lts"
     applications = ["prometheus", "thanos_sidecar", "grafana", "node_exporter"]
@@ -19,7 +19,7 @@ module "prometheus" {
       {
         mount_point = "/var/lib/prometheus"
         name        = "prometheus_wal"
-        size        = 70
+        size        = 10
       }
     ]
   }
