@@ -19,7 +19,7 @@ module "prometheus" {
       {
         mount_point = "/var/lib/prometheus"
         name        = "prometheus_wal"
-        size        = 10
+        size        = 70
       }
     ]
   }
