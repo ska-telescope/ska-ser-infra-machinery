@@ -3,15 +3,17 @@ debug: false
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
 
+elasticsearch_dns_name: logging.stfc.skao.int
 elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
 logging_filebeat_elasticsearch_password: "{{ elasticsearch_password }}"
+logging_filebeat_oci_engine: docker
+logging_filebeat_elasticsearch_address: logging.stfc.skao.int
 
 # can only do one cluster - v1
 prometheus_k8s_api_server_addr: "142.73.34.170"
 
 prometheu_slocaluser: svc_skadev_ansible
 monitoring_localgroup: admin
-ca_host: terminus
 
 prometheus_alertmanager_url: http://142.73.34.170:9093
 prometheus_url: https://142.73.34.170:9090
