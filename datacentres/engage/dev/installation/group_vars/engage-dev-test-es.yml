@@ -1,7 +1,7 @@
-elasticsearch_cluster_name: generic-test-es
+elasticsearch_cluster_name: engage-dev-test-es
 elasticsearch_memory: 8G
 elasticsearch_java_mem: 4g
-elasticsearch_dns_name: generic-test-es-loadbalancer
+elasticsearch_dns_name: engage-dev-test-es-loadbalancer
 elasticsearch_reinstall: true
 
 # Set playbook variables to variables coming from the vault
