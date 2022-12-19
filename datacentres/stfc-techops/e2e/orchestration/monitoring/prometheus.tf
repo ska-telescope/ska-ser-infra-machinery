@@ -6,7 +6,7 @@ module "prometheus" {
   }
 
   configuration = {
-    name         = join("-", [var.datacentre, var.environment, var.service, "prometheus", var.ci_pipeline_id])
+    name         = join("-", [var.datacentre, var.environment, var.service, var.ci_pipeline_id, "prometheus"])
     flavor       = "l3.micro"
     image        = "ubuntu-2004-lts"
     applications = ["prometheus", "thanos_sidecar", "grafana", "node_exporter"]
