@@ -4,6 +4,7 @@ ansible_ssh_timeout: 60
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
 nexus: 192.168.99.204  # stfc-techops nexus instance (d627d1db-a8c8-4524-b643-9c3c9c8bf967)
+certificates_dir: "/etc/pki/tls/private"
 
 elasticsearch_cluster_name: "{{ ska_datacentre }}-{{ ska_environment }}-{{ ska_service }}-{{ ska_ci_pipeline_id }}"
 elasticsearch_dns_name: "{{ elasticsearch_cluster_name }}-loadbalancer"
@@ -16,11 +17,85 @@ elasticsearch_reinstall: true
 elasticsearch_clean_data_volume: true
 certificates_recreate: false
 
-# Variables required for the tests
-elasticsearch_api_port: 9200
-elasticsearch_transport_port: 9300
-elasticsearch_nodes_endpoint: "/_cat/nodes?h=name"
-elasticsearch_doc_endpoint: "/_doc/"
-elasticsearch_doc_count_endpoint: "/_count"
-elasticsearch_doc_delete_endpoint: "/_delete_by_query"
-certificates_dir: "/etc/pki/tls/private"
+prometheus_k8s_api_server_addr: "10.200.0.63"
+prometheus_alertmanager_url: http://monitoring.skao.stfc:9093
+prometheus_url: https://monitoring.skao.stfc:9090
+slack_channel: test-dev-prometheus
+slack_channel_user: test-dev-prometheus
+prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
+project_name: "SKA-TechOps e2e test"
+prometheus_datacentre: stfc-e2e-monitor
+grafana_disable_admin_account_creation: false
+
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
+
+  - job_name: "gitlab_ci_pipelines_exporter"
+    static_configs:
+      - targets:
+          - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:8080"
+
+  - job_name: "node"
+    file_sd_configs:
+    - files:
+      - 'node_exporter.json'
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+
+  - job_name: "gitlab-runner"
+    static_configs:
+    - targets:
+      - "10.200.0.63:9252"
+
+  - job_name: "elasticsearch"
+    file_sd_configs:
+    - files:
+      - 'elasticsearch_exporter.json'
+
+  - job_name: "docker"
+    file_sd_configs:
+    - files:
+      - 'docker_exporter.json'
+
+  - job_name: "kube-proxy"
+    file_sd_configs:
+    - files:
+      - 'kube-proxy.json'
+    metric_relabel_configs: "{{ prometheus_elasticsearch_instance_add_cluster_label + prometheus_node_metric_relabel_configs }}"
+
+  - job_name: "kube-state-metrics"
+    static_configs:
+    - targets:
+      - "10.200.0.63:32080"  # load balancer
+    metric_relabel_configs:
+    - action: replace
+      regex: 192\.168\.99\.222:32080
+      replacement: systems-k8s1-loadbalancer:32080
+      source_labels:
+        - instance
+      target_label: instance
+
+  - job_name: "k8stelemetry"
+    static_configs:
+    - targets:
+      - "10.200.0.63:32081"  # load balancer
+    metric_relabel_configs:
+    - action: replace
+      regex: 192\.168\.99\.222:32081
+      replacement: systems-k8s1-loadbalancer:32081
+      source_labels:
+        - instance
+      target_label: instance
+
+  - job_name: "ceph_cluster"
+    file_sd_configs:
+    - files:
+      - 'ceph-mgr.json'
+
+thanos_query_endpoints: 
+- 192.168.99.19:10901 # staging

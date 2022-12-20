@@ -10,12 +10,13 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: 17117a38-7b0a-4781-8
@@ -35,8 +36,9 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
-          common_single_host_mode: 'false'
+          common_single_host_mode: false
           monitor_interface: ens3
           radosgw_interface: ens3
         sdhp-storage-master-1:
@@ -45,8 +47,9 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
-          common_single_host_mode: 'false'
+          common_single_host_mode: false
           monitor_interface: ens3
           radosgw_interface: ens3
         sdhp-storage-master-2:
@@ -55,8 +58,9 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
-          common_single_host_mode: 'false'
+          common_single_host_mode: false
           monitor_interface: ens3
           radosgw_interface: ens3
     cluster:
@@ -72,12 +76,13 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'true'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'true'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: true
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: true
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: 1e5a5ae1-fec5-4f21-a
               docker_vol_diskid: c5658d75-d62f-4c7e-9
@@ -97,12 +102,13 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'true'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'true'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: true
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: true
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: 313e4a22-f377-4692-a
               docker_vol_diskid: 7fbc5a0c-5b42-43d2-9
@@ -122,17 +128,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -147,17 +154,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -172,17 +180,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -199,12 +208,13 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
@@ -224,17 +234,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -249,17 +260,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -274,17 +286,18 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -299,19 +312,19 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -326,19 +339,19 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -353,19 +366,19 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -380,19 +393,19 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -407,19 +420,19 @@ all:
               ansible_python_interpreter: python3
               ansible_user: ubuntu
               ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: 'false'
-              calc_create_data_vol: 'false'
-              calc_mount_data2_vol: 'false'
-              calc_mount_data_vol: 'false'
+              ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+              calc_create_data2_vol: false
+              calc_create_data_vol: false
+              calc_mount_data2_vol: false
+              calc_mount_data_vol: false
               ceph_no_volumes: 1
-              common_single_host_mode: 'false'
+              common_single_host_mode: false
               dashboard_admin_password: ''
               data2_vol_diskid: ''
               data_vol_diskid: ''
               docker_vol_diskid: ''
-              grafana_admin_password: ''
-              log_docker: 'true'
-              log_kubernetes: 'true'
+              log_docker: true
+              log_kubernetes: true
               monitor_interface: ens3
               radosgw_interface: ens3
               sdhp-storage-master-0 ceph_data_device1: /dev/disk/by-id/virtio-8c2b2759-4632-4d38-b
@@ -745,10 +758,10 @@ all:
           ansible_python_interpreter: python3
           ansible_user: ubuntu
           ansible_ssh_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
+          ansible_scp_extra_args: -F ../datacentres/stfc-dp/production/installation/no_terraform.ssh.config
           ceph_no_volumes: 1
-          common_single_host_mode: 'false'
+          common_single_host_mode: false
           dashboard_admin_password: ''
-          grafana_admin_password: ''
           monitor_interface: ens3
           radosgw_interface: ens3
     osds:

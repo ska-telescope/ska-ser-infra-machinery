@@ -1,0 +1,5 @@
+all:
+  children:
+    reverse_proxy:
+      hosts:
+        terminus: null

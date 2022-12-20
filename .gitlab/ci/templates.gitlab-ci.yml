@@ -1,0 +1,61 @@
+.install_terraform:
+  - apt update
+  - wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O terraform.zip
+  - unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform
+
+.install_python_dependencies:
+  - poetry config virtualenvs.create false
+  - poetry install
+
+.install_secrets:
+  - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/load-secure-files/-/raw/main/installer" | bash
+  - for SSH_KEY in $(echo $REQUIRED_SSH_KEYS | tr -d ' ' | tr ',' '\n'); do cp .secure_files/$SSH_KEY resources/keys/$SSH_KEY; done
+
+.installation_dependencies:
+  variables:
+    TF_HTTP_USERNAME: $TF_HTTP_USERNAME
+    TF_HTTP_PASSWORD: $TF_HTTP_PASSWORD
+  before_script:
+    - !reference [.install_python_dependencies]
+    - !reference [.install_secrets]
+
+.orchestration_dependencies:
+  variables:
+    TF_HTTP_USERNAME: gitlab-ci-token
+    TF_HTTP_PASSWORD: $CI_JOB_TOKEN
+  before_script:
+    - '[ -f .make/terraform.mk ] || (echo "File terraform.mk not included in Makefile"; exit 1;)'
+    - !reference [.install_terraform]
+    - !reference [.install_python_dependencies]
+    - !reference [.install_secrets]
+  script: |
+    ORCHESTRATION_DIRS=$(find $(pwd)/datacentres/$DATACENTRE/$ENVIRONMENT -name 'terraform.tf' | grep -v ".make" | grep -v "ska-ser-orchestration" | sed 's/.terraform.tf//' | sort | uniq)
+    for DIR in $(echo $ORCHESTRATION_DIRS); do
+      cp .secure_files/$DATACENTRE.clouds.yaml $DIR/clouds.yaml
+    done
+
+.orchestration_plan:
+  stage: plan
+  extends:
+    - .orchestration_dependencies
+  variables:
+    TF_ARGUMENTS: "-input=false"
+  script:
+    - !reference [.orchestration_dependencies, script]
+    - make orch clean
+    - make orch init
+    - make orch plan
+
+# For safety, we will keep apply manual, until we come up with a solution
+# that avoids nefarious operations
+.orchestration_apply:
+  stage: apply
+  extends:
+    - .orchestration_dependencies
+  variables:
+    TF_ARGUMENTS: "-input=false"
+  script:
+    - !reference [.orchestration_dependencies, script]
+    - make orch clean
+    - make orch init
+    - make orch apply TF_AUTO_APPROVE="true"

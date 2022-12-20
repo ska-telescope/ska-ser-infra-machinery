@@ -14,3 +14,12 @@ elasticsearch_api_keys:
 logging_filebeat_elasticsearch_address: generic-test-es-loadbalancer
 logging_filebeat_elasticsearch_user: "elastic"
 logging_filebeat_elasticsearch_password: "{{ lookup('ansible.builtin.env', 'ELASTICSEARCH_PASSWORD', default=secrets['elasticsearch_password']) | mandatory }}"
+
+
+prometheus_url: https://alerts.engageska-portugal.pt
+prometheus_alertmanager_url: http://192.168.93.26:9093
+prometheus_datacentre: engage-ska-monitor
+prometheus_k8s_api_server_addr: "192.168.93.102"
+
+slack_channel: engage-alerts
+slack_channel_user: engage-user-alerts

@@ -64,7 +64,9 @@ setup() {
     export TF_ARGUMENTS="-input=false -no-color"
     export TF_AUTO_APPROVE=true
     run make orch apply
-    cp ${TF_ROOT_DIR}/terraform.tfstate ${TEST_STATE_JSON}
+    if [ -f ${TF_ROOT_DIR}/terraform.tfstate ]; then
+        cp ${TF_ROOT_DIR}/terraform.tfstate ${TEST_STATE_JSON}
+    fi
     assert_success
 }
 
