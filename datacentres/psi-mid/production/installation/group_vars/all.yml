@@ -19,7 +19,6 @@ prometheus_alertmanager_url: http://142.73.34.170:9093
 prometheus_url: https://142.73.34.170:9090
 slack_channel: psi-mid-alerts
 slack_channel_user: psi-mid-user-alerts
-prometheus_retention_time: "1d"
 
 prometheus_k8s_external_dns_entry: 
 
