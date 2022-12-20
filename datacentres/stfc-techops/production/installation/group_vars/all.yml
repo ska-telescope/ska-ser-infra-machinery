@@ -115,7 +115,9 @@ prometheus_scrape_configs:
           # k8s load balancer
           - "10.200.0.63"
 
+grafana_disable_admin_account_creation: true
+grafana_datasource_url: https://192.168.99.31:9095
 thanos_query_endpoints:
-- 192.168.99.153:10901
+- 192.168.99.88:10901 # prometheus sidecar
 - 192.168.99.31:19090 # store gateway
 - dns+sdhp.stfc.skao.int:10901 # jupiter sidecar exposed

@@ -1,0 +1,78 @@
+all:
+  children: {}
+  hosts:
+    stfc-techops-production-monitoring-prometheus:
+      ansible_host: stfc-techops-production-monitoring-prometheus
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.88
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes:
+        node_exporter: 192.168.99.88:9100
+      services:
+        alertmanager: 192.168.99.88:9093
+        grafana: 192.168.99.88:3000
+        node_exporter: 192.168.99.88:9100
+        prometheus: 192.168.99.88:9090
+        thanos_sidecar: 192.168.99.88:10901
+      volumes:
+      - device: /dev/vdc
+        file_system: ext4
+        id: 04edc437-f7b8-4162-948e-ec6b07ee0409
+        mount_point: /var/lib/containers
+        name: stfc-techops-production-monitoring-prometheus-containers-vol
+      - device: /dev/vdb
+        file_system: ext4
+        id: efce9a59-e5c5-4dec-a214-7032595903b9
+        mount_point: /var/lib/prometheus
+        name: stfc-techops-production-monitoring-prometheus-prometheus_wal-vol
+    thanos:
+      ansible_host: thanos
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.31
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: {}
+      scrapes:
+        node_exporter: 192.168.99.31:9100
+      services:
+        node_exporter: 192.168.99.31:9100
+        thanos_compactor: 192.168.99.31:19091
+        thanos_frontend: 192.168.99.31:9095
+        thanos_querier: 192.168.99.31:9091
+        thanos_store: 192.168.99.31:19090
+      volumes:
+      - device: /dev/vdc
+        file_system: ext4
+        id: 678d1d5e-e2c2-48af-8aee-7961d2814f51
+        mount_point: /var/lib/containers
+        name: thanos-containers-vol
+      - device: /dev/vdd
+        file_system: ext4
+        id: 655953c4-fd08-4636-81d9-0905ae6dee0c
+        mount_point: /etc/thanos/thanos-compact
+        name: thanos-thanos_compact-vol
+      - device: /dev/vdb
+        file_system: ext4
+        id: fc44d957-4bda-4da4-929a-6468e44c097e
+        mount_point: /etc/thanos/data/dir
+        name: thanos-thanos_data-vol

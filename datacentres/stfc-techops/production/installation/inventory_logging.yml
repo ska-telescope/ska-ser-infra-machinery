@@ -1,0 +1,354 @@
+
+all:
+  children:
+    ska-techops-logging-central-prod: null
+  hosts: {}
+ska-techops-logging-central-prod:
+  children:
+    ska-techops-logging-central-prod-data: null
+    ska-techops-logging-central-prod-kibana: null
+    ska-techops-logging-central-prod-master: null
+  hosts:
+    ska-techops-logging-central-prod-loadbalancer:
+      ansible_host: ska-techops-logging-central-prod-loadbalancer
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: 130.246.214.33
+      ip: 192.168.99.202
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: loadbalancer
+      scrapes:
+        node_exporter: 192.168.99.202:9100
+      services:
+        elasticsearch: 192.168.99.202:9200
+        haproxy: 192.168.99.202:9090
+        node_exporter: 192.168.99.202:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 71cba835-0646-4d1b-b437-106b34fb434d
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-loadbalancer-docker-vol
+ska-techops-logging-central-prod-data:
+  hosts:
+    ska-techops-logging-central-prod-data-i00:
+      ansible_host: ska-techops-logging-central-prod-data-i00
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.45
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: data
+      scrapes:
+        elasticsearch_exporter: 192.168.99.45:9114
+        node_exporter: 192.168.99.45:9100
+      services:
+        elasticsearch: 192.168.99.45:9300
+        elasticsearch_exporter: 192.168.99.45:9114
+        node_exporter: 192.168.99.45:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: ceadf3b5-c756-4329-868e-a97faf47f78a
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-data-i00-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: e2db12a0-cb3a-4d30-90ce-7a8df3a5b51c
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-data-i00-docker-vol
+    ska-techops-logging-central-prod-data-i01:
+      ansible_host: ska-techops-logging-central-prod-data-i01
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.18
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: data
+      scrapes:
+        elasticsearch_exporter: 192.168.99.18:9114
+        node_exporter: 192.168.99.18:9100
+      services:
+        elasticsearch: 192.168.99.18:9300
+        elasticsearch_exporter: 192.168.99.18:9114
+        node_exporter: 192.168.99.18:9100
+      volumes:
+      - device: /dev/vdc
+        file_system: ext4
+        id: 647c674a-c177-4c02-ac25-1b52f586ad6c
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-data-i01-data-vol
+      - device: /dev/vdb
+        file_system: ext4
+        id: 59424c5f-0ebd-4adf-a8ec-1102793cafdf
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-data-i01-docker-vol
+    ska-techops-logging-central-prod-data-i02:
+      ansible_host: ska-techops-logging-central-prod-data-i02
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.57
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: data
+      scrapes:
+        elasticsearch_exporter: 192.168.99.57:9114
+        node_exporter: 192.168.99.57:9100
+      services:
+        elasticsearch: 192.168.99.57:9300
+        elasticsearch_exporter: 192.168.99.57:9114
+        node_exporter: 192.168.99.57:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 06f2b093-4f36-4155-90ad-6c8a2bc0c698
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-data-i02-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 3fec99d2-3f15-43f2-a34e-5bd037fbcf7e
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-data-i02-docker-vol
+    ska-techops-logging-central-prod-data-i03:
+      ansible_host: ska-techops-logging-central-prod-data-i03
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.254
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: data
+      scrapes:
+        elasticsearch_exporter: 192.168.99.254:9114
+        node_exporter: 192.168.99.254:9100
+      services:
+        elasticsearch: 192.168.99.254:9300
+        elasticsearch_exporter: 192.168.99.254:9114
+        node_exporter: 192.168.99.254:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 61acb15d-f433-4002-aea8-60961ba83edc
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-data-i03-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 661d9fe2-3fd9-4bda-8764-73b850e8b598
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-data-i03-docker-vol
+    ska-techops-logging-central-prod-data-i04:
+      ansible_host: ska-techops-logging-central-prod-data-i04
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.220
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: data
+      scrapes:
+        elasticsearch_exporter: 192.168.99.220:9114
+        node_exporter: 192.168.99.220:9100
+      services:
+        elasticsearch: 192.168.99.220:9300
+        elasticsearch_exporter: 192.168.99.220:9114
+        node_exporter: 192.168.99.220:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 94122235-1d22-4956-83f1-afe9c7e23643
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-data-i04-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: b3ab4b26-910b-4fae-9aa4-d4ae70d3474e
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-data-i04-docker-vol
+ska-techops-logging-central-prod-kibana:
+  hosts:
+    ska-techops-logging-central-prod-kibana-i00:
+      ansible_host: ska-techops-logging-central-prod-kibana-i00
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.191
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: kibana
+      scrapes:
+        node_exporter: 192.168.99.191:9100
+      services:
+        kibana: 192.168.99.191:5601
+        node_exporter: 192.168.99.191:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: e5effab5-b308-4ee3-98d7-b092b60a4968
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-kibana-i00-docker-vol
+ska-techops-logging-central-prod-master:
+  hosts:
+    ska-techops-logging-central-prod-master-i00:
+      ansible_host: ska-techops-logging-central-prod-master-i00
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.51
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: master
+      scrapes:
+        elasticsearch_exporter: 192.168.99.51:9114
+        node_exporter: 192.168.99.51:9100
+      services:
+        elasticsearch: 192.168.99.51:9300
+        elasticsearch_exporter: 192.168.99.51:9114
+        node_exporter: 192.168.99.51:9100
+      volumes:
+      - device: /dev/vdc
+        file_system: ext4
+        id: 8e78624c-89ef-495e-b734-87c1e82f9113
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-master-i00-data-vol
+      - device: /dev/vdb
+        file_system: ext4
+        id: 6317046b-9eae-42be-895c-4b956fe8be87
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-master-i00-docker-vol
+    ska-techops-logging-central-prod-master-i01:
+      ansible_host: ska-techops-logging-central-prod-master-i01
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.63
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: master
+      scrapes:
+        elasticsearch_exporter: 192.168.99.63:9114
+        node_exporter: 192.168.99.63:9100
+      services:
+        elasticsearch: 192.168.99.63:9300
+        elasticsearch_exporter: 192.168.99.63:9114
+        node_exporter: 192.168.99.63:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: d49bbc74-d54b-4e5e-9af2-1a70229969a5
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-master-i01-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 9ab40493-82ce-4280-9f97-81fb11f7581b
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-master-i01-docker-vol
+    ska-techops-logging-central-prod-master-i02:
+      ansible_host: ska-techops-logging-central-prod-master-i02
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.139
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata:
+        roles: master
+      scrapes:
+        elasticsearch_exporter: 192.168.99.139:9114
+        node_exporter: 192.168.99.139:9100
+      services:
+        elasticsearch: 192.168.99.139:9300
+        elasticsearch_exporter: 192.168.99.139:9114
+        node_exporter: 192.168.99.139:9100
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: 79f265f2-6b6c-4267-adf3-82c4c071b620
+        mount_point: /var/lib/stack-data
+        name: ska-techops-logging-central-prod-master-i02-data-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 9abc2a3c-75c4-4150-863c-e7970ed20827
+        mount_point: /var/lib/docker
+        name: ska-techops-logging-central-prod-master-i02-docker-vol

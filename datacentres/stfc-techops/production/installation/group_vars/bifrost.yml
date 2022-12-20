@@ -15,7 +15,7 @@ dns_server_addresses:
 - name: gateway.skao.stfc
   address: 192.168.99.194
 - name: monitoring.skao.stfc
-  address: 192.168.99.154
+  address: 192.168.99.88
 - name: logging.skao.stfc
   address: 192.168.99.131
 - name: nexus.skao.stfc
