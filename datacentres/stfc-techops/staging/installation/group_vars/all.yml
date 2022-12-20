@@ -73,6 +73,12 @@ prometheus_scrape_configs:
     - files:
       - 'ceph-mgr.json'
 
+  - job_name: "ska-tango-operator"
+    static_configs:
+      - targets:
+          # k8s load balancer
+          - "10.200.0.63/ska-tango-operator-system/metrics"
+
 thanos_query_endpoints:
 - 192.168.99.19:10901 # Staging Prometheus 
 - 192.168.99.201:19090 # store gateway
