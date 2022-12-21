@@ -15,6 +15,18 @@ nexus_engage_proxy_port: 9083
 nexus_central_proxy_port: 9084
 nexus_gitlab_proxy_port: 9085
 
+nexus_vault_admin_password: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_ADMIN_PASSWORD', default=secrets['nexus_vault_admin_password']) | mandatory }}"
+nexus_vault_user_password_gitlab: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_GITLAB', default=secrets['nexus_vault_user_password_gitlab']) | mandatory }}"
+nexus_vault_user_password_publisher: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_PUBLISHER', default=secrets['nexus_vault_user_password_publisher']) | mandatory }}"
+nexus_vault_email_server_password: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_EMAIL_SERVER_PASSWORD', default=secrets['nexus_vault_email_server_password']) | mandatory }}"
+nexus_vault_user_password_quarantiner: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_QUARANTINER', default=secrets['nexus_vault_user_password_quarantiner']) | mandatory }}"
+nexus_vault_ldap_conn_passwd: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_LDAP_CONN_PASSWD', default=secrets['nexus_vault_ldap_conn_passwd']) | mandatory }}"
+nexus_webhook_secret_key: "{{ lookup('ansible.builtin.env', 'NEXUS_WEBHOOK_SECRET_KEY', default=secrets['nexus_webhook_secret_key']) | mandatory }}"
+nexus_apt_bionic_internal_key: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_INTERNAL_KEY', default=secrets['nexus_apt_bionic_internal_key']) | mandatory }}"
+nexus_apt_bionic_internal_key_passphrase: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_INTERNAL_KEY_PASSPHRASE', default=secrets['nexus_apt_bionic_internal_key_passphrase']) | mandatory }}"
+nexus_apt_bionic_quarentine_key: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_QUARENTINE_KEY', default=secrets['nexus_apt_bionic_quarentine_key']) | mandatory }}"
+nexus_apt_bionic_quarentine_key_passphrase: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_QUARENTINE_KEY_PASSPHRASE', default=secrets['nexus_apt_bionic_quarentine_key_passphrase']) | mandatory }}"
+
 nexus_privileges:
   - name: ska-all-repos-read
     description: 'Read & Browse access to all repos'

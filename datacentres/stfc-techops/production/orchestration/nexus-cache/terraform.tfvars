@@ -6,7 +6,7 @@ openstack = {
 
 # OpenStack Instance defaults for the given OpenStack Cloud
 defaults = {
-  flavor              = "c3.medium"
+  flavor              = "c3.large"
   image               = "ubuntu-focal-20.04-nogui"
   availability_zone   = "ceph"
   network             = "SKA-TechOps-Private"

@@ -1,5 +1,31 @@
 all:
   children:
+    iac_gitlab_runner:
+      hosts:
+        ska-techops-iac-gitlab-runner: null
     reverse_proxy:
       hosts:
         terminus: null
+    nexus_cache:
+      hosts:
+        stfc-techops-production-nexus-cache: null
+    elasticsearch_master:
+      children:
+        ska-techops-logging-central-prod-master: null
+    elasticsearch_data:
+      children:
+        ska-techops-logging-central-prod-data: null
+    elasticsearch:
+      children:
+        elasticsearch_master: null
+        elasticsearch_data: null
+    kibana:
+      children:
+        ska-techops-logging-central-prod-kibana: null
+    elastic:
+      children:
+        elasticsearch: null
+        kibana: null
+    elasticsearch_lb:
+      hosts:
+        ska-techops-logging-central-prod-loadbalancer: null

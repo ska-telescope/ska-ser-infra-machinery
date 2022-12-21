@@ -6,10 +6,10 @@ module "nexus" {
   }
 
   configuration = {
-    applications = ["nexus"]
-    name         = "nexus-cache"
+    name         = join("-", [var.datacentre, var.environment, var.service])
     flavor       = "c3.medium"
     image        = "ubuntu-jammy-22.04"
+    applications = ["nexus"]
     volumes = [
       {
         mount_point = "/var/lib/docker"
