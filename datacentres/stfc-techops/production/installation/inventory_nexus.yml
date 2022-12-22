@@ -1,0 +1,34 @@
+all:
+  children: {}
+  hosts:
+    stfc-techops-production-nexus-cache:
+      ansible_host: stfc-techops-production-nexus-cache
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 192.168.99.80
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services:
+        nexus_docker_ingress: 192.168.99.80:9085
+        nexus_http_ingress: 192.168.99.80:8081
+      volumes:
+      - device: /dev/vdb
+        file_system: ext4
+        id: a91a18a5-004f-4d7f-89a1-1ba9021ffb5e
+        mount_point: /var/lib/docker
+        name: stfc-techops-production-nexus-cache-docker-vol
+      - device: /dev/vdc
+        file_system: ext4
+        id: 621563e7-80cc-474a-a68e-f4c9f39b531c
+        mount_point: /var/lib/nexus
+        name: stfc-techops-production-nexus-cache-nexus-data-vol
