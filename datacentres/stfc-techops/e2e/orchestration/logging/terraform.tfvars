@@ -11,6 +11,7 @@ defaults = {
   availability_zone   = "ceph"
   network             = "SKA-TechOps-Private"
   keypair             = "ska-e2e-test"
+  jump_host           = "01a68010-cc61-4396-9690-cb7263d2412d"
   floating_ip_network = "External"
   vpn_cidr_blocks = [
     "10.8.0.0/24",    # OpenVPN Server 1
