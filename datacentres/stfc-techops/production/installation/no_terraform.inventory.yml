@@ -841,34 +841,6 @@ all:
         systems_k8s1_worker_9_systems-k8s1-worker-9:
           hosts:
             systems-k8s1-worker-9: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer:
-              ansible_host: 192.168.99.127
-              ip: 192.168.99.127
-              ansible_python_interpreter: python3
-              ansible_user: ubuntu
-              ansible_ssh_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
-              ansible_scp_extra_args: -F ../datacentres/stfc-techops/production/installation/no_terraform.ssh.config
-              calc_create_data2_vol: false
-              calc_create_data_vol: true
-              calc_mount_data2_vol: false
-              calc_mount_data_vol: true
-              ceph_no_volumes: 1
-              common_single_host_mode: false
-              dashboard_admin_password: ''
-              data2_vol_diskid: ''
-              data_vol_diskid: da9526df-646a-4c88-9
-              docker_vol_diskid: e51def7d-b3c3-4666-9
-              log_docker: true
-              monitor_interface: ens3
-              radosgw_interface: ens3
-              systems-storage1-master-0 ceph_data_device1: /dev/disk/by-id/virtio-072591b2-989f-4abc-b
-                ceph_wal_device1=/dev/disk/by-id/virtio-eb74a2bc-b2ac-4705-b
-              systems-storage1-master-1 ceph_data_device1: /dev/disk/by-id/virtio-3602a383-5c7b-4443-b
-                ceph_wal_device1=/dev/disk/by-id/virtio-aacbb133-422b-4dc6-b
-              systems-storage1-master-2 ceph_data_device1: /dev/disk/by-id/virtio-446cafa0-8029-4afb-8
-                ceph_wal_device1=/dev/disk/by-id/virtio-df66fb37-bb93-4e07-a
         systems_monitoring1_master:
           hosts:
             systems-monitoring1-master-0: {}
@@ -906,9 +878,6 @@ all:
         systems_k8s1_systems-k8s1-loadbalancer:
           hosts:
             systems-k8s1-loadbalancer: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
     cluster_logging:
       children:
         influxdb_influxdb:
@@ -1011,9 +980,6 @@ all:
         systems_k8s1_worker_9_systems-k8s1-worker-9:
           hosts:
             systems-k8s1-worker-9: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
         systems_monitoring1_master:
           hosts:
             systems-monitoring1-master-0: {}
@@ -1158,9 +1124,6 @@ all:
         systems_k8s1_worker_9_systems-k8s1-worker-9:
           hosts:
             systems-k8s1-worker-9: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
         systems_monitoring1_master:
           hosts:
             systems-monitoring1-master-0: {}
@@ -1340,9 +1303,6 @@ all:
         systems_k8s1_systems-k8s1-loadbalancer:
           hosts:
             systems-k8s1-loadbalancer: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
     logging:
       children:
         influxdb_influxdb:
@@ -1445,9 +1405,6 @@ all:
         systems_k8s1_worker_9_systems-k8s1-worker-9:
           hosts:
             systems-k8s1-worker-9: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
         systems_monitoring1_master:
           hosts:
             systems-monitoring1-master-0: {}
@@ -1614,9 +1571,6 @@ all:
         systems_k8s1_worker_9_systems-k8s1-worker-9:
           hosts:
             systems-k8s1-worker-9: {}
-        systems_logging1_systems-logging1-loadbalancer:
-          hosts:
-            systems-logging1-loadbalancer: {}
         systems_monitoring1_master:
           hosts:
             systems-monitoring1-master-0: {}
