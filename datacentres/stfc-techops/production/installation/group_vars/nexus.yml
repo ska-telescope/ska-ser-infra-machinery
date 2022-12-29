@@ -2,12 +2,10 @@
 ############
 nexus_upgrade: false
 
-# Pin versions for production
-nexus_docker_deb_version: 5:20.10.21~3-0~ubuntu-jammy
-nexus_containerd_version: 1.6.9-1
 nexus_version: '3.42.0-01'
 
 nexus_public_hostname: 'nexus.skao.stfc'
+nexus_default_port: 8881
 nexus_docker_hosted_port: 9080
 nexus_docker_proxy_port: 9081
 nexus_docker_group_port: 9082
@@ -15,17 +13,26 @@ nexus_engage_proxy_port: 9083
 nexus_central_proxy_port: 9084
 nexus_gitlab_proxy_port: 9085
 
+# User setup
 nexus_vault_admin_password: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_ADMIN_PASSWORD', default=secrets['nexus_vault_admin_password']) | mandatory }}"
 nexus_vault_user_password_gitlab: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_GITLAB', default=secrets['nexus_vault_user_password_gitlab']) | mandatory }}"
 nexus_vault_user_password_publisher: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_PUBLISHER', default=secrets['nexus_vault_user_password_publisher']) | mandatory }}"
-nexus_vault_email_server_password: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_EMAIL_SERVER_PASSWORD', default=secrets['nexus_vault_email_server_password']) | mandatory }}"
-nexus_vault_user_password_quarantiner: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_USER_PASSWORD_QUARANTINER', default=secrets['nexus_vault_user_password_quarantiner']) | mandatory }}"
-nexus_vault_ldap_conn_passwd: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_LDAP_CONN_PASSWD', default=secrets['nexus_vault_ldap_conn_passwd']) | mandatory }}"
+
+# Required to add webhooks to ['apt-bionic-internal', 'pypi-internal', 'helm-internal', 'docker-internal', 'ansible-internal', 'raw-internal', 'conan-internal', 'rpm-internal']
 nexus_webhook_secret_key: "{{ lookup('ansible.builtin.env', 'NEXUS_WEBHOOK_SECRET_KEY', default=secrets['nexus_webhook_secret_key']) | mandatory }}"
+
+# Required to cache our hosted APT repositories
 nexus_apt_bionic_internal_key: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_INTERNAL_KEY', default=secrets['nexus_apt_bionic_internal_key']) | mandatory }}"
 nexus_apt_bionic_internal_key_passphrase: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_INTERNAL_KEY_PASSPHRASE', default=secrets['nexus_apt_bionic_internal_key_passphrase']) | mandatory }}"
 nexus_apt_bionic_quarentine_key: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_QUARENTINE_KEY', default=secrets['nexus_apt_bionic_quarentine_key']) | mandatory }}"
 nexus_apt_bionic_quarentine_key_passphrase: "{{ lookup('ansible.builtin.env', 'NEXUS_APT_BIONIC_QUARENTINE_KEY_PASSPHRASE', default=secrets['nexus_apt_bionic_quarentine_key_passphrase']) | mandatory }}"
+
+nexus_vault_email_server_password: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_EMAIL_SERVER_PASSWORD', default=secrets['nexus_vault_email_server_password']) | mandatory }}"
+nexus_email_server_enabled: false
+
+nexus_vault_ldap_conn_passwd: "{{ lookup('ansible.builtin.env', 'NEXUS_VAULT_LDAP_CONN_PASSWD', default=secrets['nexus_vault_ldap_conn_passwd']) | mandatory }}"
+nexus_ldap_realm: false
+nexus_ldap_connections: [] # Delete when 'nexus_vault_ldap_conn_passwd' is available, if necessary
 
 nexus_privileges:
   - name: ska-all-repos-read
@@ -117,28 +124,18 @@ nexus_local_users:
 
 nexus_blobstores: []
 
-nexus_delete_default_repos: true
-nexus_config_maven: false
-nexus_config_pypi: false
 nexus_config_docker: true
+nexus_config_apt: true
+
+nexus_config_pypi: false
 nexus_config_raw: false
-nexus_config_rubygems: false
-nexus_config_bower: false
 nexus_config_npm: false
 nexus_config_gitlfs: false
 nexus_config_yum: false
-nexus_config_apt: false
 nexus_config_helm: false
-nexus_config_r: false
-nexus_config_p2: false
+nexus_config_conan: false
 nexus_config_conda: false
 nexus_config_go: false
-
-nexus_npm_bearer_token_realm: false
-nexus_docker_bearer_token_realm: true  # required for docker anonymous access
-nexus_nuget_api_key_realm: false # no .Net
-nexus_rut_auth_realm: false
-# nexus_rut_auth_header: "X-Remote-User"
 
 nexus_repos_cleanup_policies:
   - name: delete-k8s-creds
@@ -193,7 +190,6 @@ nexus_repos_docker_proxy:
     maximum_metadata_age: 10080
     negative_cache_enabled: true
     negative_cache_ttl: 1440
-
   - name: gitlab-proxy
     http_port: "{{ nexus_gitlab_proxy_port }}"
     blob_store: "default"
@@ -209,7 +205,6 @@ nexus_repos_docker_proxy:
     negative_cache_enabled: true
     negative_cache_ttl: 1440
 
-
 nexus_repos_docker_group:
   - name: docker-all
     http_port: "{{ nexus_docker_group_port }}"
@@ -220,3 +215,5 @@ nexus_repos_docker_group:
       - central-proxy
       - gitlab-proxy
       - docker-proxy
+
+nexus_repos_apt_hosted: []
