@@ -21,7 +21,7 @@ BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 -include $(BASE_PATH)/PrivateRules.mak
 
 # must include infra after Private Vars
--include .make/infra.mk
+# -include .make/infra.mk
 
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
@@ -177,6 +177,7 @@ im-vars:  ### Current variables
 	@echo "DATACENTRE=$(DATACENTRE)"
 	@echo "ENVIRONMENT=$(ENVIRONMENT)"
 	@echo "SERVICE=$(SERVICE)"
+	@echo "PLAYBOOKS_HOSTS=$(PLAYBOOKS_HOSTS)"
 	@echo "TF_HTTP_USERNAME=$(TF_HTTP_USERNAME)"
 	@echo "TF_HTTP_PASSWORD=$(TF_HTTP_PASSWORD)"
 	@echo "GITLAB_PROJECT_ID=$(GITLAB_PROJECT_ID)"
@@ -196,6 +197,9 @@ im-vars:  ### Current variables
 	@cd ska-ser-ansible-collections && $(ENV_VARS) $(MAKE) vars;
 	@echo "";
 
+im-setup: ## Test ansible setup
+	ansible $(PLAYBOOKS_HOSTS)  -i $(ENVIRONMENT_ROOT_DIR)/$(SERVICE) -m setup | more
+
 export-as-envs: im-check-env
 	@echo 'export $(ENV_VARS)'
 
@@ -209,7 +213,7 @@ endif
 
 playbooks: im-check-env im-setup-secrets ## Access Ansible Collections submodule targets
 	@cd ska-ser-ansible-collections && $(ENV_VARS) $(MAKE) $(TARGET_ARGS)
-	
+
 # If the first argument is "orch"...
 ifeq (orch,$(firstword $(MAKECMDGOALS)))
   # use the rest as arguments for "orch"
@@ -228,7 +232,7 @@ TEST_ENV_VARS ?= $(ENV_VARS) \
 	TF_HTTP_USERNAME="username" \
 	TF_HTTP_PASSWORD="password" \
 	TF_VAR_ci_pipeline_id="$(CI_PIPELINE_ID)"
-	
+
 # End-to-end variables
 BATS_TESTS_DIR ?= $(BASE_PATH)/tests/e2e
 BATS_TEST_SUITES ?= unit setup $(SERVICE) cleanup
@@ -252,7 +256,7 @@ endif
 im-test: im-check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
 	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="$(BATS_TEST_SUITES)" $(MAKE) --no-print-directory bats-test
-	
+
 im-test-cleanup: im-check-test-env
 	@if [ ! -d $(BATS_TESTS_DIR)/scripts/bats-core ]; then make --no-print-directory im-test-install; fi
 	@$(TEST_ENV_VARS) BASE_DIR=$(BATS_TESTS_DIR) BATS_TEST_TARGETS="cleanup" $(MAKE) --no-print-directory bats-test
