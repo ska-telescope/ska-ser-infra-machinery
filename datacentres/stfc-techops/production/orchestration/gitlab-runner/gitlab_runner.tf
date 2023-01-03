@@ -8,6 +8,5 @@ module "gitlab_runner" {
   configuration = {
     name   = "ska-techops-iac-gitlab-runner"
     flavor = "c3.large"
-    image  = "ubuntu-jammy-22.04"
   }
 }

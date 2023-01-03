@@ -7,7 +7,7 @@ openstack = {
 # OpenStack Instance defaults for the given OpenStack Cloud
 defaults = {
   flavor              = "c3.large"
-  image               = "Ubuntu-20.04"
+  image               = "Ubuntu-22.04"
   availability_zone   = "nova"
   network             = "internal"
   keypair             = "ska-techops"
