@@ -12,4 +12,5 @@ defaults = {
   network             = "SKA-TechOps-Private"
   keypair             = "ska-techops"
   floating_ip_network = "External"
+  jump_host           = "01a68010-cc61-4396-9690-cb7263d2412d"
 }
