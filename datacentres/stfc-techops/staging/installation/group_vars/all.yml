@@ -2,6 +2,7 @@ debug: false
 
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
+certificates_dir: "/etc/pki/tls/private"
 nexus: 192.168.99.204  # stfc-techops nexus instance (d627d1db-a8c8-4524-b643-9c3c9c8bf967)
 
 prometheus_k8s_api_server_addr: "10.200.0.63"
