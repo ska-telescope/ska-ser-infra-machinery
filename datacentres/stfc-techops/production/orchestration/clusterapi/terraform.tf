@@ -1,6 +1,7 @@
 # ---------------------- Config ---------------------- #
 terraform {
-  experiments = [module_variable_optional_attrs]
+  experiments      = [module_variable_optional_attrs]
+  required_version = "~>1.2.0"
   required_providers {
     openstack = {
       source  = "terraform-provider-openstack/openstack"
@@ -28,8 +29,8 @@ terraform {
 
 # -------------------- Providers -------------------- #
 provider "openstack" {
-  cloud     = var.openstack.cloud
-  tenant_id = var.openstack.project_id
-  max_retries = 12                                    // 2 minutes
+  cloud       = var.openstack.cloud
+  tenant_id   = var.openstack.project_id
+  max_retries = 12 // 2 minutes
 }
 # --------------------------------------------------- #

@@ -7,13 +7,13 @@ module "clusterapi" {
   }
 
   configuration = {
-    name = "clusterapi" # use an unique name
-    flavor = "l3.micro"
-    image = "ubuntu-jammy-22.04"
+    name            = "clusterapi" # use an unique name
+    flavor          = "l3.micro"
+    image           = "ubuntu-jammy-22.04"
     security_groups = ["default"]
     metadata = {
-      type = "k8s"
-      service = "clusterapi"
+      type      = "k8s"
+      service   = "clusterapi"
       component = "management"
     }
 
