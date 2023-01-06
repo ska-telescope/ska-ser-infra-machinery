@@ -1,0 +1,10 @@
+all:
+  hosts:
+    e2e_ca:
+      ansible_host: 192.168.99.13
+      ip: 192.168.99.13
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      ansible_ssh_extra_args: -F ../datacentres/shared/e2e_ca.ssh.config
+      ansible_scp_extra_args: -F ../datacentres/shared/e2e_ca.ssh.config
+
