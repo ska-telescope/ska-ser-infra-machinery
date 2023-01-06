@@ -6,8 +6,8 @@ module "ca" {
   }
 
   configuration = {
-    name         = join("-", [var.datacentre, var.environment, var.service])
-    flavor       = "l3.nano"
-    keypair      = "ska-ser-ca"
+    name    = join("-", [var.datacentre, var.environment, var.service])
+    flavor  = "l3.nano"
+    keypair = "ska-ser-ca"
   }
 }

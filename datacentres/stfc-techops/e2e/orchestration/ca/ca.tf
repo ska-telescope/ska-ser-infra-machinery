@@ -6,7 +6,7 @@ module "ca" {
   }
 
   configuration = {
-    name         = join("-", [var.datacentre, var.environment, var.service, var.ci_pipeline_id])
-    flavor       = "l3.nano"
+    name   = join("-", [var.datacentre, var.environment, var.service, var.ci_pipeline_id])
+    flavor = "l3.nano"
   }
 }
