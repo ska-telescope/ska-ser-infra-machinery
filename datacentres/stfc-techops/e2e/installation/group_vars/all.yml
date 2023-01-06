@@ -30,6 +30,7 @@ prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 project_name: "SKA-TechOps e2e test"
 prometheus_datacentre: stfc-e2e-monitor
 grafana_disable_admin_account_creation: false
+grafana_mid_eda_datasource_password: "some_password"
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
