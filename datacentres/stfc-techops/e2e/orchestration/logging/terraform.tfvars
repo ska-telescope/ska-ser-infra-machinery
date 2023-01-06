@@ -7,7 +7,7 @@ openstack = {
 # OpenStack Instance defaults for the given OpenStack Cloud
 defaults = {
   flavor              = "l3.micro"
-  image               = "ubuntu-focal-20.04-nogui"
+  image               = "ubuntu-jammy-22.04"
   availability_zone   = "ceph"
   network             = "SKA-TechOps-Private"
   keypair             = "ska-e2e-test"
