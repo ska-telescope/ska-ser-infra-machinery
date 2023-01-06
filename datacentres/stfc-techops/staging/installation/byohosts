@@ -1,0 +1,39 @@
+[local]
+localhost ansible_connection=local ansible_python_interpreter=python3
+
+; [clusterapi:children]
+; local
+
+
+[capi]
+clusterapi ansible_host=192.168.99.227 ansible_user=ubuntu
+
+
+[management-cluster:children]
+capi
+
+[controlplane]
+byohosts-i00
+byohosts-i01
+byohosts-i02
+
+[workers]
+byohosts-i03
+byohosts-i04
+byohosts-i05
+byohosts-i06
+
+
+[workload-cluster:children]
+controlplane
+workers
+
+[nodes:children]
+controlplane
+workers
+
+
+[nodes:vars]
+ansible_python_interpreter=python3
+ansible_user=ubuntu
+

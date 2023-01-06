@@ -1,0 +1,139 @@
+all:
+  children:
+    byohosts: null
+  hosts: {}
+byohosts:
+  hosts:
+    byohosts-i00:
+      ansible_host: byohosts-i00
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.2.194
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i01:
+      ansible_host: byohosts-i01
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.1.201
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i02:
+      ansible_host: byohosts-i02
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.3.236
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i03:
+      ansible_host: byohosts-i03
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.3.73
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i04:
+      ansible_host: byohosts-i04
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.2.171
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i05:
+      ansible_host: byohosts-i05
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.3.185
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []
+    byohosts-i06:
+      ansible_host: byohosts-i06
+      ansible_python_interpreter: python3
+      ansible_user: ubuntu
+      floating_ip: null
+      ip: 10.100.1.193
+      jump_host:
+        addresses: 130.246.214.45,192.168.99.194
+        floating_ip: 130.246.214.45
+        hostname: terminus
+        id: 01a68010-cc61-4396-9690-cb7263d2412d
+        ip: 192.168.99.194
+        keypair: ska-techops
+        user: ubuntu
+      keypair: ska-techops
+      metadata: null
+      scrapes: {}
+      services: {}
+      volumes: []

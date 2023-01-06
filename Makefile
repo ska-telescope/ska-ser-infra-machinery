@@ -17,12 +17,6 @@ TF_LINT_TARGETS?=$(shell find ./datacentres -name 'terraform.tf' | grep -v ".mak
 
 BASE_PATH?=$(shell cd "$(dirname "$1")"; pwd -P)
 
-# Include environment specific vars and secrets
--include $(BASE_PATH)/PrivateRules.mak
-
-# must include infra after Private Vars
-# -include .make/infra.mk
-
 GITLAB_PROJECT_ID?=39377838
 ENVIRONMENT_ROOT_DIR?=$(BASE_PATH)/datacentres/$(DATACENTRE)/$(ENVIRONMENT)
 TF_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/orchestration/$(SERVICE)
@@ -198,7 +192,9 @@ im-vars:  ### Current variables
 	@echo "";
 
 im-setup: ## Test ansible setup
-	ansible $(PLAYBOOKS_HOSTS)  -i $(ENVIRONMENT_ROOT_DIR)/$(SERVICE) -m setup | more
+	ansible $(PLAYBOOKS_HOSTS) \
+		-i $(ENVIRONMENT_ROOT_DIR)/orchestration/$(SERVICE)/inventory \
+		-m setup -a filter=ansible_distribution
 
 export-as-envs: im-check-env
 	@echo 'export $(ENV_VARS)'
