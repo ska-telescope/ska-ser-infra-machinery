@@ -1,7 +1,7 @@
 all:
   hosts:
     e2e_ca:
-      ansible_host: 192.168.99.13
+      ansible_host: e2e_ca
       ip: 192.168.99.13
       ansible_python_interpreter: python3
       ansible_user: ubuntu
