@@ -2,24 +2,17 @@
 debug: true
 production: true
 
-fixed_ip: 130.246.214.45
 
 # OpenVPN vars
+fixed_ip: 130.246.214.45
 openvpn_client_cert_expires: 365
-openvpn_subnet_cidr: 192.168.99.0
 
 # DNS entries advertised to VPN
 dns_addvertise_domain: skao.stfc
 dns_addvertise_address: 192.168.99.194
-dns_server_addresses:
-- name: gateway.skao.stfc
-  address: 192.168.99.194
-- name: monitoring.skao.stfc
-  address: 192.168.99.154
-- name: logging.skao.stfc
-  address: 192.168.99.131
-- name: nexus.skao.stfc
-  address: 192.168.99.204
+dns_server_addresses: []
+# - name: example.skao.stfc
+#   address: 192.168.x.x
 
 nginx_server_name: k8s.stfc.skao.int
 
@@ -69,3 +62,18 @@ add_ssh_keys_admin:
   - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMcjZXn2KE4J2XhCA83DJRKqac15znAvgBtb76QU54eP peter.prior@IT001192.local pprior
   # Lewis Pickard
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDX1tF7YXz4XrfmNc3tm5L8xKGxXVqhA6BeleEGoyrY5t/YPBzYs0T2biC8zSK5gIFE0FMKhyGwXuSMCG1qyJQJmj+BO8491kjdUwNDYXWkAB3/BSImPKQM7dR+I9BH9RfBfh9r9rpsY5zLDhMOdEtd2DlYA3A8RayX9C2neOk3ygPHu9+o56WJbrWZ2wOvwgl06nWhpdoYgP2I/iSFGiG5v1Qp/avYq0VSZ24H+D6NivJ1cph0SkFOv4fVgyBzNGsNyHrI97fvB/PQDTY2Egea+P/LRRDSz50/WFLjx2Xxl7UXauJUIDRmP29yGANYRlTNyMeS98sCACkoU6WQdhL1 Generated-by-Nova lewis
+
+
+# Reverse Proxy
+
+reverseproxy_dns_name: k8s.stfc.skao.int
+reverseproxy_oauth2proxy_tenant_id: 78887040-bad7-494b-8760-88dcacfb3805
+reverseproxy_oauth2proxy_client_id: 45aef1d7-9fcc-4e52-a572-b158d2a8b856
+reverseproxy_oauth2proxy_cookie_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_COOKIE_SECRET', default=secrets['azuread_cookie_secret']) | mandatory }}"
+reverseproxy_oauth2proxy_client_secret: "{{ lookup('ansible.builtin.env', 'AZUREAD_CLIENT_SECRET', default=secrets['azuread_client_secret']) | mandatory }}"
+reverseproxy_kubernetes_haproxy_server: "{{ groups['loadbalancers'][0] }}"
+reverseproxy_thanos_sidecar_server: stfc-techops-production-monitoring-prometheus
+reverseproxy_grafana_server: stfc-techops-production-monitoring-prometheus
+reverseproxy_kibana_server: ska-techops-logging-central-prod-kibana-i00
+
+cron_file: gateway-cron
