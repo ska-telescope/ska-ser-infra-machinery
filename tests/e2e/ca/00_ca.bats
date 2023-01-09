@@ -6,7 +6,7 @@ setup_file() {
     for VAR in ${REQUIRED_ENV_VARS}; do
         if [ -z $(printenv ${VAR}) ]; then
             echo "Environment variable '${VAR}' is not set"
-            exit 1   
+            exit 1
         fi
     done
 }

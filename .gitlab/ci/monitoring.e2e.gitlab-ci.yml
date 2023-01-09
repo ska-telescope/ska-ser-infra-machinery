@@ -5,7 +5,7 @@
     - .orchestration_dependencies
   variables:
     ENVIRONMENT: e2e
-    REQUIRED_SSH_KEYS: "ska-techops.pem,ska-e2e-test.pem"
+    REQUIRED_SSH_KEYS: "ska-ser-ca.pem,ska-e2e-test.pem"
     SERVICE: monitoring
     BATS_TEST_SUITES: "unit setup $SERVICE"
   environment:
