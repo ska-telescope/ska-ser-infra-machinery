@@ -25,8 +25,7 @@ setup() {
 
 @test 'MONITORING: Cluster hosts are reachable' {
     cd ${BASE_PATH}
-    run make playbooks ac-ping PLAYBOOKS_HOSTS="${PROMETHEUS_NODE}"
-    run make playbooks ac-ping PLAYBOOKS_HOSTS="${THANOS_NODE}"
+    run make playbooks ac-ping PLAYBOOKS_HOSTS="${PROMETHEUS_NODE},${THANOS_NODE}"
     assert_success
 }
 

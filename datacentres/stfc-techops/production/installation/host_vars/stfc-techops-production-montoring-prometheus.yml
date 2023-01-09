@@ -1,0 +1,8 @@
+
+grafana_mid_eda_datasource_url: 10.200.10.248:5432
+grafana_mid_eda_datasource_user: admin
+grafana_mid_eda_datasource_database: mid_archiver_db_master
+grafana_postgres_datasource_version: 1212 # version 12.12
+
+# secret
+grafana_mid_eda_datasource_password: "{{ lookup('ansible.builtin.env', 'MID_EDA_DATASOURCE_PASSWORD', default=secrets['MID_EDA_DATASOURCE_PASSWORD']) | mandatory }}"
