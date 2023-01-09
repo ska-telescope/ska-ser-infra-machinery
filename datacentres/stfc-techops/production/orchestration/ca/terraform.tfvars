@@ -13,4 +13,9 @@ defaults = {
   keypair             = "ska-techops"
   jump_host           = "01a68010-cc61-4396-9690-cb7263d2412d"
   floating_ip_network = "External"
+  vpn_cidr_blocks = [
+    "10.8.0.0/24",    # OpenVPN Server 1
+    "10.9.0.0/24",    # OpenVPN Server 2
+    "192.168.99.0/24" # SKA-TechOps-Private
+  ]
 }
