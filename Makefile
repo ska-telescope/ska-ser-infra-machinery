@@ -33,7 +33,7 @@ PLAYBOOKS_ROOT_DIR?=$(ENVIRONMENT_ROOT_DIR)/installation
 TF_INVENTORY_DIR?=$(PLAYBOOKS_ROOT_DIR)
 INVENTORY?=$(PLAYBOOKS_ROOT_DIR)
 ANSIBLE_CONFIG?="$(PLAYBOOKS_ROOT_DIR)/ansible.cfg"
-ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
+ANSIBLE_SSH_ARGS?=-o ControlPersist=30m -o ControlMaster=auto -o StrictHostKeyChecking=no -F $(PLAYBOOKS_ROOT_DIR)/ssh.config
 ANSIBLE_COLLECTIONS_PATHS?=$(BASE_PATH)/ska-ser-ansible-collections
 CI_PIPELINE_ID ?= $(shell echo "local-$$(whoami)" | head -c 16)
 
