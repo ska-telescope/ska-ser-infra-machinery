@@ -7,8 +7,6 @@ module "thanos" {
 
   configuration = {
     name         = join("-", [var.datacentre, var.environment, var.service, "thanos", var.ci_pipeline_id])
-    flavor       = "l3.micro"
-    image        = "ubuntu-2004-lts"
     applications = ["thanos", "node_exporter"]
     volumes = [
       {

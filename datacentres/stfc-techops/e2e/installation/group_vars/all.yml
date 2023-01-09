@@ -1,6 +1,10 @@
 debug: false
 ansible_ssh_timeout: 60
 
+# Docker pkg version in Ubuntu 22.04
+docker_deb_pkg_version: 5:20.10.22~3-0
+docker_allow_version_change: true
+
 ca_host: ca
 ca_cert_password: "{{ lookup('ansible.builtin.env', 'CA_CERT_PASSWORD', default=secrets['ca_cert_password']) | mandatory }}"
 nexus: 192.168.99.204  # stfc-techops nexus instance (d627d1db-a8c8-4524-b643-9c3c9c8bf967)
@@ -26,6 +30,7 @@ prometheus_k8s_external_dns_entry: k8s.stfc.skao.int
 project_name: "SKA-TechOps e2e test"
 prometheus_datacentre: stfc-e2e-monitor
 grafana_disable_admin_account_creation: false
+grafana_mid_eda_datasource_password: "some_password"
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
