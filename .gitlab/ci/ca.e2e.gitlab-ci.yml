@@ -1,4 +1,4 @@
-.logging_e2e:
+.ca_e2e:
   stage: test
   extends:
     - .stfc_techops
@@ -6,17 +6,17 @@
   variables:
     ENVIRONMENT: e2e
     REQUIRED_SSH_KEYS: "ska-ser-ca.pem,ska-e2e-test.pem"
-    SERVICE: logging
+    SERVICE: ca
     BATS_TEST_SUITES: "unit setup $SERVICE"
   environment:
-    name: stfc-techops-e2e-logging/$CI_COMMIT_REF_SLUG
+    name: stfc-techops-e2e-ca/$CI_COMMIT_REF_SLUG
     deployment_tier: testing
     auto_stop_in: 2 hours
-    on_stop: logging_e2e_tests_cleanup
+    on_stop: ca_e2e_tests_cleanup
 
-logging_e2e_tests:
+ca_e2e_tests:
   extends:
-    - .logging_e2e
+    - .ca_e2e
   environment:
     action: start
   allow_failure: true
@@ -29,19 +29,19 @@ logging_e2e_tests:
     - !reference [.orchestration_dependencies, script]
     - make im-test
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "ca_e2e_tests"
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
     - when: manual
       allow_failure: true
 
-logging_e2e_tests_cleanup:
+ca_e2e_tests_cleanup:
   extends:
-    - .logging_e2e
+    - .ca_e2e
   environment:
     action: stop
   needs:
-    - logging_e2e_tests
+    - ca_e2e_tests
   artifacts:
     paths:
       - build/
@@ -50,7 +50,7 @@ logging_e2e_tests_cleanup:
     - !reference [.orchestration_dependencies, script]
     - make im-test-cleanup
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "logging_e2e_tests"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB == "ca_e2e_tests"
       when: manual
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never

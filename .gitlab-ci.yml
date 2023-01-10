@@ -20,6 +20,7 @@ include:
   - local: '.gitlab/ci/datacentres.gitlab-ci.yml'
   - local: '.gitlab/ci/templates.gitlab-ci.yml'
   - local: '.gitlab/ci/logging.e2e.gitlab-ci.yml'
+  - local: '.gitlab/ci/ca.e2e.gitlab-ci.yml'
   - local: '.gitlab/ci/monitoring.e2e.gitlab-ci.yml'
   - local: '.gitlab/ci/staging.logging.gitlab-ci.yml'
   - local: '.gitlab/ci/staging.monitoring.gitlab-ci.yml'
