@@ -9,10 +9,19 @@ openvpn_client_cert_expires: 365
 
 # DNS entries advertised to VPN
 dns_addvertise_domain: skao.stfc
-dns_addvertise_address: 192.168.99.194
-dns_server_addresses: []
-# - name: example.skao.stfc
-#   address: 192.168.x.x
+dns_addvertise_address: 192.168.99.162
+dns_server_addresses:
+  - name: gateway.skao.stfc
+    address: 192.168.99.162
+  - name: monitoring.skao.stfc
+    address: 192.168.99.88
+  - name: logging.skao.stfc
+    address: 130.246.214.33
+  - name: k8s.skao.stfc
+    address: 10.200.0.63
+  - name: nexus.skao.stfc
+    address: 192.168.99.204
+
 
 nginx_server_name: k8s.stfc.skao.int
 
